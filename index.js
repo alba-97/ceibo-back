@@ -11,7 +11,9 @@ app.use("/", routes);
 const PORT = 8080;
 
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.MONGODB_URI, {
+    autoIndex: true,
+  })
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((error) => console.error(error));
 
