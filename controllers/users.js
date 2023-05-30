@@ -1,50 +1,46 @@
-const { User } = require("../models");
 const asyncHandler = require("express-async-handler");
 
-const { validateToken } = require("../config/tokens");
-const { findUser, generateUserToken } = require("../services/users");
+const { generateToken, validateToken } = require("../config/tokens");
+const {
+  findUserByUsername,
+  validateUserPassword,
+  signup,
+  getUsers,
+  getUserById,
+  updateUser,
+} = require("../services/users");
 
 exports.login = asyncHandler(async (req, res) => {
   try {
-    const user = await findUser(req.body.email);
+    const user = await findUserByUsername(req.body.username);
 
     if (!user) {
-      res.status(404).send({ message: "Email no existe" });
-    } else {
-      const { id, email, username } = user;
-
-      const isValid = validateUserPassword(user);
-
-      if (!isValid) {
-        res.status(401).send({ message: "Contraseña incorrecta" });
-      } else {
-        const token = generateUserToken(id, email, username);
-        res.cookie("token", token);
-        res.sendStatus(200);
-      }
+      return res.status(404).send({ message: "Usuario no existe" });
     }
+    const isValid = validateUserPassword(user, req.body.password);
+
+    if (!isValid) {
+      res.status(401).send({ message: "Contraseña incorrecta" });
+    }
+
+    const { id, username, email } = user;
+    const token = generateToken({ id, username, email });
+    res.cookie("token", token);
+    res.sendStatus(200);
   } catch (err) {
+    console.log(err);
     res.status(404).send(err);
   }
 });
 
 exports.signup = async (req, res) => {
   try {
-    await User(req.body).save();
+    await signup(req.body);
     res.status(200).send({ message: "registrado" });
   } catch (err) {
     res.status(404).send(err);
   }
 };
-
-exports.addUser = asyncHandler(async (req, res) => {
-  try {
-    const user = await new User(req.body).save();
-    res.send(user);
-  } catch (error) {
-    res.send({ message: error });
-  }
-});
 
 exports.logout = (req, res) => {
   res.clearCookie("token");
@@ -59,7 +55,7 @@ exports.secret = (req, res) => {
 
 exports.getUsers = asyncHandler(async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await getUsers();
     res.send(users);
   } catch (error) {
     res.send({ message: error });
@@ -68,7 +64,7 @@ exports.getUsers = asyncHandler(async (req, res) => {
 
 exports.getUser = asyncHandler(async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await getUserById(req.params.id);
     res.send(user);
   } catch (error) {
     res.send({ message: error });
@@ -77,7 +73,7 @@ exports.getUser = asyncHandler(async (req, res) => {
 
 exports.updateUser = asyncHandler(async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body);
+    const user = await updateUser(req.params.id, req.body);
     res.send(user);
   } catch (error) {
     res.send({ message: error });
