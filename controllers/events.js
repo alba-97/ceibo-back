@@ -1,9 +1,15 @@
 const asyncHandler = require("express-async-handler");
-const Events = require("../models/Events");
+const {
+  createNewEvent,
+  findEventById,
+  getAllEvents,
+  removeEvent,
+  updateEventData,
+} = require("../services/events");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
-    const event = await new Events(req.body).save();
+    const event = await createNewEvent(req.body).save();
     res.status(201).send(event);
   } catch (error) {
     res.send({ message: error });
@@ -12,7 +18,7 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
 
 exports.getEvent = asyncHandler(async (req, res) => {
   try {
-    const event = await Events.findById(req.params.id);
+    const event = await findEventById(req.params.id);
     res.status(200).send(event);
   } catch (error) {
     res.send({ message: error });
@@ -21,16 +27,15 @@ exports.getEvent = asyncHandler(async (req, res) => {
 
 exports.getAllEvents = asyncHandler(async (req, res) => {
   try {
-    const events = await Events.find();
+    const events = await getAllEvents();
     res.status(200).send(events);
   } catch (error) {
     res.send({ message: error });
   }
 });
-
 exports.deleteEvent = asyncHandler(async (req, res) => {
   try {
-    await Events.findByIdAndRemove(req.params.id);
+    await removeEvent(req.params.id);
     res.sendStatus(204);
   } catch (error) {
     res.send({ message: error });
@@ -39,7 +44,7 @@ exports.deleteEvent = asyncHandler(async (req, res) => {
 
 exports.updateEventData = asyncHandler(async (req, res) => {
   try {
-    await Events.findByIdAndUpdate(req.params.id, req.body);
+    await updateEventData(req.params.id, req.body);
     res.sendStatus(201);
   } catch (error) {
     console.log(error);
