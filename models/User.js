@@ -61,6 +61,13 @@ const User = mongoose.Schema({
   },
 });
 
+User.methods.validatePassword = function (password) {
+  console.log(432, this);
+  return bcrypt
+    .hash(password, this.salt)
+    .then((hash) => hash === this.password);
+};
+
 User.pre("save", function () {
   const salt = bcrypt.genSaltSync(8);
   this.salt = salt;
