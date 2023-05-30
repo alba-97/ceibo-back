@@ -1,30 +1,30 @@
-const { generateToken } = require("../config/tokens");
 const { User } = require("../models");
 
-exports.findUser = async (email) => {
-  try {
-    const user = await User.findOne({
-      email,
-    });
-    return user;
-  } catch (error) {}
+exports.findUserByUsername = async (username) => {
+  const user = await User.findOne({ username });
+  return user;
 };
 
-exports.generateUserToken = async (id, email, username) => {
-  try {
-    const token = generateToken({ id, email, username });
-    return token;
-  } catch (error) {}
-};
-
-exports.validateUserPassword = async (user) => {
-  try {
-    const isValid = await user.validatePassword(user.password);
-    if (isValid) {
-      return user;
-    }
-  } catch (error) {
-    throw Error(error);
-  }
+exports.validateUserPassword = async (user, password) => {
+  const isValid = await user.validatePassword(password);
   return isValid;
+};
+
+exports.signup = async (userData) => {
+  await User(userData).save();
+};
+
+exports.getUsers = async () => {
+  const users = await User.find();
+  return users;
+};
+
+exports.getUserById = async (userId) => {
+  const user = await User.findById(userId);
+  return user;
+};
+
+exports.updateUser = async (userId, userData) => {
+  const user = await User.findByIdAndUpdate(userId, userData);
+  return user;
 };
