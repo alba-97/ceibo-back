@@ -13,7 +13,15 @@ exports.getUsers = asyncHandler(async (req, res) => {
 exports.addUser = asyncHandler(async (req, res) => {
   try {
     const user = await new User(req.body).save();
-    console.log(user);
+    res.send(user);
+  } catch (error) {
+    res.send({ message: error });
+  }
+});
+
+exports.getUser = asyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
     res.send(user);
   } catch (error) {
     res.send({ message: error });
