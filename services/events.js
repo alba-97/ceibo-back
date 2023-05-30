@@ -3,9 +3,9 @@ const Events = require("../models/Events");
 exports.createNewEvent = async (eventData) => {
   try {
     let newEvent = await Events.create(eventData);
-    return newEvent;
+    return newEvent.save();
   } catch (error) {
-    console.log(error);
+    console.log({ message: error });
   }
 };
 

@@ -9,7 +9,7 @@ const {
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
-    const event = await createNewEvent(req.body).save();
+    const event = await createNewEvent(req.body);
     res.status(201).send(event);
   } catch (error) {
     res.send({ message: error });
