@@ -1,10 +1,12 @@
 const express = require("express");
 const {
   getUsers,
-  addUser,
   getUser,
   updateUser,
   login,
+  signup,
+  logout,
+  secret,
 } = require("../controllers/users");
 
 const router = express.Router();
@@ -12,8 +14,9 @@ const router = express.Router();
 router.get("/", getUsers);
 router.get("/:id", getUser);
 
-router.post("/register", addUser);
+router.post("/register", signup);
 router.post("/login", login);
+router.post("/logout", logout);
 
 router.put("/:id", updateUser);
 
