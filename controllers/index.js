@@ -12,7 +12,7 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
 
 exports.getEvent = asyncHandler(async (req, res) => {
   try {
-    const event = await Events.findById(req.params);
+    const event = await Events.findById(req.params.id);
     res.status(200).send(event);
   } catch (error) {
     res.send({ message: error });
