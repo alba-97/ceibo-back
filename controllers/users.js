@@ -13,14 +13,13 @@ const {
 exports.login = asyncHandler(async (req, res) => {
   try {
     const user = await findUserByUsername(req.body.username);
-
     if (!user) {
       return res.status(404).send({ message: "Usuario no existe" });
     }
-    const isValid = validateUserPassword(user, req.body.password);
 
+    const isValid = validateUserPassword(user, req.body.password);
     if (!isValid) {
-      res.status(401).send({ message: "Contraseña incorrecta" });
+      return res.status(401).send({ message: "Contraseña incorrecta" });
     }
 
     const { id, username, email } = user;
@@ -28,7 +27,6 @@ exports.login = asyncHandler(async (req, res) => {
     res.cookie("token", token);
     res.sendStatus(200);
   } catch (err) {
-    console.log(err);
     res.status(404).send(err);
   }
 });
@@ -62,6 +60,10 @@ exports.getUsers = asyncHandler(async (req, res) => {
   }
 });
 
+exports.me = asyncHandler(async (req, res) => {
+  res.send(req.user);
+});
+
 exports.getUser = asyncHandler(async (req, res) => {
   try {
     const user = await getUserById(req.params.id);
@@ -73,7 +75,7 @@ exports.getUser = asyncHandler(async (req, res) => {
 
 exports.updateUser = asyncHandler(async (req, res) => {
   try {
-    const user = await updateUser(req.params.id, req.body);
+    const user = await updateUser(req.user.id, req.body);
     res.send(user);
   } catch (error) {
     res.send({ message: error });
