@@ -6,10 +6,16 @@ const {
   removeEvent,
   updateEventData,
 } = require("../services/events");
+const { createNewRole } = require("../services/role");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
-    const event = await createNewEvent(req.body);
+    const { userId, role, ...restEvents } = req.body;
+
+    const event = await createNewEvent(restEvents);
+
+    await createNewRole(userId, role, event.id);
+
     res.status(201).send(event);
   } catch (error) {
     res.send({ message: error });

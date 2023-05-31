@@ -1,11 +1,15 @@
 const Events = require("../models/Events");
+const { eventErrors } = require("./errors");
 
 exports.createNewEvent = async (eventData) => {
   try {
     let newEvent = await Events.create(eventData);
-    return newEvent.save();
+    await newEvent.validate();
+    await newEvent.save();
+    return newEvent;
   } catch (error) {
-    console.log({ message: error });
+    const response = eventErrors(error);
+    throw response;
   }
 };
 
@@ -14,7 +18,7 @@ exports.findEventById = async (eventId) => {
     let foundEvent = await Events.findById(eventId);
     return foundEvent;
   } catch (error) {
-    console.log({ message: error });
+    console.log(error);
   }
 };
 
@@ -23,7 +27,7 @@ exports.getAllEvents = async () => {
     let allEvents = await Events.find();
     return allEvents;
   } catch (error) {
-    console.log({ message: error });
+    console.log(error);
   }
 };
 
@@ -31,7 +35,7 @@ exports.removeEvent = async (eventId) => {
   try {
     await Events.findByIdAndRemove(eventId);
   } catch (error) {
-    console.log({ message: error });
+    console.log(error);
   }
 };
 
@@ -39,6 +43,7 @@ exports.updateEventData = async (eventId, updatedData) => {
   try {
     await Events.findByIdAndUpdate(eventId, updatedData);
   } catch (error) {
-    console.log({ message: error });
+    const response = eventErrors(error);
+    throw response;
   }
 };
