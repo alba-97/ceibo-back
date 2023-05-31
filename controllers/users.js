@@ -4,7 +4,7 @@ const { generateToken, validateToken } = require("../config/tokens");
 const {
   findUserByUsername,
   validateUserPassword,
-  signup,
+  addUser,
   getUsers,
   getUserById,
   updateUser,
@@ -33,10 +33,14 @@ exports.login = asyncHandler(async (req, res) => {
 
 exports.signup = async (req, res) => {
   try {
-    await signup(req.body);
-    res.status(200).send({ message: "registrado" });
-  } catch (err) {
-    res.status(404).send(err);
+    await addUser(req.body);
+    res.status(200).send({ message: "Usuario registrado con éxito" });
+  } catch (error) {
+    if (error.response) {
+      res.status(error.response.status).send({ error: error.response.data });
+    } else {
+      res.status(500).send({ error: "Error del servidor" });
+    }
   }
 };
 
@@ -78,6 +82,10 @@ exports.updateUser = asyncHandler(async (req, res) => {
     const user = await updateUser(req.user.id, req.body);
     res.send(user);
   } catch (error) {
-    res.send({ message: error });
+    if (error.response) {
+      res.status(error.response.status).send({ error: error.response.data });
+    } else {
+      res.status(500).send({ error: "Error del servidor" });
+    }
   }
 });
