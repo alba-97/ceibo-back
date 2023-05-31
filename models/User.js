@@ -52,7 +52,8 @@ const User = mongoose.Schema({
   },
   phone: {
     type: String,
-    required: false,
+    unique: true,
+    sparse: true,
     validate: [isMobilePhone, "Ingrese un número válido"],
   },
   profile_img: {
