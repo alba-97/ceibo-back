@@ -17,17 +17,14 @@ const User = mongoose.Schema({
   password: {
     type: String,
     required: true,
-    validate: [
-      (str) =>
-        isStrongPassword(str, {
-          minLength: 8,
-          minUppercase: 1,
-          minSymbols: 0,
-          minNumbers: 0,
-          returnScore: false,
-        }),
-      "La contraseña debe tener como mínimo 8 caracteres y 1 mayúscula",
-    ],
+    validate: (str) =>
+      isStrongPassword(str, {
+        minLength: 8,
+        minUppercase: 1,
+        minSymbols: 0,
+        minNumbers: 0,
+        returnScore: false,
+      }),
   },
   salt: {
     type: String,
@@ -44,7 +41,7 @@ const User = mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    validate: [isEmail, "Ingrese un email válido"],
+    validate: isEmail,
   },
   birthdate: {
     type: Date,
@@ -54,11 +51,11 @@ const User = mongoose.Schema({
     type: String,
     unique: true,
     sparse: true,
-    validate: [isMobilePhone, "Ingrese un número válido"],
+    validate: isMobilePhone,
   },
   profile_img: {
     type: String,
-    validate: [isURL, "Error de URL"],
+    validate: isURL,
   },
 });
 
