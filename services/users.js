@@ -1,44 +1,22 @@
 const { User } = require("../models");
+const { userErrors } = require("./errors");
 
-const errorResponse = (error) => {
-  let message;
-  if (error.name === "ValidationError") {
-    if (error.errors.email) {
-      message = "Ingrese un email válido";
-    } else if (error.errors.password) {
-      message = "La contraseña debe tener mínimo 8 caracteres y 1 mayúscula";
-    } else if (error.errors.phone) {
-      message = "Ingrese un número de teléfono válido";
-    }
-    return { response: { status: 400, data: message } };
-  } else if (error.code === 11000) {
-    if (error.keyValue.username) {
-      message = "El nombre de usuario ya existe";
-    } else if (error.keyValue.email) {
-      message = "Ya hay una cuenta con ese email";
-    } else if (error.keyValue.phone) {
-      message = "El número de teléfono ya fue utilizado";
-    }
-    return { response: { status: 400, data: message } };
-  } else {
-    message = "Error al guardar el usuario en la base de datos";
-    return {
-      response: {
-        status: 500,
-        data: message,
-      },
-    };
+exports.findUserByUsername = async (username) => {
+  try {
+    const user = await User.findOne({ username });
+    return user;
+  } catch (error) {
+    console.log(error);
   }
 };
 
-exports.findUserByUsername = async (username) => {
-  const user = await User.findOne({ username });
-  return user;
-};
-
 exports.validateUserPassword = async (user, password) => {
-  const isValid = await user.validatePassword(password);
-  return isValid;
+  try {
+    const isValid = await user.validatePassword(password);
+    return isValid;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.addUser = async (userData) => {
@@ -47,19 +25,27 @@ exports.addUser = async (userData) => {
     await user.validate();
     await user.save();
   } catch (error) {
-    const response = errorResponse(error);
+    const response = userErrors(error);
     throw response;
   }
 };
 
 exports.getUsers = async () => {
-  const users = await User.find();
-  return users;
+  try {
+    const users = await User.find();
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.getUserById = async (userId) => {
-  const user = await User.findById(userId);
-  return user;
+  try {
+    const user = await User.findById(userId);
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.updateUser = async (userId, userData) => {
@@ -67,7 +53,7 @@ exports.updateUser = async (userId, userData) => {
     const user = await User.findByIdAndUpdate(userId, userData);
     return user;
   } catch (error) {
-    const response = errorResponse(error);
+    const response = userErrors(error);
     throw response;
   }
 };
