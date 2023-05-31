@@ -11,6 +11,10 @@ const EventsSchema = new Schema({
   },
   min_age: { type: Number, default: 0 },
   max_age: { type: Number, default: 99 },
+  min_to_pay: { type: Number, required: true },
+  total_to_pay: { type: Number, required: true },
+  deadline_to_pay: { type: String, required: true },
+  link_to_pay: { type: String, default: "" },
 });
 
 module.exports = mongoose.model("Events", EventsSchema);
