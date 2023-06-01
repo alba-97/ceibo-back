@@ -1,9 +1,20 @@
 const Events = require("../models/Events");
 const { eventErrors } = require("./errors");
 
-exports.createNewEvent = async (eventData) => {
+exports.createNewEvent = async (eventData, categoryId) => {
   try {
     const newEvent = new Events(eventData);
+
+    if (categoryId) {
+      await newEvent.set("category", categoryId);
+      await newEvent.populate({
+        path: "category",
+        select: "name",
+        model: "Category",
+      });
+    }
+
+
     await newEvent.validate();
     await newEvent.save();
     return newEvent;
