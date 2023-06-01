@@ -3,7 +3,7 @@ const { eventErrors } = require("./errors");
 
 exports.createNewEvent = async (eventData) => {
   try {
-    let newEvent = await Events.create(eventData);
+    const newEvent = new Events(eventData);
     await newEvent.validate();
     await newEvent.save();
     return newEvent;
