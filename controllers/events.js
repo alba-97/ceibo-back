@@ -7,13 +7,19 @@ const {
   updateEventData,
 } = require("../services/events");
 const { createNewRole } = require("../services/role");
+const { createNewCategory } = require("../services/category");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
-    const { userId, role, ...restEvents } = req.body;
+    const { userId, role, category, ...restEvents } = req.body;
+    let event;
 
-    const event = await createNewEvent(restEvents);
-
+    if (category) {
+      const newCategory = await createNewCategory(category);
+      event = await createNewEvent(restEvents, newCategory.id);
+    } else {
+      event = await createNewEvent(restEvents);
+    }
     await createNewRole(userId, role, event.id);
 
     res.status(201).send(event);
