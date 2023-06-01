@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const { isURL } = require("validator");
+
 const EventsSchema = new Schema({
   title: { type: String, required: true, unique: true },
   description: { type: String, required: true },
+  img: { type: String, validate: isURL },
   event_date: { type: String, required: true },
   created_at: {
     type: String,

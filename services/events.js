@@ -3,7 +3,8 @@ const { eventErrors } = require("./errors");
 
 exports.createNewEvent = async (eventData, categoryId) => {
   try {
-    let newEvent = await Events.create(eventData);
+    const newEvent = new Events(eventData);
+
     if (categoryId) {
       await newEvent.set("category", categoryId);
       await newEvent.populate({
@@ -12,6 +13,7 @@ exports.createNewEvent = async (eventData, categoryId) => {
         model: "Category",
       });
     }
+
 
     await newEvent.validate();
     await newEvent.save();
