@@ -1,19 +1,22 @@
-const Events = require("../models/Events");
+const { Event, Role, User, Category } = require("../models");
 const { eventErrors } = require("./errors");
 
-exports.createNewEvent = async (eventData, categoryId) => {
+exports.createNewEvent = async (eventData) => {
   try {
-    const newEvent = new Events(eventData);
-
-    if (categoryId) {
-      await newEvent.set("category", categoryId);
-      await newEvent.populate({
-        path: "category",
-        select: "name",
-        model: "Category",
-      });
+    if (eventData.category) {
+      let category = await Category.findOne({ name: eventData.category });
+      if (!category) {
+        category = await Category.create({ name: eventData.category });
+      }
+      eventData.category = category._id;
     }
+    const newEvent = new Event(eventData);
 
+    await newEvent.populate({
+      path: "category",
+      select: "name",
+      model: "Category",
+    });
 
     await newEvent.validate();
     await newEvent.save();
@@ -26,7 +29,7 @@ exports.createNewEvent = async (eventData, categoryId) => {
 
 exports.findEventById = async (eventId) => {
   try {
-    let foundEvent = await Events.findById(eventId);
+    const foundEvent = await Event.findById(eventId);
     return foundEvent;
   } catch (error) {
     console.log(error);
@@ -35,8 +38,25 @@ exports.findEventById = async (eventId) => {
 
 exports.getAllEvents = async () => {
   try {
-    let allEvents = await Events.find();
+    const allEvents = await Event.find()
+      .populate({
+        path: "category",
+        select: "name",
+        model: "Category",
+      })
+      .exec();
     return allEvents;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.getUserEvents = async () => {
+  try {
+    const users = await User.find();
+    const roles = await Role.find({ user: users[0]._id }).populate("event");
+    const events = roles.map((role) => role.event);
+    return events;
   } catch (error) {
     console.log(error);
   }
@@ -44,7 +64,7 @@ exports.getAllEvents = async () => {
 
 exports.removeEvent = async (eventId) => {
   try {
-    await Events.findByIdAndRemove(eventId);
+    await Event.findByIdAndRemove(eventId);
   } catch (error) {
     console.log(error);
   }

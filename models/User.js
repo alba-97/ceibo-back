@@ -8,7 +8,7 @@ const {
   isStrongPassword,
 } = require("validator");
 
-const User = mongoose.Schema({
+const UserSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -59,13 +59,13 @@ const User = mongoose.Schema({
   },
 });
 
-User.methods.validatePassword = function (password) {
+UserSchema.methods.validatePassword = function (password) {
   return bcrypt
     .hash(password, this.salt)
     .then((hash) => hash === this.password);
 };
 
-User.pre("save", function () {
+UserSchema.pre("save", function () {
   const salt = bcrypt.genSaltSync(8);
   this.salt = salt;
   return bcrypt.hash(this.password, this.salt).then((hash) => {
@@ -73,4 +73,4 @@ User.pre("save", function () {
   });
 });
 
-module.exports = mongoose.model("User", User);
+module.exports = mongoose.model("User", UserSchema);

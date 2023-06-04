@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 
+const { generateData } = require("./seed");
 const routes = require("./routes");
 
 const app = express();
@@ -18,7 +19,10 @@ mongoose
   .connect(process.env.MONGODB_URI, {
     autoIndex: true,
   })
-  .then(() => console.log("Connected to MongoDB Atlas"))
+  .then(() => {
+    generateData();
+    console.log("Connected to MongoDB Atlas");
+  })
   .catch((error) => console.error(error));
 
 app.listen(PORT, () => {

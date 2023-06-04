@@ -3,24 +3,19 @@ const {
   createNewEvent,
   findEventById,
   getAllEvents,
+  getUserEvents,
   removeEvent,
   updateEventData,
 } = require("../services/events");
-const { createNewRole } = require("../services/role");
-const { createNewCategory } = require("../services/category");
+const { createNewRole } = require("../services/roles");
+const { getUsers } = require("../services/users");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
-    const { userId, role, category, ...restEvents } = req.body;
-    let event;
+    const event = await createNewEvent(req.body);
 
-    if (category) {
-      const newCategory = await createNewCategory(category);
-      event = await createNewEvent(restEvents, newCategory.id);
-    } else {
-      event = await createNewEvent(restEvents);
-    }
-    await createNewRole(userId, role, event.id);
+    const users = await getUsers();
+    await createNewRole(users[0]._id, event._id, "Organizador");
 
     res.status(201).send(event);
   } catch (error) {
@@ -45,6 +40,16 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
     res.send({ message: error });
   }
 });
+
+exports.getUserEvents = asyncHandler(async (req, res) => {
+  try {
+    const events = await getUserEvents();
+    res.status(200).send(events);
+  } catch (error) {
+    res.send({ message: error });
+  }
+});
+
 exports.deleteEvent = asyncHandler(async (req, res) => {
   try {
     await removeEvent(req.params.id);
