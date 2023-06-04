@@ -1,0 +1,150 @@
+{
+  "users": [
+    {
+      "username": "clubDelPlan",
+      "password": "clubDelPlan",
+      "first_name": "Ceibo",
+      "last_name": "Digital",
+      "email": "ceibodigital@example.com",
+      "birthdate": "2023-05-30"
+    },
+    {
+      "username": "johndoe",
+      "password": "Jd123456",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "johndoe@example.com",
+      "birthdate": "1985-10-15"
+    },
+    {
+      "username": "janedoe",
+      "password": "janeQwerty",
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "email": "janedoe@example.com",
+      "birthdate": "1990-05-22"
+    },
+    {
+      "username": "peterparker",
+      "password": "SpiderMan",
+      "first_name": "Peter",
+      "last_name": "Parker",
+      "email": "peterparker@example.com",
+      "birthdate": "1997-08-04"
+    },
+    {
+      "username": "brucewayne",
+      "password": "soyBatman",
+      "first_name": "Bruce",
+      "last_name": "Wayne",
+      "email": "brucewayne@example.com",
+      "birthdate": "1978-06-15"
+    },
+    {
+      "username": "superman",
+      "password": "clarkKent",
+      "first_name": "Clark",
+      "last_name": "Kent",
+      "email": "clarkkent@example.com",
+      "birthdate": "1983-03-23"
+    },
+    {
+      "username": "ironman",
+      "password": "tonyStark",
+      "first_name": "Tony",
+      "last_name": "Stark",
+      "email": "tonystark@example.com",
+      "birthdate": "1970-05-29"
+    },
+    {
+      "username": "natasharomanoff",
+      "password": "blackWidow",
+      "first_name": "Natasha",
+      "last_name": "Romanoff",
+      "email": "natasharomanoff@example.com",
+      "birthdate": "1984-11-22"
+    },
+    {
+      "username": "wadewinston",
+      "password": "deadPool",
+      "first_name": "Wade",
+      "last_name": "Winston",
+      "email": "wadewinston@example.com",
+      "birthdate": "1979-02-04"
+    },
+    {
+      "username": "aquaman",
+      "password": "arthurSmith",
+      "first_name": "Arthur",
+      "last_name": "Smith",
+      "email": "arthursmith@example.com",
+      "birthdate": "1989-01-05"
+    },
+    {
+      "username": "dianaprince",
+      "password": "wonderWoman",
+      "first_name": "Diana",
+      "last_name": "Prince",
+      "email": "dianaprince@example.com",
+      "birthdate": "1981-07-20"
+    }
+  ],
+  "events": [
+    {
+      "title": "Lanzamiento de nuevo producto",
+      "description": "Presentación del nuevo producto de la compañía con una fiesta en grande",
+      "event_date": "2023-09-15",
+      "location": "Centro de convenciones",
+      "img": "https://cdn.pixabay.com/photo/2016/08/16/09/53/international-conference-1597531_1280.jpg",
+      "category": "Conferencia"
+    },
+    {
+      "title": "Boda de María y Juan",
+      "description": "Boda de María y Juan en la iglesia del pueblo seguida de una recepción en el jardín",
+      "event_date": "2023-07-18",
+      "location": "Iglesia San José, Calle Principal 123, Pueblo Nuevo",
+      "img": "https://cdn.pixabay.com/photo/2014/09/13/04/59/couple-443600_1280.jpg",
+      "category": "Celebración"
+    },
+    {
+      "title": "Fiesta de cumpleaños",
+      "description": "Celebración del cumpleaños número 30 de Ana con música y comida",
+      "event_date": "2023-12-05",
+      "location": "Casa de Ana, calle Flores 456",
+      "img": "https://cdn.pixabay.com/photo/2014/06/10/20/01/cake-366346_1280.jpg",
+      "category": "Celebración"
+    },
+    {
+      "title": "Concierto de rock",
+      "description": "Concierto de rock en el estadio con las bandas más populares",
+      "event_date": "2023-07-22",
+      "location": "Estadio Nacional",
+      "img": "https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_1280.jpg",
+      "category": "Concierto"
+    },
+    {
+      "title": "Fiesta de graduación",
+      "description": "Fiesta para celebrar la graduación de los alumnos de la promoción 2022",
+      "event_date": "2023-08-25",
+      "location": "Salón de recepciones Grand Plaza",
+      "img": "https://cdn.pixabay.com/photo/2017/02/05/00/08/graduation-2038864_1280.jpg",
+      "category": "Celebración"
+    },
+    {
+      "title": "Festival de cine",
+      "description": "Festival de cine que proyectará películas independientes de diferentes países",
+      "event_date": "2023-10-08",
+      "location": "Cine Palacio",
+      "img": "https://cdn.pixabay.com/photo/2019/11/07/20/48/cinema-4609877_1280.jpg",
+      "category": "Entretenimiento"
+    },
+    {
+      "title": "Feria gastronómica",
+      "description": "Feria gastronómica con platos de diferentes culturas y países",
+      "event_date": "2023-11-30",
+      "location": "Plaza de Armas",
+      "img": "https://cdn.pixabay.com/photo/2018/05/04/10/08/cheese-3373604_1280.jpg",
+      "category": "Feria"
+    }
+  ]
+}
