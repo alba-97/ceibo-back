@@ -19,6 +19,8 @@ const EventSchema = new Schema({
   deadline_to_pay: { type: Date },
   link_to_pay: { type: String, default: "" },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+  start_time: { type: Number, required: true },
+  end_time: { type: Number, required: true },
 });
 
 module.exports = mongoose.model("Event", EventSchema);
