@@ -11,6 +11,7 @@ require("dotenv").config();
 
 app.use(express.json());
 app.use(cookieParser());
+
 app.use("/api", routes);
 
 const PORT = process.env.PORT;

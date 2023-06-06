@@ -31,16 +31,14 @@ exports.login = asyncHandler(async (req, res) => {
   }
 });
 
-exports.signup = async (req, res) => {
+exports.signup = async (req, res, next) => {
   try {
     await addUser(req.body);
-    res.status(200).send({ message: "Usuario registrado con éxito" });
+    res
+      .status(200)
+      .send({ status: "Hecho", message: "Usuario registrado con éxito" });
   } catch (error) {
-    if (error.response) {
-      res.status(error.response.status).send({ error: error.response.data });
-    } else {
-      res.status(500).send({ error: "Error del servidor" });
-    }
+    res.send({ status: "Error", message: error.message });
   }
 };
 
