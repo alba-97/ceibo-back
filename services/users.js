@@ -6,7 +6,7 @@ exports.findUserByUsername = async (username) => {
     const user = await User.findOne({ username });
     return user;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
