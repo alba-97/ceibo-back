@@ -12,7 +12,7 @@ function generateToken(payload) {
 }
 
 function validateToken(token) {
-  return jwt.verify(token, secret);
+  return jwt.verify(token.split(" ")[1], secret);
 }
 
 module.exports = { generateToken, validateToken };
