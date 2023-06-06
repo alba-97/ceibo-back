@@ -25,8 +25,7 @@ exports.addUser = async (userData) => {
     await user.validate();
     await user.save();
   } catch (error) {
-    const response = userErrors(error);
-    throw response;
+    throw error;
   }
 };
 
