@@ -63,7 +63,8 @@ exports.getUsers = asyncHandler(async (req, res) => {
 });
 
 exports.me = asyncHandler(async (req, res) => {
-  res.send(req.user);
+  const user = await getUserById(req.user._id);
+  res.send(user);
 });
 
 exports.getUser = asyncHandler(async (req, res) => {

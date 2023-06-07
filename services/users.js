@@ -40,7 +40,7 @@ exports.getUsers = async () => {
 
 exports.getUserById = async (userId) => {
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId, "-password -salt -__v");
     return user;
   } catch (error) {
     console.log(error);
