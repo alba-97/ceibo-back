@@ -41,7 +41,7 @@ exports.signup = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.clearCookie("token");
+  req.user = {};
   res.sendStatus(204);
 };
 
