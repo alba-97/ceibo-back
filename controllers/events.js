@@ -23,6 +23,15 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
   }
 });
 
+exports.addUserEvent = asyncHandler(async (req, res) => {
+  try {
+    await createNewRole(req.user._id, req.body.eventId, "Participante");
+    res.sendStatus(200);
+  } catch (error) {
+    res.send({ message: error });
+  }
+});
+
 exports.getEvent = asyncHandler(async (req, res) => {
   try {
     const event = await findEventById(req.params.id);
@@ -43,7 +52,7 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
 
 exports.getUserEvents = asyncHandler(async (req, res) => {
   try {
-    const events = await getUserEvents();
+    const events = await getUserEvents(req.user._id);
     res.status(200).send(events);
   } catch (error) {
     res.send({ message: error });

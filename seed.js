@@ -31,15 +31,15 @@ exports.generateData = async () => {
           event_date: Date.parse(data.events[i].event_date),
           img: data.events[i].img,
           category: data.events[i].category,
+          start_time: data.events[i].start_time,
+          end_time: data.events[i].end_time,
         };
         const event = await createNewEvent(eventData);
         const users = await getUsers();
 
-        await createNewRole(
-          users[Math.floor(i / 3)]._id,
-          event._id,
-          "Organizador"
-        );
+        console.log(users[i]);
+
+        await createNewRole(users[i]._id, event._id, "Organizador");
       } catch (error) {}
     }
   }

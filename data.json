@@ -96,7 +96,9 @@
       "event_date": "2023-09-15",
       "location": "Centro de convenciones",
       "img": "https://cdn.pixabay.com/photo/2016/08/16/09/53/international-conference-1597531_1280.jpg",
-      "category": "Conferencia"
+      "category": "Conferencia",
+      "start_time": 17,
+      "end_time": 18
     },
     {
       "title": "Boda de María y Juan",
@@ -104,7 +106,9 @@
       "event_date": "2023-07-18",
       "location": "Iglesia San José, Calle Principal 123, Pueblo Nuevo",
       "img": "https://cdn.pixabay.com/photo/2014/09/13/04/59/couple-443600_1280.jpg",
-      "category": "Celebración"
+      "category": "Celebración",
+      "start_time": 21,
+      "end_time": 22
     },
     {
       "title": "Fiesta de cumpleaños",
@@ -112,7 +116,9 @@
       "event_date": "2023-12-05",
       "location": "Casa de Ana, calle Flores 456",
       "img": "https://cdn.pixabay.com/photo/2014/06/10/20/01/cake-366346_1280.jpg",
-      "category": "Celebración"
+      "category": "Celebración",
+      "start_time": 14,
+      "end_time": 16
     },
     {
       "title": "Concierto de rock",
@@ -120,7 +126,9 @@
       "event_date": "2023-07-22",
       "location": "Estadio Nacional",
       "img": "https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_1280.jpg",
-      "category": "Concierto"
+      "category": "Concierto",
+      "start_time": 21,
+      "end_time": 23
     },
     {
       "title": "Fiesta de graduación",
@@ -128,7 +136,9 @@
       "event_date": "2023-08-25",
       "location": "Salón de recepciones Grand Plaza",
       "img": "https://cdn.pixabay.com/photo/2017/02/05/00/08/graduation-2038864_1280.jpg",
-      "category": "Celebración"
+      "category": "Celebración",
+      "start_time": 17,
+      "end_time": 18
     },
     {
       "title": "Festival de cine",
@@ -136,7 +146,9 @@
       "event_date": "2023-10-08",
       "location": "Cine Palacio",
       "img": "https://cdn.pixabay.com/photo/2019/11/07/20/48/cinema-4609877_1280.jpg",
-      "category": "Entretenimiento"
+      "category": "Entretenimiento",
+      "start_time": 15,
+      "end_time": 16
     },
     {
       "title": "Feria gastronómica",
@@ -144,7 +156,9 @@
       "event_date": "2023-11-30",
       "location": "Plaza de Armas",
       "img": "https://cdn.pixabay.com/photo/2018/05/04/10/08/cheese-3373604_1280.jpg",
-      "category": "Feria"
+      "category": "Feria",
+      "start_time": 13,
+      "end_time": 15
     }
   ]
 }

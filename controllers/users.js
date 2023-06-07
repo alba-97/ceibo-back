@@ -13,12 +13,12 @@ exports.login = asyncHandler(async (req, res) => {
   try {
     const user = await findUserByUsername(req.body.username);
     if (!user) {
-      return res.status(404).send("Usuario no existe");
+      return res.status(404).send("Datos no válidos");
     }
 
     const isValid = await validateUserPassword(user, req.body.password);
     if (!isValid) {
-      return res.status(401).send("Contraseña incorrecta");
+      return res.status(404).send("Datos no válidos");
     }
 
     let { _id, username, email } = user;
@@ -47,7 +47,6 @@ exports.logout = (req, res) => {
 
 exports.secret = (req, res) => {
   const token = req.headers.authorization;
-
   const { payload } = validateToken(token);
   req.user = payload;
   res.send(payload);
