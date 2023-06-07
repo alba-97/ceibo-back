@@ -25,6 +25,7 @@ exports.login = asyncHandler(async (req, res) => {
     const token = generateToken({ _id, username, email });
     res.status(200).send({ token });
   } catch (err) {
+    console.log(err);
     res.status(404).send(err);
   }
 });
@@ -47,7 +48,6 @@ exports.logout = (req, res) => {
 
 exports.secret = (req, res) => {
   const token = req.headers.authorization;
-
   const { payload } = validateToken(token);
   req.user = payload;
   res.send(payload);

@@ -57,6 +57,7 @@ const UserSchema = mongoose.Schema({
     type: String,
     validate: isURL,
   },
+  address: { type: String },
 });
 
 UserSchema.methods.validatePassword = function (password) {
