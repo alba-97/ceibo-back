@@ -8,7 +8,7 @@ const { getUsers } = require("./services/users");
 exports.generateData = async () => {
   for (let i = 0; i < data.users.length; i++) {
     try {
-      const user = await User.find({
+      const user = await User.findOne({
         username: data.users[i].username,
         email: data.users[i].email,
       });
@@ -25,7 +25,9 @@ exports.generateData = async () => {
       });
       await newUser.save();
       console.log(`Usuario ${newUser.username} creado`);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   for (let i = 0; i < data.events.length; i++) {
