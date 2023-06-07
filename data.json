@@ -6,7 +6,8 @@
       "first_name": "Ceibo",
       "last_name": "Digital",
       "email": "ceibodigital@example.com",
-      "birthdate": "2023-05-30"
+      "birthdate": "2023-05-30",
+      "address": "calle falsa 123"
     },
     {
       "username": "johndoe",
