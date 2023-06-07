@@ -12,7 +12,11 @@ function generateToken(payload) {
 }
 
 function validateToken(token) {
-  return jwt.verify(token.split(" ")[1], secret);
+  try {
+    return jwt.verify(token.split(" ")[1], secret);
+  } catch (error) {
+    console.log("vengo de cofig", error);
+  }
 }
 
 module.exports = { generateToken, validateToken };

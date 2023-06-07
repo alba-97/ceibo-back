@@ -14,13 +14,18 @@ const EventSchema = new Schema({
   },
   min_age: { type: Number, default: 0 },
   max_age: { type: Number, default: 99 },
-  min_to_pay: { type: Number },
-  total_to_pay: { type: Number },
-  deadline_to_pay: { type: Date },
+  min_to_pay: { type: Number, required: true },
+  total_to_pay: { type: Number, required: true },
   link_to_pay: { type: String, default: "" },
+  deadline_to_pay: {
+    type: Date,
+    default: function () {
+      return this.event_date;
+    },
+  },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-  start_time: { type: Number, required: true },
-  end_time: { type: Number, required: true },
+  start_time: { type: String, required: true },
+  end_time: { type: String, required: true },
 });
 
 module.exports = mongoose.model("Event", EventSchema);
