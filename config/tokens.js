@@ -12,9 +12,11 @@ function generateToken(payload) {
 
 function validateToken(token) {
   try {
-    return jwt.verify(token.split(" ")[1], secret);
+    const verifiedToken = jwt.verify(token.split(" ")[1], secret);
+    if (!verifiedToken) return "No valida token";
+    return verifiedToken;
   } catch (error) {
-    console.log("vengo de cofig", error);
+    return "vengo de config", error;
   }
 }
 
