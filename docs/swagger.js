@@ -1,8 +1,5 @@
-const swaggerJSDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
 const path = require("path");
 
-//Metadata info about API
 const options = {
   definition: {
     openapi: "3.0.3",
@@ -19,11 +16,11 @@ const options = {
     },
   ],
   apis: [
-    path.resolve(__dirname, "../routes/users.js"),
-    path.resolve(__dirname, "../routes/events.js"),
-    path.resolve(__dirname, "../services/categories.js"),
-    path.resolve(__dirname, "../services/roles.js"),
-  ], // Ruta relativa de los archivos de las rutas
+    path.resolve(__dirname, "./user-routes.js"),
+    path.resolve(__dirname, "./event-routes.js"),
+    path.resolve(__dirname, "./categories-service.js"),
+    path.resolve(__dirname, "./roles-service.js"),
+  ],
 };
 
 module.exports = options;
