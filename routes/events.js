@@ -98,11 +98,6 @@ router.delete("/:id", deleteEvent);
  *     responses:
  *       200:
  *         description: event deleted correctly
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               $ref: '#/components/schemas/Events'
  *       404:
  *         description: an error has occurred
  */
@@ -124,6 +119,7 @@ router.delete("/:id", deleteEvent);
  *         description: event created successfully
  *       404:
  *         description: an error has occurred
+ *
  */
 // GET ALL EVENTS
 /**
