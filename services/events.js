@@ -1,5 +1,6 @@
-const { Event, Role, User, Category } = require("../models");
+const { Event, Role, Category } = require("../models");
 const { eventErrors } = require("./errors");
+const { getUserById } = require("./users");
 
 exports.createNewEvent = async (eventData) => {
   try {
@@ -22,8 +23,7 @@ exports.createNewEvent = async (eventData) => {
     await newEvent.save();
     return newEvent;
   } catch (error) {
-    const response = eventErrors(error);
-    throw response;
+    throw error;
   }
 };
 
@@ -51,10 +51,9 @@ exports.getAllEvents = async () => {
   }
 };
 
-exports.getUserEvents = async () => {
+exports.getUserEvents = async (userId) => {
   try {
-    const users = await User.find();
-    const roles = await Role.find({ user: users[0]._id }).populate("event");
+    const roles = await Role.find({ user: userId }).populate("event");
     const events = roles.map((role) => role.event);
     return events;
   } catch (error) {

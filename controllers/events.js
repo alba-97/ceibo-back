@@ -30,10 +30,19 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
       event = await createNewEvent(req.body);
 
       const users = await getUsers();
-      await createNewRole(users[0]._id, event._id, "Organizador");
+      await createNewRole(req.user._id, event._id, "Organizador");
     }
 
     res.status(201).send(event);
+  } catch (error) {
+    res.send({ message: error });
+  }
+});
+
+exports.addUserEvent = asyncHandler(async (req, res) => {
+  try {
+    await createNewRole(req.user._id, req.body.eventId, "Participante");
+    res.sendStatus(200);
   } catch (error) {
     res.send({ message: error });
   }
@@ -103,7 +112,7 @@ exports.getUserEvents = asyncHandler(async (req, res) => {
         end_time: "16:16",
       };
     } else {
-      events = await getUserEvents();
+      events = await getUserEvents(req.user._id);
     }
     res.status(200).send(events);
   } catch (error) {

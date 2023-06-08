@@ -11,12 +11,12 @@ const {
 const UserSchema = mongoose.Schema({
   username: {
     type: String,
-    required: true,
+    required: [true, "Ingrese un nombre de usuario"],
     unique: true,
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "Ingrese una contraseña"],
     validate: [
       (str) =>
         isStrongPassword(str, {
@@ -40,7 +40,7 @@ const UserSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Ingrese un email"],
     unique: true,
     validate: [isEmail, "Ingrese un email válido"],
   },
@@ -55,6 +55,8 @@ const UserSchema = mongoose.Schema({
   },
   profile_img: {
     type: String,
+    default:
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     validate: isURL,
   },
   address: { type: String },
