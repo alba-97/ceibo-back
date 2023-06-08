@@ -68,6 +68,7 @@ router.put("/", validateUser, updateUser);
  *         - last_name
  *         - email
  *       example:
+ *          id: 1
  *          username: ester123
  *          firstname: ester
  *          lastname: esterosa
@@ -136,12 +137,12 @@ router.put("/", validateUser, updateUser);
  *       404:
  *         description: user not found
  */
-// Login one user
+//Login user
 /**
  * @swagger
  * /api/users/login:
  *   post:
- *     summary: Iniciar sesión de usuario
+ *     summary: Login user
  *     tags: [User]
  *     requestBody:
  *       required: true
@@ -152,18 +153,35 @@ router.put("/", validateUser, updateUser);
  *             properties:
  *               username:
  *                 type: string
+ *                 example: ester123
  *               password:
  *                 type: string
- *             required:
- *               - username
- *               - password
+ *                 example: Ester123456
  *     responses:
  *       200:
- *         description: El usuario ha iniciado sesión exitosamente
- *       400:
- *         description: Ha ocurrido un error
+ *         description: User login succesfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       404:
+ *         description: an error as occurred
  */
 
+// Logout user
+/**
+ * @swagger
+ * /api/users/logout:
+ *   get:
+ *     summary: Cerrar sesión del usuario
+ *     tags: [User]
+ *     responses:
+ *       204:
+ *         description: Sesión cerrada exitosamente
+ */
 // update one user
 /**
  * @swagger
@@ -176,8 +194,8 @@ router.put("/", validateUser, updateUser);
  *         name: id
  *         schema:
  *           type: string
- *           required: true
- *           description: the user id
+ *           required: false
+ *           description: the user id (optional)
  *     requestBody:
  *         content:
  *           application/json:
