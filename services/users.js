@@ -1,5 +1,16 @@
 const { User } = require("../models");
 const { userErrors } = require("./errors");
+const { Category } = require("../models");
+
+exports.addPreferences = async (categories) => {
+  console.log(categories);
+  for (let i = 0; i < categories.length; i++) {
+    const category = await Category.findOne({ name: categories[i] });
+    if (category) {
+      console.log(category);
+    }
+  }
+};
 
 exports.findUserByUsername = async (username) => {
   try {

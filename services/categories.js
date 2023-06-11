@@ -1,9 +1,9 @@
 const { Category } = require("../models");
 
-exports.createNewCategory = async (category) => {
+exports.listCategories = async () => {
   try {
-    let createdCategory = await new Category({ name: category }).save();
-    return createdCategory;
+    let categories = await Category.find();
+    return categories;
   } catch (error) {
     return null;
   }

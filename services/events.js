@@ -1,6 +1,5 @@
 const { Event, Role, Category } = require("../models");
 const { eventErrors } = require("./errors");
-const { getUserById } = require("./users");
 
 exports.createNewEvent = async (eventData) => {
   try {

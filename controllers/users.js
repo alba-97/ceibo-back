@@ -55,6 +55,16 @@ exports.signup = async (req, res) => {
   }
 };
 
+exports.addPreferences = async (req, res) => {
+  try {
+    await addPreferences(req.body);
+    res.status(200).send({ message: "Preferencias añadidas" });
+  } catch (error) {
+    console.log(111, error);
+    res.status(400).send(error.message);
+  }
+};
+
 exports.logout = (req, res) => {
   const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
   if (isSwaggerTest) {
@@ -131,7 +141,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
       user = req.body;
       res.status(200).send(user);
     } else {
-      user = await updateUser(req.user.id, req.body);
+      user = await updateUser(req.user._id, req.body);
       res.send(user);
     }
   } catch (error) {

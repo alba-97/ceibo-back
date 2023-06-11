@@ -60,6 +60,8 @@ const UserSchema = mongoose.Schema({
     validate: isURL,
   },
   address: { type: String },
+  preferences: [{ type: mongoose.Schema.Types.ObjectId, ref: "Categories" }],
+  new_user: { type: Boolean, default: true },
 });
 
 UserSchema.methods.validatePassword = function (password) {
@@ -76,7 +78,7 @@ UserSchema.pre("save", function () {
   });
 });
 
-UserSchema.post("save", function (error, doc, next) {
+UserSchema.post("save", function (error, _, next) {
   if (error.name === "MongoServerError" && error.code === 11000) {
     let message;
     if (error.message.includes("email")) {
@@ -92,7 +94,7 @@ UserSchema.post("save", function (error, doc, next) {
   }
 });
 
-UserSchema.post("validate", function (error, doc, next) {
+UserSchema.post("validate", function (error, _, next) {
   if (error.name === "ValidationError") {
     let message;
     if (error.errors.email) {

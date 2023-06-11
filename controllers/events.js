@@ -8,7 +8,6 @@ const {
   updateEventData,
 } = require("../services/events");
 const { createNewRole } = require("../services/roles");
-const { getUsers } = require("../services/users");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
@@ -28,8 +27,6 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
       };
     } else {
       event = await createNewEvent(req.body);
-
-      const users = await getUsers();
       await createNewRole(req.user._id, event._id, "Organizador");
     }
 
