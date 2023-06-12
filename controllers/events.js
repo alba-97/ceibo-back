@@ -17,16 +17,7 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
     // Verificar si se están ejecutando pruebas de Swagger
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
     if (isSwaggerTest) {
-      event = {
-        id: 1,
-        title: "fakeEvent",
-        description: "i'm a fake event",
-        event_date: "2023-06-06",
-        min_to_pay: 500,
-        total_to_pay: 2500,
-        start_time: "15:15",
-        end_time: "16:16",
-      };
+      event = req.body;
     } else {
       event = await createNewEvent(req.body);
       await createNewRole(req.user._id, event._id, "Organizador");
