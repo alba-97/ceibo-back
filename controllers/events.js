@@ -3,11 +3,13 @@ const {
   createNewEvent,
   findEventById,
   getAllEvents,
+  getFilteredEvents,
   getUserEvents,
   removeEvent,
   updateEventData,
 } = require("../services/events");
 const { createNewRole } = require("../services/roles");
+const { getUserById } = require("../services/users");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
@@ -20,7 +22,6 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
       event = await createNewEvent(req.body);
       await createNewRole(req.user._id, event._id, "Organizador");
     }
-
     res.status(201).send(event);
   } catch (error) {
     res.send({ message: error });
@@ -108,6 +109,16 @@ exports.getUserEvents = asyncHandler(async (req, res) => {
   }
 });
 
+exports.getFilteredEvents = asyncHandler(async (req, res) => {
+  try {
+    const user = await getUserById(req.user._id);
+    const events = await getFilteredEvents(user.preferences);
+    res.status(200).send(events);
+  } catch (error) {
+    res.send({ message: error });
+  }
+});
+
 exports.deleteEvent = asyncHandler(async (req, res) => {
   try {
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
@@ -133,6 +144,6 @@ exports.updateEventData = asyncHandler(async (req, res) => {
       res.sendStatus(201);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });

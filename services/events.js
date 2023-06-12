@@ -1,6 +1,5 @@
-const { Event, Role, Category } = require("../models");
+const { Event, Role, Category, Comment } = require("../models");
 const { eventErrors } = require("./errors");
-const { getUserById } = require("./users");
 
 exports.createNewEvent = async (eventData) => {
   try {
@@ -29,10 +28,20 @@ exports.createNewEvent = async (eventData) => {
 
 exports.findEventById = async (eventId) => {
   try {
-    const foundEvent = await Event.findById(eventId);
-    return foundEvent;
+    const event = await Event.findOne({ _id: eventId })
+      .populate({
+        path: "comments",
+        model: "Comment",
+        populate: {
+          path: "user",
+          model: "User",
+          select: "_id, username",
+        },
+      })
+      .exec();
+    return event;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -41,23 +50,44 @@ exports.getAllEvents = async () => {
     const allEvents = await Event.find()
       .populate({
         path: "category",
-        select: "name",
         model: "Category",
       })
       .exec();
     return allEvents;
   } catch (error) {
-    console.log(error);
+    throw error;
+  }
+};
+
+exports.getFilteredEvents = async (preferences) => {
+  try {
+    const events = await Event.find({ category: { $in: preferences } })
+      .populate({
+        path: "category",
+        model: "Category",
+      })
+      .exec();
+    return events;
+  } catch (error) {
+    throw error;
   }
 };
 
 exports.getUserEvents = async (userId) => {
   try {
-    const roles = await Role.find({ user: userId }).populate("event");
+    const roles = await Role.find({ user: userId }).populate({
+      path: "event",
+      model: "Event",
+      populate: {
+        path: "category",
+        select: "name",
+        model: "Category",
+      },
+    });
     const events = roles.map((role) => role.event);
     return events;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -65,7 +95,7 @@ exports.removeEvent = async (eventId) => {
   try {
     await Event.findByIdAndRemove(eventId);
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 

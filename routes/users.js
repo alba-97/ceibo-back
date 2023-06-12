@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  addPreferences,
   updateUser,
   getUsers,
   getUser,
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.get("/", getUsers);
 
+router.post("/preferences", validateUser, addPreferences);
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", logout);

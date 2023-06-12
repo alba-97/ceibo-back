@@ -26,6 +26,7 @@ const EventSchema = new Schema({
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   start_time: { type: String, required: true },
   end_time: { type: String, required: true },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 module.exports = mongoose.model("Event", EventSchema);

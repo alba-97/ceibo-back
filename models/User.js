@@ -60,6 +60,8 @@ const UserSchema = mongoose.Schema({
     validate: isURL,
   },
   address: { type: String },
+  preferences: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
+  new_user: { type: Boolean, default: true },
 });
 
 UserSchema.methods.validatePassword = function (password) {
@@ -68,7 +70,10 @@ UserSchema.methods.validatePassword = function (password) {
     .then((hash) => hash === this.password);
 };
 
-UserSchema.pre("save", function () {
+UserSchema.pre("save", function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
   const salt = bcrypt.genSaltSync(8);
   this.salt = salt;
   return bcrypt.hash(this.password, this.salt).then((hash) => {
@@ -76,7 +81,7 @@ UserSchema.pre("save", function () {
   });
 });
 
-UserSchema.post("save", function (error, doc, next) {
+UserSchema.post("save", function (error, _, next) {
   if (error.name === "MongoServerError" && error.code === 11000) {
     let message;
     if (error.message.includes("email")) {
@@ -92,7 +97,7 @@ UserSchema.post("save", function (error, doc, next) {
   }
 });
 
-UserSchema.post("validate", function (error, doc, next) {
+UserSchema.post("validate", function (error, _, next) {
   if (error.name === "ValidationError") {
     let message;
     if (error.errors.email) {

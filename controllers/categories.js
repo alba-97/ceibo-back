@@ -1,10 +1,22 @@
 const asyncHandler = require("express-async-handler");
-const { removeCategory, createNewCategory } = require("../services/categories");
+const {
+  listCategories,
+  removeCategory,
+  createNewCategory,
+} = require("../services/categories");
+
+exports.listCategories = asyncHandler(async (req, res) => {
+  try {
+    const categories = await listCategories();
+    res.status(200).send(categories);
+  } catch (error) {
+    res.send({ message: error });
+  }
+});
 
 exports.createCategory = asyncHandler(async (req, res) => {
   try {
     let category;
-    // Verificar si se están ejecutando pruebas de Swagger
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
     if (isSwaggerTest) {
       category = req.body;
