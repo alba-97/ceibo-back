@@ -71,7 +71,7 @@ exports.removeEvent = async (eventId) => {
 
 exports.updateEventData = async (eventId, updatedData) => {
   try {
-    await Events.findByIdAndUpdate(eventId, updatedData);
+    await Event.findByIdAndUpdate(eventId, updatedData);
   } catch (error) {
     const response = eventErrors(error);
     throw response;
