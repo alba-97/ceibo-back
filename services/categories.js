@@ -5,6 +5,6 @@ exports.listCategories = async () => {
     let categories = await Category.find();
     return categories;
   } catch (error) {
-    return null;
+    throw error;
   }
 };

@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { generateToken, validateToken } = require("../config/tokens");
 const {
+  addPreferences,
   findUserByUsername,
   validateUserPassword,
   addUser,
@@ -57,10 +58,12 @@ exports.signup = async (req, res) => {
 
 exports.addPreferences = async (req, res) => {
   try {
-    await addPreferences(req.body);
+    console.log(req.user._id);
+    const user = await getUserById(req.user._id);
+    await addPreferences(user, req.body);
     res.status(200).send({ message: "Preferencias añadidas" });
   } catch (error) {
-    console.log(111, error);
+    console.error(error);
     res.status(400).send(error.message);
   }
 };
@@ -107,6 +110,11 @@ exports.getUsers = asyncHandler(async (req, res) => {
 
 exports.me = asyncHandler(async (req, res) => {
   const user = await getUserById(req.user._id);
+  await user.populate({
+    path: "preferences",
+    select: "name",
+    model: "Category",
+  });
   res.send(user);
 });
 

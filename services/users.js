@@ -2,13 +2,18 @@ const { User } = require("../models");
 const { userErrors } = require("./errors");
 const { Category } = require("../models");
 
-exports.addPreferences = async (categories) => {
-  console.log(categories);
-  for (let i = 0; i < categories.length; i++) {
-    const category = await Category.findOne({ name: categories[i] });
-    if (category) {
-      console.log(category);
+exports.addPreferences = async (user, categories) => {
+  try {
+    user.preferences = [];
+    for (let i = 0; i < categories.length; i++) {
+      const category = await Category.findOne({ name: categories[i] });
+      if (category) {
+        user.preferences.push(category);
+      }
     }
+    await user.save();
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -26,7 +31,7 @@ exports.validateUserPassword = async (user, password) => {
     const isValid = await user.validatePassword(password);
     return isValid;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -45,7 +50,7 @@ exports.getUsers = async () => {
     const users = await User.find();
     return users;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
@@ -54,7 +59,7 @@ exports.getUserById = async (userId) => {
     const user = await User.findById(userId, "-password -salt -__v");
     return user;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
