@@ -8,12 +8,6 @@ const { getUsers } = require("./services/users");
 exports.generateData = async () => {
   for (let i = 0; i < data.users.length; i++) {
     try {
-      const user = await User.findOne({
-        username: data.users[i].username,
-        email: data.users[i].email,
-      });
-      if (user) continue;
-
       const newUser = new User({
         username: data.users[i].username,
         password: data.users[i].password,
@@ -26,7 +20,7 @@ exports.generateData = async () => {
       await newUser.save();
       console.log(`Usuario ${newUser.username} creado`);
     } catch (error) {
-      console.log(error);
+      continue;
     }
   }
 
@@ -49,6 +43,8 @@ exports.generateData = async () => {
 
       const users = await getUsers();
       await createNewRole(users[i]._id, newEvent._id, "Organizador");
-    } catch (error) {}
+    } catch (error) {
+      continue;
+    }
   }
 };

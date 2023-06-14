@@ -3,6 +3,7 @@ const {
   createNewEvent,
   getAllEvents,
   getUserEvents,
+  getFilteredEvents,
   deleteEvent,
   getEvent,
   updateEventData,
@@ -14,6 +15,7 @@ const validateUser = require("../middleware/auth");
 
 router.get("/", getAllEvents);
 router.post("/", createNewEvent);
+router.get("/filter", validateUser, getFilteredEvents);
 router.get("/my-events", validateUser, getUserEvents);
 router.post("/enroll", validateUser, addUserEvent);
 router.delete("/stop-participating/:eventId", validateUser, removeUserEvent);

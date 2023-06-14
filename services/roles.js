@@ -10,7 +10,7 @@ exports.createNewRole = async (userId, eventId, role) => {
     await newRole.save();
     return newRole;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 

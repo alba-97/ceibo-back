@@ -3,12 +3,18 @@ const {
   createNewEvent,
   findEventById,
   getAllEvents,
+  getFilteredEvents,
   getUserEvents,
   removeEvent,
   updateEventData,
 } = require("../services/events");
+<<<<<<< HEAD
 const { createNewRole, removeRoleByEventId } = require("../services/roles");
 const { getUsers } = require("../services/users");
+=======
+const { createNewRole } = require("../services/roles");
+const { getUserById } = require("../services/users");
+>>>>>>> 55a0f0d788a9faea1efbcc8bc343b0b21116d73e
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
@@ -16,23 +22,11 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
     // Verificar si se están ejecutando pruebas de Swagger
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
     if (isSwaggerTest) {
-      event = {
-        id: 1,
-        title: "fakeEvent",
-        description: "i'm a fake event",
-        event_date: "2023-06-06",
-        min_to_pay: 500,
-        total_to_pay: 2500,
-        start_time: "15:15",
-        end_time: "16:16",
-      };
+      event = req.body;
     } else {
       event = await createNewEvent(req.body);
-
-      const users = await getUsers();
       await createNewRole(req.user._id, event._id, "Organizador");
     }
-
     res.status(201).send(event);
   } catch (error) {
     res.send({ message: error });
@@ -134,6 +128,16 @@ exports.getUserEvents = asyncHandler(async (req, res) => {
   }
 });
 
+exports.getFilteredEvents = asyncHandler(async (req, res) => {
+  try {
+    const user = await getUserById(req.user._id);
+    const events = await getFilteredEvents(user.preferences);
+    res.status(200).send(events);
+  } catch (error) {
+    res.send({ message: error });
+  }
+});
+
 exports.deleteEvent = asyncHandler(async (req, res) => {
   try {
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
@@ -159,6 +163,6 @@ exports.updateEventData = asyncHandler(async (req, res) => {
       res.sendStatus(201);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });
