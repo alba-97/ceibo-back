@@ -7,6 +7,7 @@ const {
   getEvent,
   updateEventData,
   addUserEvent,
+  removeUserEvent,
 } = require("../controllers/events");
 const router = express.Router();
 const validateUser = require("../middleware/auth");
@@ -15,6 +16,7 @@ router.get("/", getAllEvents);
 router.post("/", createNewEvent);
 router.get("/my-events", validateUser, getUserEvents);
 router.post("/enroll", validateUser, addUserEvent);
+router.delete("/stop-participating/:eventId", validateUser, removeUserEvent);
 router.get("/:id", getEvent);
 router.put("/:id", updateEventData);
 router.delete("/:id", deleteEvent);
