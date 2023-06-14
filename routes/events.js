@@ -8,6 +8,8 @@ const {
   getEvent,
   updateEventData,
   addUserEvent,
+  getOrganizer,
+  rateEvent,
 } = require("../controllers/events");
 const router = express.Router();
 const validateUser = require("../middleware/auth");
@@ -18,6 +20,8 @@ router.get("/filter", validateUser, getFilteredEvents);
 router.get("/my-events", validateUser, getUserEvents);
 router.post("/enroll", validateUser, addUserEvent);
 router.get("/:id", getEvent);
+router.get("/:id/organizer", getOrganizer);
+router.post("/:id/rate", validateUser, rateEvent);
 router.put("/:id", updateEventData);
 router.delete("/:id", deleteEvent);
 

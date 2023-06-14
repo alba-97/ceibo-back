@@ -8,7 +8,7 @@ function validateUser(req, res, next) {
       if (payload) return next();
     }
     res.status(401).send({ message: "Usuario no autorizado" });
-  } catch {
+  } catch (error) {
     res.status(401).send({ message: "Fallo de validación" });
   }
 }

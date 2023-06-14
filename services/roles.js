@@ -1,14 +1,28 @@
 const { Role } = require("../models");
 
-exports.createNewRole = async (userId, eventId, role) => {
+exports.createNewRole = async (userId, eventId, role, rating) => {
   try {
-    let newRole = await new Role({
+    let roleData = {
       user: userId,
       event: eventId,
-      role: role,
-    }).save();
+      role,
+    };
+    if (rating) roleData.rating = rating;
+
+    const newRole = await new Role(roleData).save();
     await newRole.save();
     return newRole;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.rateEvent = async (userId, eventId, rating) => {
+  try {
+    const role = await Role.findOne({ user: userId, event: eventId });
+    if (role && role.role != "Organizador") {
+      await Role.updateOne({ _id: role._id }, { rating });
+    }
   } catch (error) {
     throw error;
   }

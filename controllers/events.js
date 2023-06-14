@@ -7,8 +7,9 @@ const {
   getUserEvents,
   removeEvent,
   updateEventData,
+  getOrganizer,
 } = require("../services/events");
-const { createNewRole } = require("../services/roles");
+const { createNewRole, rateEvent } = require("../services/roles");
 const { getUserById } = require("../services/users");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
@@ -24,7 +25,7 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
     }
     res.status(201).send(event);
   } catch (error) {
-    res.send({ message: error });
+    res.status(400).send({ message: error });
   }
 });
 
@@ -33,7 +34,7 @@ exports.addUserEvent = asyncHandler(async (req, res) => {
     await createNewRole(req.user._id, req.body.eventId, "Participante");
     res.sendStatus(200);
   } catch (error) {
-    res.send({ message: error });
+    res.status(400).send({ message: error });
   }
 });
 
@@ -57,7 +58,7 @@ exports.getEvent = asyncHandler(async (req, res) => {
     }
     res.status(200).send(event);
   } catch (error) {
-    res.send({ message: error });
+    res.status(400).send({ message: error });
   }
 });
 
@@ -81,7 +82,7 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
     }
     res.status(200).send(events);
   } catch (error) {
-    res.send({ message: error });
+    res.status(400).send({ message: error });
   }
 });
 
@@ -105,7 +106,7 @@ exports.getUserEvents = asyncHandler(async (req, res) => {
     }
     res.status(200).send(events);
   } catch (error) {
-    res.send({ message: error });
+    res.status(400).send({ message: error });
   }
 });
 
@@ -115,7 +116,7 @@ exports.getFilteredEvents = asyncHandler(async (req, res) => {
     const events = await getFilteredEvents(user.preferences);
     res.status(200).send(events);
   } catch (error) {
-    res.send({ message: error });
+    res.status(400).send({ message: error });
   }
 });
 
@@ -129,7 +130,7 @@ exports.deleteEvent = asyncHandler(async (req, res) => {
     }
     res.sendStatus(204);
   } catch (error) {
-    res.send({ message: error });
+    res.status(400).send({ message: error });
   }
 });
 
@@ -144,6 +145,25 @@ exports.updateEventData = asyncHandler(async (req, res) => {
       res.sendStatus(201);
     }
   } catch (error) {
-    console.error(error);
+    res.status(400).send({ message: error });
+  }
+});
+
+exports.getOrganizer = asyncHandler(async (req, res) => {
+  try {
+    const organizer = await getOrganizer(req.params.id);
+    res.send(organizer);
+  } catch (error) {
+    res.status(400).send({ message: error });
+  }
+});
+
+exports.rateEvent = asyncHandler(async (req, res) => {
+  try {
+    await rateEvent(req.user._id, req.params.id, req.body.rating);
+    res.send({ message: "Se calificó el evento" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: error });
   }
 });

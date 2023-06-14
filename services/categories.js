@@ -15,7 +15,7 @@ exports.createNewCategory = async (category) => {
     await createdCategory.save();
     return createdCategory;
   } catch (error) {
-    return null;
+    throw error;
   }
 };
 
@@ -23,6 +23,6 @@ exports.removeCategory = async (categoryId) => {
   try {
     await Category.findByIdAndRemove(categoryId);
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
