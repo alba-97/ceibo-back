@@ -8,13 +8,8 @@ const {
   removeEvent,
   updateEventData,
 } = require("../services/events");
-<<<<<<< HEAD
 const { createNewRole, removeRoleByEventId } = require("../services/roles");
-const { getUsers } = require("../services/users");
-=======
-const { createNewRole } = require("../services/roles");
 const { getUserById } = require("../services/users");
->>>>>>> 55a0f0d788a9faea1efbcc8bc343b0b21116d73e
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
