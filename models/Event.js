@@ -68,6 +68,14 @@ EventSchema.post("validate", function (error, _, next) {
     let message;
     if (error.errors.start_time || error.errors.end_time) {
       message = error.errors.start_time.message;
+    } else if (error.errors.title) {
+      message = error.errors.title.message;
+    } else if (error.errors.description) {
+      message = error.errors.description.message;
+    } else if (error.errors.location) {
+      message = error.errors.location.message;
+    } else {
+      message = "Ocurrió un error";
     }
     next(new Error(message));
   } else {
