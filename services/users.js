@@ -1,5 +1,4 @@
 const { User } = require("../models");
-const { userErrors } = require("./errors");
 const { Category } = require("../models");
 
 exports.addPreferences = async (user, categories) => {
@@ -68,7 +67,6 @@ exports.updateUser = async (userId, userData) => {
     const user = await User.findByIdAndUpdate(userId, userData);
     return user;
   } catch (error) {
-    const response = userErrors(error);
-    throw response;
+    throw error;
   }
 };

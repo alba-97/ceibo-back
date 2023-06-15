@@ -30,7 +30,7 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
     }
     res.status(201).send(event);
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send(error.message);
   }
 });
 
@@ -43,7 +43,6 @@ exports.removeUserEvent = asyncHandler(async (req, res) => {
 
     res.status(200).json({ message: "Evento eliminado correctamente" });
   } catch (error) {
-    console.log("Error al eliminar el evento", error);
     res.status(500).send("Error al eliminar el evento");
   }
 });
@@ -53,7 +52,7 @@ exports.addUserEvent = asyncHandler(async (req, res) => {
     await createNewRole(req.user._id, req.body.eventId, "Participante");
     res.sendStatus(200);
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send(error.message);
   }
 });
 
@@ -77,7 +76,7 @@ exports.getEvent = asyncHandler(async (req, res) => {
     }
     res.status(200).send(event);
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send(error.message);
   }
 });
 
@@ -90,6 +89,7 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
         id: 1,
         title: "fakeEvent",
         description: "I'm a fake event",
+        location: "calle falsa 123",
         event_date: "2023-06-06",
         min_to_pay: 500,
         total_to_pay: 2500,
@@ -101,7 +101,7 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
     }
     res.status(200).send(events);
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send(error.message);
   }
 });
 
@@ -125,7 +125,7 @@ exports.getUserEvents = asyncHandler(async (req, res) => {
     }
     res.status(200).send(events);
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send(error.message);
   }
 });
 
@@ -135,7 +135,7 @@ exports.getFilteredEvents = asyncHandler(async (req, res) => {
     const events = await getFilteredEvents(user.preferences);
     res.status(200).send(events);
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send(error);
   }
 });
 
@@ -149,7 +149,7 @@ exports.deleteEvent = asyncHandler(async (req, res) => {
     }
     res.sendStatus(204);
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send(error.message);
   }
 });
 
@@ -164,7 +164,7 @@ exports.updateEventData = asyncHandler(async (req, res) => {
       res.sendStatus(201);
     }
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send(error.message);
   }
 });
 
@@ -173,7 +173,7 @@ exports.getOrganizer = asyncHandler(async (req, res) => {
     const organizer = await getOrganizer(req.params.id);
     res.send(organizer);
   } catch (error) {
-    res.status(400).send({ message: error });
+    res.status(400).send(error.message);
   }
 });
 
@@ -182,7 +182,6 @@ exports.rateEvent = asyncHandler(async (req, res) => {
     await rateEvent(req.user._id, req.params.id, req.body.rating);
     res.send({ message: "Se calificó el evento" });
   } catch (error) {
-    console.log(error);
-    res.status(400).send({ message: error });
+    res.status(400).send(error.message);
   }
 });
