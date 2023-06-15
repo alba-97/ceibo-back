@@ -9,7 +9,12 @@ const {
   updateEventData,
   getOrganizer,
 } = require("../services/events");
-const { createNewRole, rateEvent } = require("../services/roles");
+
+const {
+  createNewRole,
+  removeRoleByEventId,
+  rateEvent,
+} = require("../services/roles");
 const { getUserById } = require("../services/users");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
@@ -26,6 +31,20 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
     res.status(201).send(event);
   } catch (error) {
     res.status(400).send({ message: error });
+  }
+});
+
+exports.removeUserEvent = asyncHandler(async (req, res) => {
+  try {
+    const eventId = req.params.eventId;
+    const userId = req.user._id;
+
+    await removeRoleByEventId(userId, eventId);
+
+    res.status(200).json({ message: "Evento eliminado correctamente" });
+  } catch (error) {
+    console.log("Error al eliminar el evento", error);
+    res.status(500).send("Error al eliminar el evento");
   }
 });
 
