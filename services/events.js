@@ -10,6 +10,11 @@ exports.createNewEvent = async (eventData) => {
       }
       eventData.category = category._id;
     }
+
+    eventData.event_date = new Date(eventData.date);
+
+    console.log(1, eventData);
+
     const newEvent = new Event(eventData);
 
     await newEvent.populate({
@@ -20,8 +25,10 @@ exports.createNewEvent = async (eventData) => {
 
     await newEvent.validate();
     await newEvent.save();
+    console.log(2, newEvent);
     return newEvent;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };

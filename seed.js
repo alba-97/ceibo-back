@@ -6,16 +6,6 @@ const { createNewRole } = require("./services/roles");
 const { findUserByUsername } = require("./services/users");
 
 exports.generateData = async () => {
-  /*
-  for (let i = 0; i < data.users.length; i++) {
-    await User.deleteOne({ username: data.users.username });
-  }
-
-  for (let i = 0; i < data.events.length; i++) {
-    await Event.deleteOne({ title: data.events.title });
-  }
-  */
-
   for (let i = 0; i < data.users.length; i++) {
     try {
       const newUser = new User({
@@ -33,7 +23,7 @@ exports.generateData = async () => {
       continue;
     }
   }
-
+  /*
   for (let i = 0; i < data.events.length; i++) {
     try {
       const event = await createNewEvent({
@@ -50,6 +40,7 @@ exports.generateData = async () => {
       continue;
     }
   }
+  */
   let users = [];
   let events = [];
 

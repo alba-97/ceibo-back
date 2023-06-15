@@ -16,7 +16,7 @@ const router = express.Router();
 const validateUser = require("../middleware/auth");
 
 router.get("/", getAllEvents);
-router.post("/", createNewEvent);
+router.post("/", validateUser, createNewEvent);
 router.get("/filter", validateUser, getFilteredEvents);
 router.get("/my-events", validateUser, getUserEvents);
 router.post("/enroll", validateUser, addUserEvent);
