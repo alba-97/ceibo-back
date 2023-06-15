@@ -7,9 +7,9 @@ function validateUser(req, res, next) {
       req.user = payload;
       if (payload) return next();
     }
-    res.status(401).send({ message: "Usuario no autorizado" });
+    res.status(401).send("Usuario no autorizado");
   } catch (error) {
-    res.status(401).send({ message: "Fallo de validación" });
+    res.status(401).send("Fallo de validación");
   }
 }
 module.exports = validateUser;
