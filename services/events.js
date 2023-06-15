@@ -1,5 +1,4 @@
 const { Event, Role, Category } = require("../models");
-const { eventErrors } = require("./errors");
 
 exports.createNewEvent = async (eventData) => {
   try {
@@ -9,11 +8,15 @@ exports.createNewEvent = async (eventData) => {
         category = await Category.create({ name: eventData.category });
       }
       eventData.category = category._id;
+    } else {
+      throw new Error("Ingrese una categoría para el evento");
     }
 
-    eventData.event_date = new Date(eventData.date);
+    if (!eventData.event_date) {
+      throw new Error("Ingrese una fecha para el evento");
+    }
 
-    console.log(1, eventData);
+    eventData.event_date = new Date(eventData.event_date);
 
     const newEvent = new Event(eventData);
 
@@ -25,10 +28,8 @@ exports.createNewEvent = async (eventData) => {
 
     await newEvent.validate();
     await newEvent.save();
-    console.log(2, newEvent);
     return newEvent;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
@@ -113,8 +114,7 @@ exports.updateEventData = async (eventId, updatedData) => {
   try {
     await Event.findByIdAndUpdate(eventId, updatedData);
   } catch (error) {
-    const response = eventErrors(error);
-    throw response;
+    throw error;
   }
 };
 

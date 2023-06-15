@@ -1,14 +1,22 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
 
 const { isURL } = require("validator");
 
-const EventSchema = new Schema({
-  title: { type: String, required: true, unique: true },
-  description: { type: String, required: true },
+const EventSchema = new mongoose.Schema({
+  title: { type: String, required: [true, "Ingrese el título del evento"] },
+  description: {
+    type: String,
+    required: [true, "Ingrese la descripción del evento"],
+  },
   img: { type: String, validate: isURL },
-  event_date: { type: Date, required: true },
-  location: { type: String, required: true },
+  event_date: {
+    type: Date,
+    required: [true, "Ingrese una fecha para el evento"],
+  },
+  location: {
+    type: String,
+    required: [true, "Ingrese la ubicación del evento"],
+  },
   created_at: {
     type: String,
     default: Date().substring(0, 15),
@@ -24,16 +32,47 @@ const EventSchema = new Schema({
       return this.event_date;
     },
   },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-  start_time: { type: String, required: true },
-  end_time: { type: String, required: true },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+  },
+  start_time: {
+    type: String,
+    required: [true, "Seleccione la hora de inicio y finalización del evento"],
+  },
+  end_time: {
+    type: String,
+    required: [true, "Seleccione la hora de inicio y finalización del evento"],
+  },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });
+
+EventSchema.index({ title: 1, event_date: 1, location: 1 }, { unique: true });
 
 EventSchema.set("toJSON", { getters: true, virtuals: true });
 
 EventSchema.virtual("ended").get(function () {
   return this.event_date < new Date();
+});
+
+EventSchema.post("save", function (error, _, next) {
+  if (error.name === "MongoServerError" && error.code === 11000) {
+    next(new Error("Este evento ya fue creado"));
+  } else {
+    next(error);
+  }
+});
+
+EventSchema.post("validate", function (error, _, next) {
+  if (error.name === "ValidationError") {
+    let message;
+    if (error.errors.start_time || error.errors.end_time) {
+      message = error.errors.start_time.message;
+    }
+    next(new Error(message));
+  } else {
+    next(error);
+  }
 });
 
 module.exports = mongoose.model("Event", EventSchema);

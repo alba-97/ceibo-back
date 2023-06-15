@@ -23,24 +23,26 @@ exports.generateData = async () => {
       continue;
     }
   }
-  /*
+
   for (let i = 0; i < data.events.length; i++) {
     try {
       const event = await createNewEvent({
         title: data.events[i].title,
         description: data.events[i].description,
-        event_date: Date.parse(data.events[i].event_date),
+        location: data.events[i].location,
+        event_date: data.events[i].event_date,
         img: data.events[i].img,
         category: data.events[i].category,
         start_time: data.events[i].start_time,
         end_time: data.events[i].end_time,
       });
       console.log(`Evento ${event.title} creado`);
-    } catch {
+    } catch (error) {
+      console.log(error.message);
       continue;
     }
   }
-  */
+
   let users = [];
   let events = [];
 
