@@ -29,4 +29,10 @@ const EventSchema = new Schema({
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });
 
+EventSchema.set("toJSON", { getters: true, virtuals: true });
+
+EventSchema.virtual("ended").get(function () {
+  return this.event_date < new Date();
+});
+
 module.exports = mongoose.model("Event", EventSchema);

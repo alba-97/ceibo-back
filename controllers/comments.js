@@ -9,7 +9,6 @@ exports.addComment = asyncHandler(async (req, res) => {
     const newComment = await addComment(event, data);
     res.status(200).send(newComment);
   } catch (error) {
-    console.log(error);
     res.send({ message: error });
   }
 });

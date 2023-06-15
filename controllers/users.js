@@ -35,7 +35,6 @@ exports.login = asyncHandler(async (req, res) => {
     const token = generateToken({ _id, username, email });
     res.status(200).send({ token });
   } catch (err) {
-    console.log(err);
     res.status(404).send(err);
   }
 });
@@ -58,7 +57,6 @@ exports.signup = async (req, res) => {
 
 exports.addPreferences = async (req, res) => {
   try {
-    console.log(req.user._id);
     const user = await getUserById(req.user._id);
     await addPreferences(user, req.body);
     res.status(200).send({ message: "Preferencias añadidas" });

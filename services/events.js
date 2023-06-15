@@ -1,4 +1,4 @@
-const { Event, Role, Category, Comment } = require("../models");
+const { Event, Role, Category } = require("../models");
 const { eventErrors } = require("./errors");
 
 exports.createNewEvent = async (eventData) => {
@@ -61,7 +61,10 @@ exports.getAllEvents = async () => {
 
 exports.getFilteredEvents = async (preferences) => {
   try {
-    const events = await Event.find({ category: { $in: preferences } })
+    const events = await Event.find({
+      event_date: { $gte: new Date() },
+      category: { $in: preferences },
+    })
       .populate({
         path: "category",
         model: "Category",
@@ -105,5 +108,39 @@ exports.updateEventData = async (eventId, updatedData) => {
   } catch (error) {
     const response = eventErrors(error);
     throw response;
+  }
+};
+
+exports.getOrganizer = async (eventId) => {
+  try {
+    let organizer = await Role.findOne({
+      role: "Organizador",
+      event: eventId,
+    }).populate({ path: "user", model: "User", select: "-password -salt" });
+    organizer = organizer.user;
+
+    let organizerEvents = await Role.find({
+      role: "Organizador",
+      user: organizer._id,
+    }).populate({ path: "event", model: "Event", select: "_id" });
+
+    organizerEvents = organizerEvents.map((item) => item.event._id);
+
+    const participantRoles = await Role.find({
+      role: { $ne: "Organizador" },
+      event: { $in: organizerEvents },
+    });
+
+    const ratings = participantRoles
+      .map((item) => item.rating)
+      .filter((item) => item >= 0);
+
+    const sumRating = ratings.reduce((total, rating) => total + rating, 0);
+    const avgRating = sumRating / ratings.length;
+    let newOrganizer = { ...organizer.toObject() };
+    newOrganizer.rating = avgRating;
+    return newOrganizer;
+  } catch (error) {
+    throw error;
   }
 };
