@@ -8,6 +8,7 @@ const EventSchema = new Schema({
   description: { type: String, required: true },
   img: { type: String, validate: isURL },
   event_date: { type: Date, required: true },
+  location: { type: String, required: true },
   created_at: {
     type: String,
     default: Date().substring(0, 15),
