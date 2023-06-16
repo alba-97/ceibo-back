@@ -9,6 +9,33 @@ const {
   getUserById,
   updateUser,
 } = require("../services/users");
+const transporter = require("../mailTransporter");
+require("dotenv").config();
+
+exports.inviteUsers = asyncHandler(async (req, res) => {
+  try {
+    const invitedUsers = req.body.users;
+    const event = req.body.plan.title;
+    const user = await getUserById(req.user._id);
+    for (let i = 0; i < invitedUsers.length; i++) {
+      const to = invitedUsers[i];
+      const subject = `¡${user.username} te ha invitado a un evento!`;
+      const text = `${user.username} te invitó a ${event} del Club del Plan.`;
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to,
+        subject,
+        text,
+      };
+
+      await transporter.sendMail(mailOptions);
+    }
+    res.status(200).send("Invitaciones enviadas");
+  } catch (error) {
+    res.status(404).send(error);
+  }
+});
 
 exports.login = asyncHandler(async (req, res) => {
   try {
@@ -34,8 +61,8 @@ exports.login = asyncHandler(async (req, res) => {
     let { _id, username, email } = user;
     const token = generateToken({ _id, username, email });
     res.status(200).send({ token });
-  } catch (err) {
-    res.status(404).send(err);
+  } catch (error) {
+    res.status(404).send(error.message);
   }
 });
 

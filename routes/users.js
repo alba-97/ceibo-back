@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   addPreferences,
+  inviteUsers,
   updateUser,
   getUsers,
   getUser,
@@ -20,6 +21,7 @@ router.post("/preferences", validateUser, addPreferences);
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/logout", logout);
+router.post("/invite", validateUser, inviteUsers);
 
 router.get("/secret", secret);
 router.get("/me", validateUser, me);
