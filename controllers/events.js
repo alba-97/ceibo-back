@@ -8,6 +8,7 @@ const {
   removeEvent,
   updateEventData,
   getOrganizer,
+  checkEdit,
 } = require("../services/events");
 
 const {
@@ -153,6 +154,15 @@ exports.deleteEvent = asyncHandler(async (req, res) => {
   }
 });
 
+exports.checkUpdate = asyncHandler(async (req, res) => {
+  try {
+    const result = await checkEdit(req.params.id, req.user._id);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 exports.updateEventData = asyncHandler(async (req, res) => {
   try {
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
@@ -160,8 +170,13 @@ exports.updateEventData = asyncHandler(async (req, res) => {
       const updatedEvent = req.body;
       res.status(200).send(updatedEvent);
     } else {
-      await updateEventData(req.params.id, req.body);
-      res.sendStatus(201);
+      const result = await checkEdit(req.params.id, req.user._id);
+      if (result) {
+        await updateEventData(req.params.id, req.body);
+        res.status(201).send("Evento actualizado");
+      } else {
+        res.status(401).send("Acceso denegado");
+      }
     }
   } catch (error) {
     res.status(400).send(error.message);

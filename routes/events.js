@@ -11,6 +11,7 @@ const {
   getOrganizer,
   rateEvent,
   removeUserEvent,
+  checkUpdate,
 } = require("../controllers/events");
 const router = express.Router();
 const validateUser = require("../middleware/auth");
@@ -24,7 +25,8 @@ router.delete("/stop-participating/:eventId", validateUser, removeUserEvent);
 router.get("/:id", getEvent);
 router.get("/:id/organizer", getOrganizer);
 router.post("/:id/rate", validateUser, rateEvent);
-router.put("/:id", updateEventData);
+router.put("/:id", validateUser, updateEventData);
+router.get("/:id/can-update", validateUser, checkUpdate);
 router.delete("/:id", deleteEvent);
 
 // Swagger Documentation

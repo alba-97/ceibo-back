@@ -118,6 +118,16 @@ exports.updateEventData = async (eventId, updatedData) => {
   }
 };
 
+exports.checkEdit = async (eventId, userId) => {
+  try {
+    const role = await Role.findOne({ event: eventId, user: userId });
+    if (!role) return false;
+    return role.role === "Organizador";
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.getOrganizer = async (eventId) => {
   try {
     let organizer = await Role.findOne({
