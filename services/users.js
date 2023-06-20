@@ -25,6 +25,17 @@ exports.findUserByUsername = async (username) => {
   }
 };
 
+exports.searchByUsername = async (username) => {
+  try {
+    const user = await User.findOne({
+      username: { $regex: username, $options: "i" },
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.validateUserPassword = async (user, password) => {
   try {
     const isValid = await user.validatePassword(password);

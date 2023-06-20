@@ -16,7 +16,11 @@ require("dotenv").config();
 
 const TWILIO_SID = process.env.TWILIO_SID;
 const TWILIO_TOKEN = process.env.TWILIO_TOKEN;
-const client = require("twilio")(TWILIO_SID, TWILIO_TOKEN);
+
+let client;
+if (TWILIO_SID && TWILIO_TOKEN) {
+  client = require("twilio")(TWILIO_SID, TWILIO_TOKEN);
+}
 
 exports.inviteUsers = asyncHandler(async (req, res) => {
   try {
