@@ -46,7 +46,7 @@ exports.addUser = async (userData) => {
 
 exports.getUsers = async () => {
   try {
-    const users = await User.find();
+    const users = await User.find({}, { password: 0, salt: 0, __v: 0 });
     return users;
   } catch (error) {
     throw error;
@@ -64,7 +64,11 @@ exports.getUserById = async (userId) => {
 
 exports.updateUser = async (userId, userData) => {
   try {
-    const user = await User.findByIdAndUpdate(userId, userData);
+    const user = await User.findByIdAndUpdate(userId, userData).select({
+      password: 0,
+      salt: 0,
+      __v: 0,
+    });
     return user;
   } catch (error) {
     throw error;
