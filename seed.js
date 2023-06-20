@@ -1,9 +1,11 @@
 const data = require("./data.json");
 
-const { User, Event, Role } = require("./models");
+const { User, Event, Role, Comment } = require("./models");
 const { createNewEvent } = require("./services/events");
 const { createNewRole } = require("./services/roles");
 const { findUserByUsername } = require("./services/users");
+const { addComment } = require("./services/comments");
+const { createNewCategory } = require("./services/categories");
 
 exports.generateData = async () => {
   for (let i = 0; i < data.users.length; i++) {
@@ -24,6 +26,14 @@ exports.generateData = async () => {
     }
   }
 
+  for (let i = 0; i < data.categories.length; i++) {
+    try {
+      await createNewCategory(data.categories[i]);
+    } catch (error) {
+      continue;
+    }
+  }
+
   for (let i = 0; i < data.events.length; i++) {
     try {
       const event = await createNewEvent({
@@ -37,8 +47,7 @@ exports.generateData = async () => {
         end_time: data.events[i].end_time,
       });
       console.log(`Evento ${event.title} creado`);
-    } catch (error) {
-      console.log(error.message);
+    } catch {
       continue;
     }
   }
@@ -46,29 +55,53 @@ exports.generateData = async () => {
   let users = [];
   let events = [];
 
-  const roles = await Role.find();
-  if (roles.length == 0) {
-    for (let i = 0; i < data.roles.length; i++) {
-      const user = await findUserByUsername(data.roles[i].user);
-      const event = await Event.findOne({ title: data.roles[i].event });
-      if (user) {
-        users.push(user);
-      }
-      if (event) {
-        events.push(event);
-      }
-    }
+  const allRoles = await Role.find();
+  const nRoles = allRoles.length;
+  const allComments = await Comment.find();
+  const nComments = allComments.length;
 
+  for (let i = 0; i < data.roles.length; i++) {
+    const user = await findUserByUsername(data.roles[i].user);
+    const event = await Event.findOne({ title: data.roles[i].event });
+    if (user) {
+      users.push(user);
+    }
+    if (event) {
+      events.push(event);
+    }
+  }
+
+  if (nRoles == 0) {
     for (let i = 0; i < users.length; i++) {
       for (let j = 0; j < events.length; j++) {
         const role = j == i ? "Organizador" : "Participante";
         const user = users[i];
         const event = events[j];
-        const rating = role == "Participante" ? Math.random() * 5 : null;
-        await createNewRole(user._id, event._id, role, rating);
-        const message = `${user.username} agregado a ${event.title} como ${role} (${rating})`;
-        console.log(message);
+        const rating = role !== "Organizador" ? Math.random() * 5 : null;
+        if (nRoles == 0) {
+          await createNewRole(user._id, event._id, role, rating);
+          console.log(
+            `${user.username} agregado a ${event.title} como ${role} (${rating})`
+          );
+        }
       }
     }
   }
+  if (nComments == 0) {
+    for (let i = 0; i < events.length; i++) {
+      const comments = data.comments[events[i].title];
+      let counter = 0;
+      for (let j = 0; j < users.length; j++) {
+        if (j !== i && counter < comments.length) {
+          const data = { user: users[j]._id, text: comments[counter] };
+          await addComment(events[i], data);
+          console.log(
+            `Comentario ${counter} de ${users[j].username} agregado a ${events[i].title}`
+          );
+          counter++;
+        }
+      }
+    }
+  }
+  console.log("Datos falsos creados");
 };

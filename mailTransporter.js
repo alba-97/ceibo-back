@@ -13,8 +13,7 @@ try {
       pass: process.env.EMAIL_PASSWORD,
     },
   };
-  res.status(200).send("Se han enviado las invitaciones");
-} catch {
+} catch (error) {
   console.log("Error en NodeMailer");
 }
 

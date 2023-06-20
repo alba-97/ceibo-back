@@ -37,15 +37,21 @@ exports.createNewEvent = async (eventData) => {
 exports.findEventById = async (eventId) => {
   try {
     const event = await Event.findOne({ _id: eventId })
-      .populate({
-        path: "comments",
-        model: "Comment",
-        populate: {
-          path: "user",
-          model: "User",
-          select: "_id, username",
+      .populate([
+        {
+          path: "comments",
+          model: "Comment",
+          populate: {
+            path: "user",
+            model: "User",
+            select: "_id, username",
+          },
         },
-      })
+        {
+          path: "category",
+          model: "Category",
+        },
+      ])
       .exec();
     return event;
   } catch (error) {
@@ -95,16 +101,17 @@ exports.getUserEvents = async (userId) => {
         model: "Category",
       },
     });
-    const events = roles.map((role) => role.event);
+    const events = roles.filter((role) => role.event).map((role) => role.event);
     return events;
   } catch (error) {
     throw error;
   }
 };
 
-exports.removeEvent = async (eventId) => {
+exports.removeEvent = async (eventId, userId) => {
   try {
     await Event.findByIdAndRemove(eventId);
+    await Role.deleteMany({ event: eventId, user: userId });
   } catch (error) {
     throw error;
   }
@@ -112,6 +119,11 @@ exports.removeEvent = async (eventId) => {
 
 exports.updateEventData = async (eventId, updatedData) => {
   try {
+    if (updatedData["category"]) {
+      updatedData["category"] = await Category.findOne({
+        name: updatedData.category,
+      });
+    }
     await Event.findByIdAndUpdate(eventId, updatedData);
   } catch (error) {
     throw error;

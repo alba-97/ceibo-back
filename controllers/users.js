@@ -9,8 +9,14 @@ const {
   getUserById,
   updateUser,
 } = require("../services/users");
+
 const transporter = require("../mailTransporter");
+
 require("dotenv").config();
+
+const TWILIO_SID = process.env.TWILIO_SID;
+const TWILIO_TOKEN = process.env.TWILIO_TOKEN;
+const client = require("twilio")(TWILIO_SID, TWILIO_TOKEN);
 
 exports.inviteUsers = asyncHandler(async (req, res) => {
   try {
@@ -18,21 +24,32 @@ exports.inviteUsers = asyncHandler(async (req, res) => {
     const event = req.body.plan.title;
     const user = await getUserById(req.user._id);
     for (let i = 0; i < invitedUsers.length; i++) {
-      const to = invitedUsers[i];
-      const subject = `¡${user.username} te ha invitado a un evento!`;
-      const text = `${user.username} te invitó a ${event} del Club del Plan.`;
+      const invitedUser = await findUserByUsername(invitedUsers[i]);
+      if (req.body.method == "email") {
+        const to = invitedUser.email;
+        const subject = `¡${user.username} te ha invitado a un evento!`;
+        const html = `${user.username} te invitó a ${event} del Club del Plan: <a href="clubdelplan://${req.body.plan._id}">Haz click aquí</a> para entrar`;
 
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to,
-        subject,
-        text,
-      };
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to,
+          subject,
+          html,
+        };
 
-      await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
+      } else if (req.body.method == "phone" && invitedUser.phone) {
+        const text = `${user.username} te invitó a ${event} del Club del Plan: https://www.ejemplo.com/`;
+        await client.messages.create({
+          body: text,
+          from: `whatsapp:+${process.env.TWILIO_NUMBER}`,
+          to: `whatsapp:+549${invitedUser.phone}`,
+        });
+      }
     }
     res.status(200).send("Invitaciones enviadas");
   } catch (error) {
+    console.log(error);
     res.status(404).send(error);
   }
 });

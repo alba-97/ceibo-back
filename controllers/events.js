@@ -146,9 +146,14 @@ exports.deleteEvent = asyncHandler(async (req, res) => {
     if (isSwaggerTest) {
       return res.send("Event deleted correctly");
     } else {
-      await removeEvent(req.params.id);
+      const result = await checkEdit(req.params.id, req.user._id);
+      if (result) {
+        await removeEvent(req.params.id, req.user._id);
+        res.status(201).send("Evento eliminado");
+      } else {
+        res.status(401).send("Acceso denegado");
+      }
     }
-    res.sendStatus(204);
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -172,8 +177,8 @@ exports.updateEventData = asyncHandler(async (req, res) => {
     } else {
       const result = await checkEdit(req.params.id, req.user._id);
       if (result) {
-        await updateEventData(req.params.id, req.body);
-        res.status(201).send("Evento actualizado");
+        const updatedEvent = await updateEventData(req.params.id, req.body);
+        res.status(201).send(updatedEvent);
       } else {
         res.status(401).send("Acceso denegado");
       }

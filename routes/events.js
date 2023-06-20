@@ -27,7 +27,7 @@ router.get("/:id/organizer", getOrganizer);
 router.post("/:id/rate", validateUser, rateEvent);
 router.put("/:id", validateUser, updateEventData);
 router.get("/:id/can-update", validateUser, checkUpdate);
-router.delete("/:id", deleteEvent);
+router.delete("/:id", validateUser, deleteEvent);
 
 // Swagger Documentation
 /**
