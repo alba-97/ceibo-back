@@ -30,14 +30,12 @@ router.post("/upload", upload.single("image"), async (req, res) => {
     const file = req.file;
 
     if (!file) {
-      console.log("123");
       return res.status(400).send("No se proporcionó ningún archivo");
     }
     const uploadResult = await cloudinary.uploader.upload(file.path);
     const imageUrl = uploadResult.secure_url;
     res.send({ imageUrl });
   } catch (error) {
-    console.log("123");
     res.status(500).send("Error al realizar la carga de la imagen");
   }
 });

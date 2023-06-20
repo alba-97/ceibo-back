@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
+    "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.37.1",
     "cookie-parser": "^1.4.6",
@@ -25,7 +26,9 @@
     "nodemon": "^2.0.22",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
-    "validator": "^13.9.0"
+    "twilio": "^4.12.0",
+    "validator": "^13.9.0",
+    "whatsapp-web.js": "^1.21.0"
   },
   "devDependencies": {
     "mongodb": "^5.6.0",

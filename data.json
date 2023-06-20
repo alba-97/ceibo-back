@@ -90,6 +90,43 @@
       "birthdate": "1981-07-20"
     }
   ],
+  "categories": [
+    "Aficiones y manualidades",
+    "Conferencia",
+    "Fiesta",
+    "Apoyo",
+    "Arte y cultura",
+    "Vehiculos",
+    "Danza",
+    "Negocios",
+    "Fantasía y ciencia ficción",
+    "Cine y películas",
+    "Comidas y bebidas",
+    "Comunidad y medioambiente",
+    "Salud física",
+    "Deportes",
+    "Educación",
+    "Escritura",
+    "Estilo de vida",
+    "Fenómenos paranormales",
+    "Fotografía",
+    "Idiomas",
+    "Juegos",
+    "LGBT",
+    "Libros",
+    "Mascotas y animales",
+    "Moda y belleza",
+    "Política",
+    "Música",
+    "Naturaleza y aventura",
+    "New Age y espiritualidad",
+    "Padres y familia",
+    "Personas solteras",
+    "Religión y creencias",
+    "Salud y bienestar",
+    "Tecnología",
+    "Vida social"
+  ],
   "events": [
     {
       "title": "Lanzamiento de nuevo producto",
@@ -107,7 +144,7 @@
       "event_date": "2023-07-18",
       "location": "Iglesia San José, Calle Principal 123, Pueblo Nuevo",
       "img": "https://cdn.pixabay.com/photo/2014/09/13/04/59/couple-443600_1280.jpg",
-      "category": "Celebración",
+      "category": "Fiesta",
       "start_time": "21",
       "end_time": "22"
     },
@@ -117,7 +154,7 @@
       "event_date": "2023-12-05",
       "location": "Casa de Ana, calle Flores 456",
       "img": "https://cdn.pixabay.com/photo/2014/06/10/20/01/cake-366346_1280.jpg",
-      "category": "Celebración",
+      "category": "Fiesta",
       "start_time": "14",
       "end_time": "16"
     },
@@ -127,7 +164,7 @@
       "event_date": "2023-07-22",
       "location": "Estadio Nacional",
       "img": "https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_1280.jpg",
-      "category": "Concierto",
+      "category": "Música",
       "start_time": "21",
       "end_time": "23"
     },
@@ -137,7 +174,7 @@
       "event_date": "2023-03-25",
       "location": "Salón de recepciones Grand Plaza",
       "img": "https://cdn.pixabay.com/photo/2017/02/05/00/08/graduation-2038864_1280.jpg",
-      "category": "Celebración",
+      "category": "Fiesta",
       "start_time": "17",
       "end_time": "18"
     },
@@ -147,7 +184,7 @@
       "event_date": "2023-04-08",
       "location": "Cine Palacio",
       "img": "https://cdn.pixabay.com/photo/2019/11/07/20/48/cinema-4609877_1280.jpg",
-      "category": "Entretenimiento",
+      "category": "Arte y cultura",
       "start_time": "15",
       "end_time": "16"
     },
@@ -157,7 +194,7 @@
       "event_date": "2023-01-30",
       "location": "Plaza de Armas",
       "img": "https://cdn.pixabay.com/photo/2018/05/04/10/08/cheese-3373604_1280.jpg",
-      "category": "Feria",
+      "category": "Comidas y bebidas",
       "start_time": "13",
       "end_time": "15"
     }
@@ -170,5 +207,32 @@
     { "user": "brucewayne", "event": "Concierto de rock" },
     { "user": "wadewinston", "event": "Boda de María y Juan" },
     { "user": "ironman", "event": "Lanzamiento de nuevo producto" }
-  ]
+  ],
+  "comments": {
+    "Lanzamiento de nuevo producto": [
+      "que bueno!!!",
+      "que van a presentar en el evento?",
+      "Alguien sabe si hay comida y bebida en el lugar?"
+    ],
+    "Fiesta de cumpleaños": [
+      "Feliz cumpleaños",
+      "¡Feliz cumple! Pasala bien.",
+      "¡Felicidades en tu día especial!",
+      "¡Hoy es tu día! Te deseo un año lleno de éxitos y felicidad.",
+      "Espero que la torta esté buena"
+    ],
+    "Fiesta de graduación": ["buenisimo", "Felicitaciones a los egresados!"],
+    "Festival de cine": [
+      "Que bueno!! qué películas pasan?",
+      "Buenísimo, ahi me anoto",
+      "Habrá cortometrajes?"
+    ],
+    "Concierto de rock": [
+      "quienes van a estar?",
+      "La rompen estos pibes che",
+      "aguante metallica"
+    ],
+    "Feria gastronómica": ["Que ricooo!", "Tiene buena pinta"],
+    "Boda de María y Juan": ["Que bueno!!!", "Felicidades a los 2"]
+  }
 }
