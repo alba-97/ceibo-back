@@ -9,6 +9,9 @@ const {
   updateEventData,
   getOrganizer,
   checkEdit,
+  getEventsByCategory,
+  getEventsByUser,
+  getEventsByQuery,
 } = require("../services/events");
 
 const {
@@ -16,7 +19,8 @@ const {
   removeRoleByEventId,
   rateEvent,
 } = require("../services/roles");
-const { getUserById } = require("../services/users");
+
+const { getUserById, searchByUsername } = require("../services/users");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
@@ -134,6 +138,36 @@ exports.getFilteredEvents = asyncHandler(async (req, res) => {
   try {
     const user = await getUserById(req.user._id);
     const events = await getFilteredEvents(user.preferences);
+    res.status(200).send(events);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+exports.getEventsByQuery = asyncHandler(async (req, res) => {
+  try {
+    const events = await getEventsByQuery(req.query.query);
+    res.status(200).send(events);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
+});
+
+exports.getEventsByCategory = asyncHandler(async (req, res) => {
+  try {
+    const events = await getEventsByCategory(req.query.query);
+    res.status(200).send(events);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+exports.getEventsByUser = asyncHandler(async (req, res) => {
+  try {
+    const user = await searchByUsername(req.query.query);
+    console.log(user);
+    const events = await getEventsByUser(user);
     res.status(200).send(events);
   } catch (error) {
     res.status(400).send(error);

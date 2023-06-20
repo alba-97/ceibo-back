@@ -12,11 +12,18 @@ const {
   rateEvent,
   removeUserEvent,
   checkUpdate,
+  getEventsByQuery,
+  getEventsByCategory,
+  getEventsByUser,
 } = require("../controllers/events");
 const router = express.Router();
 const validateUser = require("../middleware/auth");
 
 router.get("/", getAllEvents);
+router.get("/search", getEventsByQuery);
+router.get("/search/category", getEventsByCategory);
+router.get("/search/user", getEventsByUser);
+
 router.post("/", validateUser, createNewEvent);
 router.get("/filter", validateUser, getFilteredEvents);
 router.get("/my-events", validateUser, getUserEvents);
