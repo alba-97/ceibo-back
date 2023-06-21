@@ -16,6 +16,7 @@ const {
   getEventsByCategory,
   getEventsByUser,
   userRating,
+  getPastUserEvents,
 } = require("../controllers/events");
 const router = express.Router();
 const validateUser = require("../middleware/auth");
@@ -28,6 +29,7 @@ router.get("/search/user", getEventsByUser);
 router.post("/", validateUser, createNewEvent);
 router.get("/filter", validateUser, getFilteredEvents);
 router.get("/my-events", validateUser, getUserEvents);
+router.get("/history", validateUser, getPastUserEvents);
 router.post("/enroll", validateUser, addUserEvent);
 router.delete("/stop-participating/:eventId", validateUser, removeUserEvent);
 router.get("/:id", getEvent);

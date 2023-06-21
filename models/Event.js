@@ -45,6 +45,7 @@ const EventSchema = new mongoose.Schema({
     required: [true, "Seleccione la hora de inicio y finalización del evento"],
   },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+  public: { type: Boolean, default: true },
 });
 
 EventSchema.index({ title: 1, event_date: 1, location: 1 }, { unique: true });

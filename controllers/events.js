@@ -121,6 +121,16 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
   }
 });
 
+exports.getPastUserEvents = asyncHandler(async (req, res) => {
+  try {
+    let events = await getUserEvents(req.user._id);
+    events = events.filter((item) => item.event_date <= new Date());
+    res.status(200).send(events);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 exports.getUserEvents = asyncHandler(async (req, res) => {
   try {
     let events;
@@ -138,6 +148,7 @@ exports.getUserEvents = asyncHandler(async (req, res) => {
       };
     } else {
       events = await getUserEvents(req.user._id);
+      events = events.filter((item) => item.event_date > new Date());
     }
     res.status(200).send(events);
   } catch (error) {
@@ -177,7 +188,6 @@ exports.getEventsByCategory = asyncHandler(async (req, res) => {
 exports.getEventsByUser = asyncHandler(async (req, res) => {
   try {
     const user = await searchByUsername(req.query.query);
-    console.log(user);
     const events = await getEventsByUser(user);
     res.status(200).send(events);
   } catch (error) {
