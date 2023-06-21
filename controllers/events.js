@@ -18,6 +18,7 @@ const {
   createNewRole,
   removeRoleByEventId,
   rateEvent,
+  userRating,
 } = require("../services/roles");
 
 const { getUserById, searchByUsername } = require("../services/users");
@@ -39,6 +40,16 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
   }
 });
 
+exports.userRating = asyncHandler(async (req, res) => {
+  try {
+    const rating = await userRating(req.params.id, req.user._id);
+    res.status(200).send({ rating });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error al obtener rating");
+  }
+});
+
 exports.removeUserEvent = asyncHandler(async (req, res) => {
   try {
     const eventId = req.params.eventId;
@@ -46,7 +57,7 @@ exports.removeUserEvent = asyncHandler(async (req, res) => {
 
     await removeRoleByEventId(userId, eventId);
 
-    res.status(200).json({ message: "Evento eliminado correctamente" });
+    res.status(200).send({ message: "Evento eliminado correctamente" });
   } catch (error) {
     res.status(500).send("Error al eliminar el evento");
   }

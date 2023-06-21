@@ -15,6 +15,7 @@ const {
   getEventsByQuery,
   getEventsByCategory,
   getEventsByUser,
+  userRating,
 } = require("../controllers/events");
 const router = express.Router();
 const validateUser = require("../middleware/auth");
@@ -31,6 +32,7 @@ router.post("/enroll", validateUser, addUserEvent);
 router.delete("/stop-participating/:eventId", validateUser, removeUserEvent);
 router.get("/:id", getEvent);
 router.get("/:id/organizer", getOrganizer);
+router.get("/:id/rating", validateUser, userRating);
 router.post("/:id/rate", validateUser, rateEvent);
 router.put("/:id", validateUser, updateEventData);
 router.get("/:id/can-update", validateUser, checkUpdate);
