@@ -28,6 +28,15 @@ exports.rateEvent = async (userId, eventId, rating) => {
   }
 };
 
+exports.userRating = async (eventId, userId) => {
+  try {
+    const role = await Role.findOne({ user: userId, event: eventId });
+    return role.rating;
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.removeRoleByEventId = async (userId, eventId) => {
   try {
     const role = await Role.findOne({ user: userId, event: eventId });
