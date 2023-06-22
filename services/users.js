@@ -85,3 +85,52 @@ exports.updateUser = async (userId, userData) => {
     throw error;
   }
 };
+
+exports.addFriend = async (userId, friendId) => {
+  try {
+    const user = await this.getUserById(userId);
+    const friend = await this.getUserById(friendId);
+    user.friends.push(friendId);
+    await user.save();
+    friend.friends.push(userId);
+    await friend.save();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.removeUserFriend = async (userId, friendId) => {
+  try {
+    const user = await this.getUserById(userId);
+    const friend = await this.getUserById(friendId);
+
+    userFriends = await this.getUserFriends(userId);
+    friendFriends = await this.getUserFriends(friendId);
+
+    const userFriendIdString = friendId.toString();
+    const friendUserIdString = userId.toString();
+
+    user.friends = userFriends.filter(
+      (friend) => friend._id.toString() !== userFriendIdString
+    );
+    await user.save();
+    console.log("user friends", user.friends);
+
+    friend.friends = friendFriends.filter(
+      (friend) => friend._id.toString() !== friendUserIdString
+    );
+    await friend.save();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.getUserFriends = async (userId) => {
+  try {
+    const user = await this.getUserById(userId);
+    const userFriend = await User.populate(user, { path: "friends" });
+    return userFriend.friends;
+  } catch (error) {
+    console.log(error);
+  }
+};
