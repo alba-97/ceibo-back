@@ -64,10 +64,10 @@ const UserSchema = mongoose.Schema({
   new_user: { type: Boolean, default: true },
 });
 
-UserSchema.methods.validatePassword = function (password) {
-  return bcrypt
-    .hash(password, this.salt)
-    .then((hash) => hash === this.password);
+UserSchema.methods.validatePassword = async function (password) {
+  const hash = await bcrypt.hash(password, this.salt);
+  const checking = hash === this.password;
+  return checking;
 };
 
 UserSchema.pre("save", function (next) {

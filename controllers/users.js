@@ -65,19 +65,22 @@ exports.login = asyncHandler(async (req, res) => {
       }
     } else {
       user = await findUserByUsername(req.body.username);
-    }
-    if (!user) {
-      return res.status(404).send("Datos no válidos");
-    }
 
-    const isValid = await validateUserPassword(user, req.body.password);
-    if (!isValid) {
-      return res.status(404).send("Datos no válidos");
-    }
+      if (!user) {
+        return res.status(404).send("Datos no válidos");
+      }
+      const isValid = await validateUserPassword(user, req.body.password);
+      console.log("isvalid", isValid);
 
-    let { _id, username, email } = user;
-    const token = generateToken({ _id, username, email });
-    res.status(200).send({ token });
+      if (!isValid) {
+        return res.status(404).send("Datos no válidos");
+      }
+      let { _id, username, email } = user;
+      console.log("user data ", _id, username, email);
+      const token = generateToken({ _id, username, email });
+      console.log("soy req.user", req.user._id);
+      res.status(200).send({ token });
+    }
   } catch (error) {
     res.status(404).send(error.message);
   }
