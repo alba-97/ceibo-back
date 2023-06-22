@@ -18,6 +18,7 @@ const {
   createNewRole,
   removeRoleByEventId,
   rateEvent,
+  userRating,
 } = require("../services/roles");
 
 const { getUserById, searchByUsername } = require("../services/users");
@@ -39,6 +40,16 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
   }
 });
 
+exports.userRating = asyncHandler(async (req, res) => {
+  try {
+    const rating = await userRating(req.params.id, req.user._id);
+    res.status(200).send({ rating });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error al obtener rating");
+  }
+});
+
 exports.removeUserEvent = asyncHandler(async (req, res) => {
   try {
     const eventId = req.params.eventId;
@@ -46,7 +57,7 @@ exports.removeUserEvent = asyncHandler(async (req, res) => {
 
     await removeRoleByEventId(userId, eventId);
 
-    res.status(200).json({ message: "Evento eliminado correctamente" });
+    res.status(200).send({ message: "Evento eliminado correctamente" });
   } catch (error) {
     res.status(500).send("Error al eliminar el evento");
   }
@@ -110,6 +121,16 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
   }
 });
 
+exports.getPastUserEvents = asyncHandler(async (req, res) => {
+  try {
+    let events = await getUserEvents(req.user._id);
+    events = events.filter((item) => item.event_date <= new Date());
+    res.status(200).send(events);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 exports.getUserEvents = asyncHandler(async (req, res) => {
   try {
     let events;
@@ -127,6 +148,7 @@ exports.getUserEvents = asyncHandler(async (req, res) => {
       };
     } else {
       events = await getUserEvents(req.user._id);
+      events = events.filter((item) => item.event_date > new Date());
     }
     res.status(200).send(events);
   } catch (error) {
@@ -166,7 +188,6 @@ exports.getEventsByCategory = asyncHandler(async (req, res) => {
 exports.getEventsByUser = asyncHandler(async (req, res) => {
   try {
     const user = await searchByUsername(req.query.query);
-    console.log(user);
     const events = await getEventsByUser(user);
     res.status(200).send(events);
   } catch (error) {

@@ -150,7 +150,9 @@ exports.getEventsByQuery = async (text) => {
 
 exports.getUserEvents = async (userId) => {
   try {
-    const roles = await Role.find({ user: userId }).populate({
+    const roles = await Role.find({
+      user: userId,
+    }).populate({
       path: "event",
       model: "Event",
       populate: {
