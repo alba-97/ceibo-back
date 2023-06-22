@@ -9,14 +9,19 @@ const {
   updateEventData,
   getOrganizer,
   checkEdit,
+  getEventsByCategory,
+  getEventsByUser,
+  getEventsByQuery,
 } = require("../services/events");
 
 const {
   createNewRole,
   removeRoleByEventId,
   rateEvent,
+  userRating,
 } = require("../services/roles");
-const { getUserById } = require("../services/users");
+
+const { getUserById, searchByUsername } = require("../services/users");
 
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
@@ -32,6 +37,16 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
     res.status(201).send(event);
   } catch (error) {
     res.status(400).send(error.message);
+  }
+});
+
+exports.userRating = asyncHandler(async (req, res) => {
+  try {
+    const rating = await userRating(req.params.id, req.user._id);
+    res.status(200).send({ rating });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error al obtener rating");
   }
 });
 
@@ -116,6 +131,16 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
   }
 });
 
+exports.getPastUserEvents = asyncHandler(async (req, res) => {
+  try {
+    let events = await getUserEvents(req.user._id);
+    events = events.filter((item) => item.event_date <= new Date());
+    res.status(200).send(events);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 exports.getUserEvents = asyncHandler(async (req, res) => {
   try {
     let events;
@@ -133,6 +158,7 @@ exports.getUserEvents = asyncHandler(async (req, res) => {
       };
     } else {
       events = await getUserEvents(req.user._id);
+      events = events.filter((item) => item.event_date > new Date());
     }
     res.status(200).send(events);
   } catch (error) {
@@ -144,6 +170,35 @@ exports.getFilteredEvents = asyncHandler(async (req, res) => {
   try {
     const user = await getUserById(req.user._id);
     const events = await getFilteredEvents(user.preferences);
+    res.status(200).send(events);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+exports.getEventsByQuery = asyncHandler(async (req, res) => {
+  try {
+    const events = await getEventsByQuery(req.query.query);
+    res.status(200).send(events);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error);
+  }
+});
+
+exports.getEventsByCategory = asyncHandler(async (req, res) => {
+  try {
+    const events = await getEventsByCategory(req.query.query);
+    res.status(200).send(events);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+exports.getEventsByUser = asyncHandler(async (req, res) => {
+  try {
+    const user = await searchByUsername(req.query.query);
+    const events = await getEventsByUser(user);
     res.status(200).send(events);
   } catch (error) {
     res.status(400).send(error);

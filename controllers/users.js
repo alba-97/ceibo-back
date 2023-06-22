@@ -16,7 +16,11 @@ require("dotenv").config();
 
 const TWILIO_SID = process.env.TWILIO_SID;
 const TWILIO_TOKEN = process.env.TWILIO_TOKEN;
-const client = require("twilio")(TWILIO_SID, TWILIO_TOKEN);
+
+let client;
+if (TWILIO_SID && TWILIO_TOKEN) {
+  client = require("twilio")(TWILIO_SID, TWILIO_TOKEN);
+}
 
 exports.inviteUsers = asyncHandler(async (req, res) => {
   try {
@@ -28,7 +32,7 @@ exports.inviteUsers = asyncHandler(async (req, res) => {
       if (req.body.method == "email") {
         const to = invitedUser.email;
         const subject = `¡${user.username} te ha invitado a un evento!`;
-        const html = `${user.username} te invitó a ${event} del Club del Plan: <a href="clubdelplan://${req.body.plan._id}">Haz click aquí</a> para entrar`;
+        const html = `${user.username} te invitó a ${event} del Club del Plan: <a href="https://celadon-cat-51ac3b.netlify.app/?id=${req.body.plan._id}">Haz click aquí</a> para entrar`;
 
         const mailOptions = {
           from: process.env.EMAIL_USER,
@@ -39,7 +43,7 @@ exports.inviteUsers = asyncHandler(async (req, res) => {
 
         await transporter.sendMail(mailOptions);
       } else if (req.body.method == "phone" && invitedUser.phone) {
-        const text = `${user.username} te invitó a ${event} del Club del Plan: https://www.ejemplo.com/`;
+        const text = `${user.username} te invitó a ${event} del Club del Plan: https://celadon-cat-51ac3b.netlify.app/?id=${req.body.plan._id}`;
         await client.messages.create({
           body: text,
           from: `whatsapp:+${process.env.TWILIO_NUMBER}`,

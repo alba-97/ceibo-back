@@ -77,13 +77,14 @@ exports.generateData = async () => {
         const role = j == i ? "Organizador" : "Participante";
         const user = users[i];
         const event = events[j];
-        const rating = role !== "Organizador" ? Math.random() * 5 : null;
-        if (nRoles == 0) {
-          await createNewRole(user._id, event._id, role, rating);
-          console.log(
-            `${user.username} agregado a ${event.title} como ${role} (${rating})`
-          );
-        }
+        const rating =
+          role !== "Organizador" && user.username !== "clubDelPlan"
+            ? Math.random() * 5
+            : null;
+        await createNewRole(user._id, event._id, role, rating);
+        console.log(
+          `${user.username} agregado a ${event.title} como ${role} (${rating})`
+        );
       }
     }
   }

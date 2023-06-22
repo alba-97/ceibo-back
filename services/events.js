@@ -90,9 +90,69 @@ exports.getFilteredEvents = async (preferences) => {
   }
 };
 
+exports.getEventsByCategory = async (category) => {
+  try {
+    category = await Category.findOne({
+      name: { $regex: category, $options: "i" },
+    });
+    category = category._id;
+
+    const events = await Event.find({
+      category,
+    })
+      .populate({
+        path: "category",
+        model: "Category",
+      })
+      .exec();
+    return events;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.getEventsByUser = async (user) => {
+  try {
+    const roles = await Role.find({ user: user._id }).populate({
+      path: "event",
+      model: "Event",
+      populate: {
+        path: "category",
+        select: "name",
+        model: "Category",
+      },
+    });
+    const events = roles.filter((role) => role.event).map((role) => role.event);
+    return events;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.getEventsByQuery = async (text) => {
+  try {
+    const events = await Event.find({
+      $or: [
+        { title: { $regex: text, $options: "i" } },
+        { description: { $regex: text, $options: "i" } },
+      ],
+    })
+      .populate({
+        path: "category",
+        model: "Category",
+      })
+      .exec();
+    return events;
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.getUserEvents = async (userId) => {
   try {
-    const roles = await Role.find({ user: userId }).populate({
+    const roles = await Role.find({
+      user: userId,
+    }).populate({
       path: "event",
       model: "Event",
       populate: {
