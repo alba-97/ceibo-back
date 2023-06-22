@@ -8,7 +8,11 @@ const {
   getUsers,
   getUserById,
   updateUser,
+  addFriend,
+  getUserFriends,
+  removeUserFriend,
 } = require("../services/users");
+const User = require("../models/User");
 
 const transporter = require("../mailTransporter");
 
@@ -204,5 +208,33 @@ exports.updateUser = asyncHandler(async (req, res) => {
     } else {
       res.status(500).send({ error: "Error del servidor" });
     }
+  }
+});
+
+exports.addFriend = asyncHandler(async (req, res) => {
+  try {
+    await addFriend(req.user._id, req.body.friendId);
+    res.sendStatus(204);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.removeUserFriend = asyncHandler(async (req, res) => {
+  try {
+    console.log("estoy en removeUserFriendController");
+    await removeUserFriend(req.body.userId, req.params.id);
+    res.sendStatus(204);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+exports.getUserFriends = asyncHandler(async (req, res) => {
+  try {
+    const userFriends = await getUserFriends(req.user._id);
+    res.send(userFriends).status(200);
+  } catch (error) {
+    console.log(error);
   }
 });
