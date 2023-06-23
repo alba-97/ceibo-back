@@ -25,6 +25,15 @@ exports.findUserByUsername = async (username) => {
   }
 };
 
+exports.findUserByEmail = async (email) => {
+  try {
+    const user = await User.findOne({ email });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.searchByUsername = async (username) => {
   try {
     const user = await User.findOne({
@@ -49,6 +58,7 @@ exports.addUser = async (userData) => {
   try {
     const user = new User(userData);
     await user.validate();
+
     await user.save();
   } catch (error) {
     throw error;
