@@ -77,7 +77,6 @@ exports.getUsers = async () => {
 exports.getUserById = async (userId) => {
   try {
     const user = await User.findById(userId, "-password -salt -__v");
-    console.log("getUserById", user);
     return user;
   } catch (error) {
     throw error;
