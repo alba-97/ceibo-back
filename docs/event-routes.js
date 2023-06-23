@@ -63,6 +63,7 @@
  *          start_time: 15:15
  *          end_time: 16:16
  */
+
 //DELETE EVENTS
 /**
  * @swagger
@@ -83,6 +84,7 @@
  *       404:
  *         description: an error has occurred
  */
+
 //CREATE A EVENT
 /**
  * @swagger
@@ -103,6 +105,7 @@
  *         description: an error has occurred
  *
  */
+
 // GET ALL EVENTS
 /**
  * @swagger
@@ -121,6 +124,7 @@
  *       404:
  *         description: an error has occurred
  */
+
 // GET ONE EVENT
 /**
  * @swagger
@@ -146,6 +150,7 @@
  *       404:
  *         description: event not found
  */
+
 // UPDATE ONE EVENT
 /**
  * @swagger
@@ -171,4 +176,99 @@
  *         description: user updated correctly
  *       404:
  *         description: user not found
+ */
+
+//REMOVE USER EVENT
+/**
+ * @swagger
+ * /api/events/stop-participating/{eventId}:
+ *   delete:
+ *     summary: Delete a user event
+ *     tags:
+ *       - User Events
+ *     parameters:
+ *       - in: path
+ *         name: eventId
+ *         required: true
+ *         description: Event ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User event deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Exit message
+ *                   example: User event deleted successfully
+ *       500:
+ *         description: an error ocurred erasing the user event
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: an error ocurred erasing the user event
+ */
+
+//ADD USER EVENT
+/**
+ * @swagger
+ * /api/events/enroll:
+ *   post:
+ *     summary: User event added succesfully
+ *     tags:
+ *       - User Events
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               eventId:
+ *                 type: string
+ *                 description: Event id
+ *             example:
+ *               eventId: 1
+ *     responses:
+ *       200:
+ *         description: User event added successfully
+ *       400:
+ *         description: an error ocurred
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Error Messagge
+ */
+
+//GET FILTERED EVENTS
+/**
+ * @swagger
+ * /api/events:
+ *   get:
+ *     summary: Obtiene eventos filtrados según las preferencias del usuario
+ *     tags:
+ *       - Events
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: OK. Devuelve una lista de eventos filtrados.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Event'
+ *       400:
+ *         description: Error de solicitud. Devuelve el mensaje de error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
