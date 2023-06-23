@@ -13,7 +13,9 @@ function generateToken(payload) {
 function validateToken(token) {
   try {
     return jwt.verify(token.split(" ")[1], secret);
-  } catch (error) {}
+  } catch (error) {
+    console.log("error validate token", error);
+  }
 }
 
 module.exports = { generateToken, validateToken };

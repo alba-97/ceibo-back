@@ -8,6 +8,7 @@ const {
   getUsers,
   getUserById,
   updateUser,
+  findUserByEmail,
   addFriend,
   getUserFriends,
   removeUserFriend,
@@ -73,19 +74,17 @@ exports.login = asyncHandler(async (req, res) => {
       }
     } else {
       user = await findUserByUsername(req.body.username);
+      if (!user) {
+        return res.status(404).send("Datos no válidos");
+      }
+      const isValid = await validateUserPassword(user, req.body.password);
+      if (!isValid) {
+        return res.status(404).send("Datos no válidos");
+      }
+      let { _id, username, email } = user;
+      const token = generateToken({ _id, username, email });
+      res.status(200).send({ token });
     }
-    if (!user) {
-      return res.status(404).send("Datos no válidos");
-    }
-
-    const isValid = await validateUserPassword(user, req.body.password);
-    if (!isValid) {
-      return res.status(404).send("Datos no válidos");
-    }
-
-    let { _id, username, email } = user;
-    const token = generateToken({ _id, username, email });
-    res.status(200).send({ token });
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -158,6 +157,16 @@ exports.getUsers = asyncHandler(async (req, res) => {
   }
 });
 
+exports.findByEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await findUserByEmail(email);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send("Error al buscar el usuario por correo electrónico");
+  }
+};
+
 exports.me = asyncHandler(async (req, res) => {
   const user = await getUserById(req.user._id);
   await user.populate({
@@ -222,7 +231,6 @@ exports.addFriend = asyncHandler(async (req, res) => {
 
 exports.removeUserFriend = asyncHandler(async (req, res) => {
   try {
-    console.log("estoy en removeUserFriendController");
     await removeUserFriend(req.body.userId, req.params.id);
     res.sendStatus(204);
   } catch (error) {

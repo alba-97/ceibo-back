@@ -25,6 +25,15 @@ exports.findUserByUsername = async (username) => {
   }
 };
 
+exports.findUserByEmail = async (email) => {
+  try {
+    const user = await User.findOne({ email });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.searchByUsername = async (username) => {
   try {
     const user = await User.findOne({
@@ -49,6 +58,7 @@ exports.addUser = async (userData) => {
   try {
     const user = new User(userData);
     await user.validate();
+
     await user.save();
   } catch (error) {
     throw error;
@@ -67,6 +77,7 @@ exports.getUsers = async () => {
 exports.getUserById = async (userId) => {
   try {
     const user = await User.findById(userId, "-password -salt -__v");
+    console.log("getUserById", user);
     return user;
   } catch (error) {
     throw error;
@@ -114,7 +125,6 @@ exports.removeUserFriend = async (userId, friendId) => {
       (friend) => friend._id.toString() !== userFriendIdString
     );
     await user.save();
-    console.log("user friends", user.friends);
 
     friend.friends = friendFriends.filter(
       (friend) => friend._id.toString() !== friendUserIdString
