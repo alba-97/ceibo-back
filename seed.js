@@ -45,6 +45,7 @@ exports.generateData = async () => {
         category: data.events[i].category,
         start_time: data.events[i].start_time,
         end_time: data.events[i].end_time,
+        private: data.events[i].private,
       });
       console.log(`Evento ${event.title} creado`);
     } catch {

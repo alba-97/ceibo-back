@@ -23,8 +23,8 @@ const EventSchema = new mongoose.Schema({
   },
   min_age: { type: Number, default: 0 },
   max_age: { type: Number, default: 99 },
-  min_to_pay: { type: Number },
-  total_to_pay: { type: Number },
+  min_to_pay: { type: Number, default: 0 },
+  total_to_pay: { type: Number, default: 0 },
   link_to_pay: { type: String, default: "" },
   deadline_to_pay: {
     type: Date,
@@ -45,7 +45,7 @@ const EventSchema = new mongoose.Schema({
     required: [true, "Seleccione la hora de inicio y finalización del evento"],
   },
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-  public: { type: Boolean, default: true },
+  private: { type: Boolean, default: false },
 });
 
 EventSchema.index({ title: 1, event_date: 1, location: 1 }, { unique: true });

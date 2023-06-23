@@ -196,7 +196,8 @@
       "img": "https://cdn.pixabay.com/photo/2018/05/04/10/08/cheese-3373604_1280.jpg",
       "category": "Comidas y bebidas",
       "start_time": "13",
-      "end_time": "15"
+      "end_time": "15",
+      "private": true
     }
   ],
   "roles": [
