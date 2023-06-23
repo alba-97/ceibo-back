@@ -61,7 +61,7 @@ exports.findEventById = async (eventId) => {
 
 exports.getAllEvents = async () => {
   try {
-    const allEvents = await Event.find()
+    const allEvents = await Event.find({ private: false })
       .populate({
         path: "category",
         model: "Category",
@@ -76,6 +76,7 @@ exports.getAllEvents = async () => {
 exports.getFilteredEvents = async (preferences) => {
   try {
     const events = await Event.find({
+      private: false,
       event_date: { $gte: new Date() },
       category: { $in: preferences },
     })
@@ -98,6 +99,7 @@ exports.getEventsByCategory = async (category) => {
     category = category._id;
 
     const events = await Event.find({
+      private: false,
       category,
     })
       .populate({
@@ -113,7 +115,7 @@ exports.getEventsByCategory = async (category) => {
 
 exports.getEventsByUser = async (user) => {
   try {
-    const roles = await Role.find({ user: user._id }).populate({
+    const roles = await Role.find({ user: user._id, private: false }).populate({
       path: "event",
       model: "Event",
       populate: {
@@ -132,6 +134,7 @@ exports.getEventsByUser = async (user) => {
 exports.getEventsByQuery = async (text) => {
   try {
     const events = await Event.find({
+      private: false,
       $or: [
         { title: { $regex: text, $options: "i" } },
         { description: { $regex: text, $options: "i" } },
