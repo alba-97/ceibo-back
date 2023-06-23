@@ -8,6 +8,7 @@ const {
   getUsers,
   getUserById,
   updateUser,
+  findUserByEmail,
 } = require("../services/users");
 
 const transporter = require("../mailTransporter");
@@ -69,20 +70,15 @@ exports.login = asyncHandler(async (req, res) => {
       }
     } else {
       user = await findUserByUsername(req.body.username);
-
       if (!user) {
         return res.status(404).send("Datos no válidos");
       }
       const isValid = await validateUserPassword(user, req.body.password);
-      console.log("isvalid", isValid);
-
       if (!isValid) {
         return res.status(404).send("Datos no válidos");
       }
       let { _id, username, email } = user;
-      console.log("user data ", _id, username, email);
       const token = generateToken({ _id, username, email });
-      console.log("soy req.user", req.user._id);
       res.status(200).send({ token });
     }
   } catch (error) {
@@ -156,6 +152,16 @@ exports.getUsers = asyncHandler(async (req, res) => {
     res.send({ message: error });
   }
 });
+
+exports.findByEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await findUserByEmail(email);
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(500).send("Error al buscar el usuario por correo electrónico");
+  }
+};
 
 exports.me = asyncHandler(async (req, res) => {
   const user = await getUserById(req.user._id);
