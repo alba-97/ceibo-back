@@ -5,7 +5,7 @@ exports.createNewEvent = async (eventData) => {
     if (eventData.category) {
       let category = await Category.findOne({ name: eventData.category });
       if (!category) {
-        category = await Category.create({ name: eventData.category });
+        throw new Error("Ingrese una categoría para el evento");
       }
       eventData.category = category._id;
     } else {
@@ -96,18 +96,23 @@ exports.getEventsByCategory = async (category) => {
     category = await Category.findOne({
       name: { $regex: category, $options: "i" },
     });
-    category = category._id;
+    if (category) {
+      category = category._id;
 
-    const events = await Event.find({
-      private: false,
-      category,
-    })
-      .populate({
-        path: "category",
-        model: "Category",
+      const events = await Event.find({
+        private: false,
+        category,
       })
-      .exec();
-    return events;
+        .populate({
+          path: "category",
+          model: "Category",
+        })
+        .exec();
+      return events;
+    } else {
+      console.log(123);
+      res.send("Evento no encontrado");
+    }
   } catch (error) {
     throw error;
   }

@@ -198,8 +198,12 @@ exports.getEventsByCategory = asyncHandler(async (req, res) => {
 exports.getEventsByUser = asyncHandler(async (req, res) => {
   try {
     const user = await searchByUsername(req.query.query);
-    const events = await getEventsByUser(user);
-    res.status(200).send(events);
+    if (user) {
+      const events = await getEventsByUser(user);
+      res.status(200).send(events);
+    } else {
+      res.status(400).send("Evento no encontrado");
+    }
   } catch (error) {
     res.status(400).send(error);
   }
