@@ -62,6 +62,14 @@ const UserSchema = mongoose.Schema({
   address: { type: String },
   preferences: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   new_user: { type: Boolean, default: true },
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      timestamps: true,
+      toJSON: { virtuals: true },
+    },
+  ],
 });
 
 UserSchema.methods.validatePassword = async function (password) {
