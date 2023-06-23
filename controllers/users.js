@@ -222,7 +222,6 @@ exports.addFriend = asyncHandler(async (req, res) => {
 
 exports.removeUserFriend = asyncHandler(async (req, res) => {
   try {
-    console.log("estoy en removeUserFriendController");
     await removeUserFriend(req.body.userId, req.params.id);
     res.sendStatus(204);
   } catch (error) {
