@@ -225,7 +225,7 @@ exports.addFriend = asyncHandler(async (req, res) => {
     await addFriend(req.user._id, req.body.friendId);
     res.sendStatus(204);
   } catch (error) {
-    console.log(error);
+    res.status(400).send(error);
   }
 });
 
@@ -234,7 +234,7 @@ exports.removeUserFriend = asyncHandler(async (req, res) => {
     await removeUserFriend(req.body.userId, req.params.id);
     res.sendStatus(204);
   } catch (error) {
-    console.log(error);
+    res.status(400).send(error);
   }
 });
 
@@ -243,6 +243,6 @@ exports.getUserFriends = asyncHandler(async (req, res) => {
     const userFriends = await getUserFriends(req.user._id);
     res.send(userFriends).status(200);
   } catch (error) {
-    console.log(error);
+    res.status(400).send(error);
   }
 });
