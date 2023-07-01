@@ -58,7 +58,6 @@ exports.inviteUsers = asyncHandler(async (req, res) => {
     }
     res.status(200).send("Invitaciones enviadas");
   } catch (error) {
-    console.log(error);
     res.status(404).send(error);
   }
 });
@@ -97,9 +96,7 @@ exports.signup = async (req, res) => {
       res.status(200).send("user signed up succesfully");
     } else {
       await addUser(req.body);
-      res
-        .status(200)
-        .send({ status: "Hecho", message: "Usuario registrado con éxito" });
+      res.status(200).send("Usuario registrado con éxito");
     }
   } catch (error) {
     res.status(400).send(error.message);
@@ -110,7 +107,7 @@ exports.addPreferences = async (req, res) => {
   try {
     const user = await getUserById(req.user._id);
     await addPreferences(user, req.body);
-    res.status(200).send({ message: "Preferencias añadidas" });
+    res.status(200).send("Preferencias añadidas");
   } catch (error) {
     console.error(error);
     res.status(400).send(error.message);
@@ -153,7 +150,7 @@ exports.getUsers = asyncHandler(async (req, res) => {
     }
     res.send(users);
   } catch (error) {
-    res.send({ message: error });
+    res.send(error);
   }
 });
 
@@ -196,7 +193,7 @@ exports.getUser = asyncHandler(async (req, res) => {
     }
     res.send(user);
   } catch (error) {
-    res.send({ message: error });
+    res.send(error);
   }
 });
 
@@ -213,9 +210,9 @@ exports.updateUser = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     if (error.response) {
-      res.status(error.response.status).send({ error: error.response.data });
+      res.status(error.response.status).send(error.response.data);
     } else {
-      res.status(500).send({ error: "Error del servidor" });
+      res.status(500).send("Error del servidor");
     }
   }
 });

@@ -26,7 +26,6 @@ const { getUserById, searchByUsername } = require("../services/users");
 exports.createNewEvent = asyncHandler(async (req, res) => {
   try {
     let event;
-    // Verificar si se están ejecutando pruebas de Swagger
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
     if (isSwaggerTest) {
       event = req.body;
@@ -45,7 +44,6 @@ exports.userRating = asyncHandler(async (req, res) => {
     const rating = await userRating(req.params.id, req.user._id);
     res.status(200).send({ rating });
   } catch (error) {
-    console.log(error);
     res.status(500).send("Error al obtener rating");
   }
 });
@@ -61,7 +59,7 @@ exports.removeUserEvent = asyncHandler(async (req, res) => {
 
       await removeRoleByEventId(userId, eventId);
 
-      res.status(200).json({ message: "Evento eliminado correctamente" });
+      res.status(200).send("Evento eliminado correctamente");
     }
   } catch (error) {
     res.status(500).send("Error al eliminar el evento");
@@ -75,7 +73,8 @@ exports.addUserEvent = asyncHandler(async (req, res) => {
       res.status(200).send("user event added successfully");
     } else {
       await createNewRole(req.user._id, req.body.eventId, "Participante");
-      res.sendStatus(200);
+      const event = await findEventById(req.body.eventId);
+      res.status(200).send(event);
     }
   } catch (error) {
     res.status(400).send(error.message);
@@ -181,7 +180,6 @@ exports.getEventsByQuery = asyncHandler(async (req, res) => {
     const events = await getEventsByQuery(req.query.query);
     res.status(200).send(events);
   } catch (error) {
-    console.log(error);
     res.status(400).send(error);
   }
 });

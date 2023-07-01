@@ -110,7 +110,6 @@ exports.getEventsByCategory = async (category) => {
         .exec();
       return events;
     } else {
-      console.log(123);
       res.send("Evento no encontrado");
     }
   } catch (error) {

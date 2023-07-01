@@ -67,8 +67,10 @@ EventSchema.post("save", function (error, _, next) {
 EventSchema.post("validate", function (error, _, next) {
   if (error.name === "ValidationError") {
     let message;
-    if (error.errors.start_time || error.errors.end_time) {
+    if (error.errors.start_time) {
       message = error.errors.start_time.message;
+    } else if (error.errors.end_time) {
+      message = error.errors.end_time.message;
     } else if (error.errors.title) {
       message = error.errors.title.message;
     } else if (error.errors.description) {
