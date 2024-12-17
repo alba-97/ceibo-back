@@ -5,7 +5,7 @@ import { ICategory } from "./Category";
 import { isURL } from "validator";
 
 export interface IEvent {
-  _id: number;
+  _id: string;
   title: string;
   description: string;
   img?: string;
@@ -21,7 +21,7 @@ export interface IEvent {
   category: ICategory;
   start_time: string;
   end_time: string;
-  comments: IComment[] | number[];
+  comments: IComment[];
   private: boolean;
   ended: boolean;
   save: () => {};

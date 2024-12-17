@@ -32,7 +32,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
     if (isSwaggerTest) return res.send("Category deleted correctly");
 
-    await categoryService.removeCategory(+req.params.id);
+    await categoryService.removeCategory(req.params.id);
     return res.sendStatus(204);
   } catch (err) {
     handleError(res, err);

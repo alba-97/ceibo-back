@@ -1,0 +1,6 @@
+export interface RoleDto {
+  userId: string;
+  eventId: string;
+  rating?: number;
+  role: string;
+}

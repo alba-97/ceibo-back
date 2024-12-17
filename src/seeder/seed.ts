@@ -61,7 +61,7 @@ const generateData = async () => {
   const nComments = allComments.length;
 
   for (let i = 0; i < data.roles.length; i++) {
-    const user = await userService.findUserByUsername(data.roles[i].user);
+    const user = await userService.getUser({ username: data.roles[i].user });
     const event = await Event.findOne({ title: data.roles[i].event });
     if (user) {
       users.push(user);
@@ -98,7 +98,7 @@ const generateData = async () => {
       for (let j = 0; j < users.length; j++) {
         if (j !== i && counter < comments.length) {
           const data = { user: users[j]._id, text: comments[counter] };
-          await commentService.addComment(events[i], data);
+          await commentService.addComment(events[i]._id, data.user, data.text);
           console.log(
             `Comentario ${counter} de ${users[j].username} agregado a ${events[i].title}`
           );

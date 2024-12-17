@@ -3,6 +3,7 @@ import { IUser } from "./User";
 import { IEvent } from "./Event";
 
 export interface IRole {
+  _id: string;
   user: IUser;
   event: IEvent;
   role: string;

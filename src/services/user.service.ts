@@ -1,16 +1,14 @@
-import { IMailOptions } from "../interfaces/Email";
-import { IEventQuery } from "../interfaces/Event";
+import { generateToken } from "../config/tokens";
 import { HttpError } from "../interfaces/HttpError";
 import { InvitationData } from "../interfaces/Invitation";
-import { IWhatsappOptions } from "../interfaces/Whatsapp";
-import { User } from "../models";
+import { UserQuery } from "../interfaces/User";
 import { ICategory } from "../models/Category";
 import { IUser } from "../models/User";
 import emailRepository from "../repositories/email.repository";
 import twilioRepository from "../repositories/twilio.repository";
 import userRepository from "../repositories/user.repository";
 
-const inviteUsers = async (data: InvitationData, userId?: number) => {
+const inviteUsers = async (data: InvitationData, userId?: string) => {
   if (!userId) throw new HttpError(403, "Forbidden");
   const usernames = data.users;
   const eventTitle = data.plan.title;
@@ -41,26 +39,25 @@ const inviteUsers = async (data: InvitationData, userId?: number) => {
   });
 };
 
+const login = async (username: string, password: string) => {
+  const user = await userRepository.getUserByUsername(username);
+  if (!user) throw new HttpError(401, "Invalid username or password");
+
+  const isValid = await user.validatePassword(password);
+  if (!isValid) throw new HttpError(401, "Invalid username or password");
+
+  let { _id, email } = user;
+  const token = generateToken({ _id, username, email });
+  return token;
+};
+
 const addPreferences = async (user: IUser, categories: ICategory[]) => {
   user.preferences = [...categories];
   await user.save();
 };
 
-const findUserByUsername = async (username: string): Promise<IUser | null> => {
-  const user = await userRepository.getUserByUsername(username);
-  return user;
-};
-
-const findUserByEmail = async (email: string) => {
-  const user = await User.findOne({ email });
-  return user;
-};
-
-const searchByUsername = async (query: IEventQuery) => {
-  const { username } = query;
-  const user = await User.findOne({
-    username: { $regex: username, $options: "i" },
-  });
+const getUser = async (userQuery: UserQuery): Promise<IUser | null> => {
+  const user = await userRepository.getUser(userQuery);
   return user;
 };
 
@@ -69,49 +66,44 @@ const validateUserPassword = async (user: IUser, password: string) => {
   return isValid;
 };
 
-const addUser = async (userData: Partial<IUser>) => {
-  const user = new User(userData);
-  await user.validate();
-  await user.save();
+const addUser = async (userData: IUser) => {
+  await userRepository.addUser(userData);
 };
 
 const getUsers = async () => {
-  return await User.find({}, { password: 0, salt: 0, __v: 0 });
+  return await userRepository.getUsers();
 };
 
-const getUserById = async (userId?: number) => {
-  if (!userId) throw new HttpError(403, "Forbidden");
+const getUserById = async (userId: string) => {
   const user = await userRepository.getUserById(userId);
   if (!user) throw new HttpError(404, "User not found");
   return user;
 };
 
-const updateUser = async (userId: number, userData: Partial<IUser>) => {
-  const user = await User.findByIdAndUpdate(userId, userData).select({
-    password: 0,
-    salt: 0,
-    __v: 0,
-  });
+const updateUser = async (userId: string, userData: Partial<IUser>) => {
+  const user = await userRepository.updateById(userId, userData);
   return user;
 };
-const addFriend = async (userId: number, friendId: number) => {
-  const user = await getUserById(userId);
+
+const addFriend = async (userId: string, friendId: string) => {
+  const user = await userRepository.getUserById(userId);
   if (!user) return;
 
-  const friend = await getUserById(friendId);
+  const friend = await userRepository.getUserById(friendId);
   if (!friend) return;
 
   user.friends.push(friend);
   await user.save();
+
   friend.friends.push(user);
   await friend.save();
 };
 
-const removeUserFriend = async (userId: number, friendId: number) => {
-  const user = await getUserById(userId);
+const removeUserFriend = async (userId: string, friendId: string) => {
+  const user = await userRepository.getUserById(userId);
   if (!user) return;
 
-  const friend = await getUserById(friendId);
+  const friend = await userRepository.getUserById(friendId);
   if (!friend) return;
 
   const userFriends = await getUserFriends(userId);
@@ -131,18 +123,16 @@ const removeUserFriend = async (userId: number, friendId: number) => {
   await friend.save();
 };
 
-const getUserFriends = async (userId: number) => {
-  const user = await getUserById(userId);
-  const userFriend = await User.populate(user, { path: "friends" });
-  return userFriend.friends;
+const getUserFriends = async (userId: string) => {
+  const user = await userRepository.getUserById(userId);
+  if (!user) throw new HttpError(404, "User not found");
+  return user.friends;
 };
 
 export default {
   inviteUsers,
   addPreferences,
-  findUserByUsername,
-  findUserByEmail,
-  searchByUsername,
+  getUser,
   validateUserPassword,
   addUser,
   getUsers,
@@ -151,4 +141,5 @@ export default {
   addFriend,
   removeUserFriend,
   getUserFriends,
+  login,
 };

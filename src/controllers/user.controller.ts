@@ -18,28 +18,16 @@ const inviteUsers = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
   try {
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
-    let user;
     if (isSwaggerTest) {
       const { username, password } = req.body;
       if (username === "ester123" && password === "Ester123456") {
         res.status(200).send("user logged successfully");
       }
-    } else {
-      user = await userService.findUserByUsername(req.body.username);
-      if (!user) {
-        return res.status(404).send("Datos no válidos");
-      }
-      const isValid = await userService.validateUserPassword(
-        user,
-        req.body.password
-      );
-      if (!isValid) {
-        return res.status(404).send("Datos no válidos");
-      }
-      let { _id, username, email } = user;
-      const token = generateToken({ _id, username, email });
-      res.status(200).send({ token });
+      return;
     }
+    const { username, password } = req.body;
+    const token = await userService.login(username, password);
+    res.status(200).send({ token });
   } catch (err) {
     handleError(res, err);
   }
@@ -103,7 +91,7 @@ const getUsers = async (req: Request, res: Response) => {
 const findByEmail = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    const user = await userService.findUserByEmail(email);
+    const user = await userService.getUser({ email });
     res.status(200).send(user);
   } catch (err) {
     handleError(res, err);
@@ -140,7 +128,7 @@ const getUser = async (req: Request, res: Response) => {
         address: "peronia 456",
       };
     } else {
-      user = await userService.getUserById(+req.params.id);
+      user = await userService.getUserById(req.params.id);
     }
     res.send(user);
   } catch (err) {
@@ -170,7 +158,7 @@ const addFriend = async (req: Request, res: Response) => {
 
 const removeUserFriend = async (req: Request, res: Response) => {
   try {
-    await userService.removeUserFriend(req.body.userId, +req.params.id);
+    await userService.removeUserFriend(req.body.userId, req.params.id);
     res.sendStatus(204);
   } catch (error) {
     res.status(400).send(error);

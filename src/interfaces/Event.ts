@@ -1,5 +1,9 @@
-export interface IEventQuery {
+import { ICategory } from "../models/Category";
+
+export interface EventQuery {
   searchTerm?: string;
-  category?: string;
+  categoryId?: string;
   username?: string;
+  future?: boolean;
+  preferences?: ICategory[];
 }

@@ -1,18 +1,28 @@
-import { Comment } from "../models";
-import { IComment } from "../models/Comment";
-import { IEvent } from "../models/Event";
+import { HttpError } from "../interfaces/HttpError";
+import fromCommentDtoToEntity from "../mappers/fromCommentDtoToEntity";
+import commentRepository from "../repositories/comment.repository";
+import userRepository from "../repositories/user.repository";
+import eventService from "./event.service";
 
-const addComment = async (event: IEvent, data: IComment) => {
-  const comment = new Comment(data);
-  await comment.populate({
-    path: "user",
-    model: "User",
-    select: "-password -salt",
+const addComment = async (eventId: string, userId: string, text: string) => {
+  const comment = fromCommentDtoToEntity({
+    userId,
+    text,
+    eventId,
   });
-  await comment.save();
-  event.comments = [...event.comments, comment] as IComment[];
+
+  const event = await eventService.findEventById(eventId);
+  if (!event) throw new HttpError(404, "Event not found");
+  comment.event = event;
+
+  const user = await userRepository.getUserById(userId);
+  if (!user) throw new HttpError(404, "User not found");
+  comment.user = user;
+
+  const newComment = await commentRepository.addComment(comment);
+  event.comments = [...event.comments, newComment];
   await event.save();
-  return comment;
+  return newComment;
 };
 
 export default { addComment };

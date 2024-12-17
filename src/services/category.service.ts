@@ -11,7 +11,7 @@ const createNewCategory = async (category: string) => {
   return createdCategory;
 };
 
-const removeCategory = async (categoryId: number) => {
+const removeCategory = async (categoryId: string) => {
   await Category.findByIdAndRemove(categoryId);
 };
 

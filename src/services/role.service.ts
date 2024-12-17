@@ -1,41 +1,48 @@
-import { Role } from "../models";
-import { IRole } from "../models/Role";
+import { RoleDto } from "../dto/role.dto";
+import { HttpError } from "../interfaces/HttpError";
+import fromRoleDtoToEntity from "../mappers/fromRoleDtoToEntity";
+import eventRepository from "../repositories/event.repository";
+import roleRepository from "../repositories/role.repository";
+import userRepository from "../repositories/user.repository";
 
 const createNewRole = async (
-  userId: number,
-  eventId: number,
+  userId: string,
+  eventId: string,
   role: string,
   rating?: number
 ) => {
-  const roleDto = {
-    user: userId,
-    event: eventId,
+  const roleDto: RoleDto = {
+    userId,
+    eventId,
     rating,
     role,
   };
-  const newRole = await new Role(roleDto).save();
-  await newRole.save();
+  const roleEntity = fromRoleDtoToEntity(roleDto);
+  const user = await userRepository.getUserById(userId);
+  if (!user) throw new HttpError(404, "User not found");
+  roleEntity.user = user;
+
+  const event = await eventRepository.getEventById(eventId);
+  if (!event) throw new HttpError(404, "Event not found");
+  roleEntity.event = event;
+
+  const newRole = await roleRepository.addRole(roleEntity);
   return newRole;
 };
 
-const rateEvent = async (userId: number, eventId: number, rating: number) => {
-  const role = await Role.findOne({ user: userId, event: eventId });
-  if (role && role.role != "Organizer") {
-    await Role.updateOne({ _id: role._id }, { rating });
-  }
+const rateEvent = async (userId: string, eventId: string, rating: number) => {
+  await roleRepository.rateEvent(eventId, userId, rating);
 };
 
-const userRating = async (eventId: number, userId: number) => {
-  const role = await Role.findOne({ user: userId, event: eventId });
+const userRating = async (eventId: string, userId: string) => {
+  const role = await roleRepository.getRole({ userId, eventId });
   return role?.rating;
 };
 
-const removeRoleByEventId = async (userId: number, eventId: number) => {
-  const role = await Role.findOne({ user: userId, event: eventId });
-  if (!role) {
-    throw new Error("El rol no existe");
-  }
-  await Role.findByIdAndRemove(role._id);
+const removeRoleByEventId = async (userId: string, eventId: string) => {
+  const role = await roleRepository.getRole({ userId, eventId });
+  if (!role) throw new HttpError(404, "Role not found");
+  await roleRepository.removeRoleById(role._id);
 };
 
 export default { createNewRole, rateEvent, userRating, removeRoleByEventId };

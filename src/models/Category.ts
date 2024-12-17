@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 export interface ICategory {
-  _id: number;
+  _id: string;
   name: string;
 }
 

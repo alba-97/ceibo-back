@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { roleService, eventService, userService } from "../services";
 import { IEvent } from "../models/Event";
 import { handleError } from "../utils/handleError";
+import { UserQuery } from "../interfaces/User";
+import { CategoryQuery } from "../interfaces/Category";
 
 const createNewEvent = async (req: Request, res: Response) => {
   try {
@@ -11,7 +13,7 @@ const createNewEvent = async (req: Request, res: Response) => {
       event = req.body;
     } else {
       event = await eventService.createNewEvent(req.body);
-      await roleService.createNewRole(+req.user._id, event._id, "Organizer");
+      await roleService.createNewRole(req.user._id, event._id, "Organizer");
     }
     res.status(201).send(event);
   } catch (err) {
@@ -21,7 +23,7 @@ const createNewEvent = async (req: Request, res: Response) => {
 
 const userRating = async (req: Request, res: Response) => {
   try {
-    const rating = await roleService.userRating(+req.params.id, +req.user._id);
+    const rating = await roleService.userRating(req.params.id, req.user._id);
     res.status(200).send({ rating });
   } catch (err) {
     return handleError(res, err);
@@ -37,7 +39,7 @@ const removeUserEvent = async (req: Request, res: Response) => {
       const eventId = req.params.eventId;
       const userId = req.user._id;
 
-      await roleService.removeRoleByEventId(userId, +eventId);
+      await roleService.removeRoleByEventId(userId, eventId);
 
       res.status(200).send("Evento eliminado correctamente");
     }
@@ -77,7 +79,7 @@ const getEvent = async (req: Request, res: Response) => {
         end_time: "16:16",
       };
     } else {
-      event = await eventService.findEventById(+req.params.id);
+      event = await eventService.findEventById(req.params.id);
     }
     res.status(200).send(event);
   } catch (err) {
@@ -150,7 +152,9 @@ const getFilteredEvents = async (req: Request, res: Response) => {
   try {
     const user = await userService.getUserById(req.user._id);
     if (!user) return;
-    const events = await eventService.getFilteredEvents(user.preferences);
+    const events = await eventService.getEventsByUserPreferences(
+      user.preferences
+    );
     res.status(200).send(events);
   } catch (error) {
     res.status(400).send(error);
@@ -168,17 +172,19 @@ const getEventsByQuery = async (req: Request, res: Response) => {
 
 const getEventsByCategory = async (req: Request, res: Response) => {
   try {
-    const events = await eventService.getEventsByCategory(req.query);
+    const { name }: CategoryQuery = req.query;
+    const events = await eventService.getEventsByCategory({ name });
     res.status(200).send(events);
   } catch (err) {
     return handleError(res, err);
   }
 };
 
-const getEventsByUser = async (req: Request, res: Response) => {
+const getEventsByUsername = async (req: Request, res: Response) => {
   try {
-    const user = await userService.searchByUsername(req.query);
-    if (!user) return res.status(400).send("Evento no encontrado");
+    const { username }: UserQuery = req.query;
+    const user = await userService.getUser({ username });
+    if (!user) return res.status(404).send("User not found");
     const events = await eventService.getEventsByUser(user);
     res.status(200).send(events);
   } catch (err) {
@@ -190,9 +196,9 @@ const deleteEvent = async (req: Request, res: Response) => {
   try {
     const isSwaggerTest = process.env.NODE_ENV === "swagger-test";
     if (isSwaggerTest) return res.send("Event deleted correctly");
-    const result = await eventService.checkEdit(+req.params.id, req.user._id);
+    const result = await eventService.checkEdit(req.params.id, req.user._id);
     if (!result) res.status(401).send("Acceso denegado");
-    await eventService.removeEvent(+req.params.id, req.user._id);
+    await eventService.removeEvent(req.params.id, req.user._id);
     res.status(201).send("Evento eliminado");
   } catch (err) {
     return handleError(res, err);
@@ -201,7 +207,7 @@ const deleteEvent = async (req: Request, res: Response) => {
 
 const checkUpdate = async (req: Request, res: Response) => {
   try {
-    const result = await eventService.checkEdit(+req.params.id, req.user._id);
+    const result = await eventService.checkEdit(req.params.id, req.user._id);
     res.status(200).send(result);
   } catch (err) {
     return handleError(res, err);
@@ -214,10 +220,10 @@ const updateEventData = async (req: Request, res: Response) => {
 
     if (isSwaggerTest) return res.status(200).send(req.body);
 
-    const result = await eventService.checkEdit(+req.params.id, req.user._id);
+    const result = await eventService.checkEdit(req.params.id, req.user._id);
     if (!result) res.status(401).send("Acceso denegado");
     const updatedEvent = await eventService.updateEventData(
-      +req.params.id,
+      req.params.id,
       req.body
     );
     res.status(201).send(updatedEvent);
@@ -228,7 +234,7 @@ const updateEventData = async (req: Request, res: Response) => {
 
 const getOrganizerAvgRating = async (req: Request, res: Response) => {
   try {
-    const organizer = await eventService.getOrganizerAvgRating(+req.params.id);
+    const organizer = await eventService.getOrganizerAvgRating(req.params.id);
     res.send(organizer);
   } catch (err) {
     return handleError(res, err);
@@ -237,7 +243,7 @@ const getOrganizerAvgRating = async (req: Request, res: Response) => {
 
 const rateEvent = async (req: Request, res: Response) => {
   try {
-    await roleService.rateEvent(req.user._id, +req.params.id, +req.body.rating);
+    await roleService.rateEvent(req.user._id, req.params.id, +req.body.rating);
     res.send({ message: "Se calificó el evento" });
   } catch (err) {
     return handleError(res, err);
@@ -250,7 +256,7 @@ export {
   getFilteredEvents,
   getEventsByQuery,
   getEventsByCategory,
-  getEventsByUser,
+  getEventsByUsername,
   deleteEvent,
   checkUpdate,
   updateEventData,

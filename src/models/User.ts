@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { ICategory } from "./Category";
 
 export interface IUser {
-  _id: number;
+  _id: string;
   username: string;
   password: string;
   salt: string;
