@@ -1,26 +1,7 @@
+import bcrypt from "bcrypt";
 import { isEmail, isMobilePhone, isURL, isStrongPassword } from "validator";
 import { Schema, model, Error as MongoError } from "mongoose";
-import bcrypt from "bcrypt";
-import { ICategory } from "./Category";
-
-export interface IUser {
-  _id: number;
-  username: string;
-  password: string;
-  salt: string;
-  first_name?: string;
-  last_name?: string;
-  email: string;
-  birthdate?: Date;
-  phone?: string;
-  profile_img?: string;
-  address?: string;
-  preferences: ICategory[];
-  new_user: boolean;
-  friends: IUser[];
-  validatePassword(password: string): Promise<boolean>;
-  save: () => {};
-}
+import { IUser } from "../interfaces/entities";
 
 const UserSchema = new Schema<IUser>({
   username: {

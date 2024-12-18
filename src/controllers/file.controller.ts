@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import fileService from "../services/file.service";
-import { handleError } from "../utils/handleError";
+import handleError from "../utils/handleError";
+import { fileService } from "../services";
 
 const uploadFile = async (req: Request, res: Response) => {
   try {

@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { IUser } from "../models/User";
+import { IUser } from "../interfaces/entities";
 dotenv.config();
 
 const secret = process.env.JWT_SECRET ?? "";

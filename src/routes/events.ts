@@ -14,7 +14,7 @@ import {
   checkUpdate,
   getEventsByQuery,
   getEventsByCategory,
-  getEventsByUser,
+  getEventsByUsername,
   userRating,
   getPastUserEvents,
 } from "../controllers/event.controller";
@@ -24,7 +24,7 @@ import validateUser from "../middleware/auth";
 router.get("/", getAllEvents);
 router.get("/search", getEventsByQuery);
 router.get("/search/category", getEventsByCategory);
-router.get("/search/user", getEventsByUser);
+router.get("/search/user", getEventsByUsername);
 
 router.post("/", validateUser, createNewEvent);
 router.get("/filter", validateUser, getFilteredEvents);

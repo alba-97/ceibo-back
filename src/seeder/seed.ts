@@ -1,10 +1,12 @@
 import data from "../data.json";
 import { User, Event, Role, Comment } from "../models";
-import eventService from "../services/event.service";
-import roleService from "../services/role.service";
-import userService from "../services/user.service";
-import commentService from "../services/comment.service";
-import categoryService from "../services/category.service";
+import {
+  eventService,
+  roleService,
+  userService,
+  commentService,
+  categoryService,
+} from "../services";
 
 const generateData = async () => {
   for (let i = 0; i < data.users.length; i++) {
@@ -61,7 +63,7 @@ const generateData = async () => {
   const nComments = allComments.length;
 
   for (let i = 0; i < data.roles.length; i++) {
-    const user = await userService.findUserByUsername(data.roles[i].user);
+    const user = await userService.getUser({ username: data.roles[i].user });
     const event = await Event.findOne({ title: data.roles[i].event });
     if (user) {
       users.push(user);
@@ -82,7 +84,13 @@ const generateData = async () => {
         if (role !== "Organizer" && user.username !== "clubDelPlan")
           rating = Math.random() * 5;
 
-        await roleService.createNewRole(user._id, event._id, role, rating);
+        await roleService.createNewRole({
+          userId: user._id,
+          eventId: event._id,
+          role,
+          rating,
+        });
+
         console.log(
           `${user.username} agregado a ${event.title} como ${role} (${rating})`
         );
@@ -98,7 +106,7 @@ const generateData = async () => {
       for (let j = 0; j < users.length; j++) {
         if (j !== i && counter < comments.length) {
           const data = { user: users[j]._id, text: comments[counter] };
-          await commentService.addComment(events[i], data);
+          await commentService.addComment(events[i]._id, data.user, data.text);
           console.log(
             `Comentario ${counter} de ${users[j].username} agregado a ${events[i].title}`
           );

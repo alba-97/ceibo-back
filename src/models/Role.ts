@@ -1,13 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IUser } from "./User";
-import { IEvent } from "./Event";
-
-export interface IRole {
-  user: IUser;
-  event: IEvent;
-  role: string;
-  rating?: number;
-}
+import { IRole } from "../interfaces/entities";
 
 const RoleSchema = new Schema<IRole>({
   user: { type: Schema.Types.ObjectId, ref: "User" },

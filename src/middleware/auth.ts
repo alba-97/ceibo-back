@@ -1,5 +1,5 @@
-import { validateToken } from "../config/tokens";
 import { Response, NextFunction, Request } from "express";
+import { validateToken } from "../config/tokens";
 
 function validateUser(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;

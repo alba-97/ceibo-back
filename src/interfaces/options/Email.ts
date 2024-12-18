@@ -1,6 +1,6 @@
-export interface IMailOptions {
+export default interface EmailOptions {
   email: string;
   username: string;
   eventTitle: string;
-  eventId: number;
+  eventId: string;
 }

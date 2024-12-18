@@ -1,7 +1,7 @@
 import twilio from "twilio";
-import { IWhatsappOptions } from "../interfaces/Whatsapp";
+import { WhatsappOptions } from "../interfaces/options";
 
-const sendWhatsapp = async (whatsappOptions: IWhatsappOptions) => {
+const sendWhatsapp = async (whatsappOptions: WhatsappOptions) => {
   const TWILIO_SID = process.env.TWILIO_SID;
   const TWILIO_TOKEN = process.env.TWILIO_TOKEN;
 

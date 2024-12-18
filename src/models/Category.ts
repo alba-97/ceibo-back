@@ -1,9 +1,5 @@
 import { Schema, model } from "mongoose";
-
-export interface ICategory {
-  _id: number;
-  name: string;
-}
+import { ICategory } from "../interfaces/entities";
 
 const CategorySchema = new Schema<ICategory>({
   name: { type: String, required: true, unique: true },

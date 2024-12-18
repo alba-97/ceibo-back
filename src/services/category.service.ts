@@ -1,18 +1,19 @@
-import { Category } from "../models";
+import { fromCategoryDtoToEntity } from "../mappers";
+import { categoryRepository } from "../repositories";
 
 const listCategories = async () => {
-  let categories = await Category.find();
+  let categories = categoryRepository.getCategories();
   return categories;
 };
 
-const createNewCategory = async (category: string) => {
-  let createdCategory = new Category({ name: category });
-  await createdCategory.save();
-  return createdCategory;
+const createNewCategory = async (name: string) => {
+  const category = fromCategoryDtoToEntity({ name });
+  let newCategory = await categoryRepository.addCategory(category);
+  return newCategory;
 };
 
-const removeCategory = async (categoryId: number) => {
-  await Category.findByIdAndRemove(categoryId);
+const removeCategory = async (categoryId: string) => {
+  await categoryRepository.removeCategoryById(categoryId);
 };
 
 export default { listCategories, createNewCategory, removeCategory };

@@ -1,145 +1,64 @@
-import { IEventQuery } from "../interfaces/Event";
-import { ICategory } from "../models/Category";
-import { IEvent } from "../models/Event";
-import { IRole } from "../models/Role";
-import { IUser } from "../models/User";
-import { Event, Role, Category } from "../models";
-import categoryRepository from "../repositories/category.repository";
-import roleRepository from "../repositories/role.repository";
-import { HttpError } from "../interfaces/HttpError";
-import { EventDto } from "../dto/event.dto";
+import { EventOptions, CategoryOptions } from "../interfaces/options";
+import {
+  categoryRepository,
+  roleRepository,
+  eventRepository,
+} from "../repositories";
+import HttpError from "../interfaces/HttpError";
+import { fromEventDtoToEntity } from "../mappers";
+import { ICategory, IEvent, IRole, IUser } from "../interfaces/entities";
+import { EventDto } from "../interfaces/dto";
 
 const createNewEvent = async (eventData: EventDto) => {
-  if (!eventData.category)
-    throw new HttpError(400, "Add a category for the event");
-
-  const category = await Category.findOne({ name: eventData.category });
+  const category = await categoryRepository.findByName(eventData.category);
   if (!category) throw new HttpError(404, "Category not found");
-
-  if (!eventData.event_date)
-    throw new Error("Ingrese una fecha para el evento");
-
-  const newEvent = new Event({ ...eventData, category: category._id });
-
-  await newEvent.populate({
-    path: "category",
-    select: "name",
-    model: "Category",
-  });
-
-  await newEvent.validate();
-  await newEvent.save();
+  const event = fromEventDtoToEntity(eventData);
+  const newEvent = await eventRepository.addEvent(event);
   return newEvent;
 };
 
-const findEventById = async (eventId: number) => {
-  const event = await Event.findOne({ _id: eventId })
-    .populate([
-      {
-        path: "comments",
-        model: "Comment",
-        populate: {
-          path: "user",
-          model: "User",
-          select: "_id, username",
-        },
-      },
-      {
-        path: "category",
-        model: "Category",
-      },
-    ])
-    .exec();
+const findEventById = async (eventId: string) => {
+  const event = await eventRepository.getEventById(eventId);
   return event;
 };
 
 const getAllEvents = async () => {
-  const allEvents = await Event.find({ private: false })
-    .populate({
-      path: "category",
-      model: "Category",
-    })
-    .exec();
-  return allEvents;
+  return await eventRepository.getEvents();
 };
 
-const getFilteredEvents = async (preferences: ICategory[]) => {
-  const events = await Event.find({
-    private: false,
-    event_date: { $gte: new Date().toISOString() },
-    category: { $in: preferences },
-  })
-    .populate({
-      path: "category",
-      model: "Category",
-    })
-    .exec();
+const getEventsByUserPreferences = async (preferences: ICategory[]) => {
+  const events = await eventRepository.getEvents({
+    future: true,
+    preferences,
+  });
   return events;
 };
 
-const getEventsByCategory = async (_category: IEventQuery) => {
-  const category = await Category.findOne({
-    name: { $regex: _category, $options: "i" },
-  });
-  if (!category) throw new Error("Evento no encontrado");
-
-  const events = await Event.find({
-    private: false,
-    categoryId: category._id,
-  })
-    .populate({
-      path: "category",
-      model: "Category",
-    })
-    .exec();
+const getEventsByCategory = async (query: CategoryOptions) => {
+  if (!query.name) throw new HttpError(400, "No category name specified");
+  const category = await categoryRepository.findByName(query.name);
+  if (!category) throw new HttpError(404, "Event not found");
+  const events = await eventRepository.getEvents({ categoryId: category._id });
   return events;
 };
 
 const getEventsByUser = async (user: IUser) => {
-  const roles = await Role.find({ user: user._id, private: false }).populate({
-    path: "event",
-    model: "Event",
-    populate: {
-      path: "category",
-      select: "name",
-      model: "Category",
-    },
-  });
+  const roles = await roleRepository.getRoles({ userId: user._id });
   const events = roles
     .filter((role: IRole) => role.event)
     .map((role: IRole) => role.event);
   return events;
 };
 
-const getEventsByQuery = async (query: IEventQuery) => {
+const getEventsByQuery = async (query: EventOptions) => {
   const { searchTerm } = query;
-  const events = await Event.find({
-    private: false,
-    $or: [
-      { title: { $regex: searchTerm, $options: "i" } },
-      { description: { $regex: searchTerm, $options: "i" } },
-    ],
-  })
-    .populate({
-      path: "category",
-      model: "Category",
-    })
-    .exec();
+  const events = await eventRepository.getEvents({ searchTerm });
   return events;
 };
 
-const getUserEvents = async (userId: number) => {
-  const roles = await Role.find({
-    user: userId,
-  }).populate({
-    path: "event",
-    model: "Event",
-    populate: {
-      path: "category",
-      select: "name",
-      model: "Category",
-    },
-  });
+const getUserEvents = async (userId: string) => {
+  const roles = await roleRepository.getRoles({ userId });
+
   const events = roles
     .filter((role: IRole) => role.event)
     .map((role: IRole) => role.event);
@@ -150,35 +69,34 @@ const getUserEvents = async (userId: number) => {
   return pastEvents;
 };
 
-const removeEvent = async (eventId: number, userId: number) => {
-  await Event.findByIdAndRemove(eventId);
-  await Role.deleteMany({ event: eventId, user: userId });
+const removeEvent = async (eventId: string, userId: string) => {
+  await eventRepository.removeEventById(eventId);
+  await roleRepository.removeRoles({ eventId, userId });
 };
 
 const updateEventData = async (
-  eventId: number,
-  updatedData: Omit<Partial<IEvent>, "category"> & { category: string }
+  eventId: string,
+  updatedData: Partial<EventDto>
 ) => {
-  const updatedEvent: Partial<IEvent> = { ...updatedData, category: undefined };
+  const event = fromEventDtoToEntity(updatedData);
   if (updatedData.category) {
     const category = await categoryRepository.findByName(updatedData.category);
-    if (category) updatedEvent.category = category;
+    if (!category) throw new HttpError(404, "Category not found");
+    event.category = category;
   }
-  await Event.findByIdAndUpdate(eventId, updatedData);
+  await eventRepository.updateEventById(eventId, event);
 };
 
-const checkEdit = async (eventId: number, userId: number) => {
-  const role = await Role.findOne({ event: eventId, user: userId });
-  if (!role) return false;
-  return role.role === "Organizer";
+const checkEdit = async (eventId: string, userId: string) => {
+  const role = await roleRepository.getRole({ eventId, userId });
+  if (!role) throw new HttpError(404, "Role not found");
+  if (role.role !== "Organizer") throw new HttpError(401, "Access denied");
 };
 
-const getOrganizerAvgRating = async (eventId: number) => {
+const getOrganizerAvgRating = async (eventId: string) => {
   const organizer = await roleRepository.getOrganizerFromEvent(eventId);
   if (!organizer) throw new HttpError(404, "Organizer not found");
-
   const eventIds = await roleRepository.getEventIdsFromOrganizer(organizer._id);
-
   const ratings = await roleRepository.getRatingsFromEventIds(eventIds);
   const avgRating = await roleRepository.getAvgRating(ratings);
 
@@ -189,7 +107,7 @@ export default {
   createNewEvent,
   findEventById,
   getAllEvents,
-  getFilteredEvents,
+  getEventsByUserPreferences,
   getEventsByCategory,
   getEventsByUser,
   getEventsByQuery,
