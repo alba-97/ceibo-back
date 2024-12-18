@@ -1,6 +1,6 @@
-import { UserQuery } from "../interfaces/User";
+import { IUser } from "../interfaces/entities";
+import { UserOptions } from "../interfaces/options";
 import { User } from "../models";
-import { IUser } from "../models/User";
 
 const addUser = async (userData: IUser) => {
   const user = new User(userData);
@@ -16,7 +16,7 @@ const updateById = async (userId: string, userData: Partial<IUser>) => {
   });
 };
 
-const getUsers = async (query: UserQuery = {}) => {
+const getUsers = async (query: UserOptions = {}) => {
   const users = await User.find(query, "-password -salt -__v").populate({
     path: "preferences",
     model: "Category",
@@ -24,7 +24,7 @@ const getUsers = async (query: UserQuery = {}) => {
   return users;
 };
 
-const getUser = async (query: UserQuery) => {
+const getUser = async (query: UserOptions) => {
   const user = await User.findOne(query, "-password -salt -__v").populate({
     path: "preferences",
     model: "Category",

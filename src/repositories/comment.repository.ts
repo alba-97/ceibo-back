@@ -1,5 +1,5 @@
+import { IComment } from "../interfaces/entities";
 import { Comment } from "../models";
-import { IComment } from "../models/Comment";
 
 const addComment = async (data: IComment) => {
   const comment = new Comment(data);

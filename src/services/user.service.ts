@@ -1,15 +1,15 @@
-import { generateToken } from "../config/tokens";
-import { HttpError } from "../interfaces/HttpError";
-import { InvitationData } from "../interfaces/Invitation";
-import { UserQuery } from "../interfaces/User";
-import { ICategory } from "../models/Category";
-import { IUser } from "../models/User";
-import emailRepository from "../repositories/email.repository";
-import twilioRepository from "../repositories/twilio.repository";
-import userRepository from "../repositories/user.repository";
+import { generateToken, validateToken } from "../config/tokens";
+import { ICategory, IUser } from "../interfaces/entities";
+import HttpError from "../interfaces/HttpError";
+import { InvitationOptions } from "../interfaces/options";
+import { UserOptions } from "../interfaces/options";
+import {
+  emailRepository,
+  twilioRepository,
+  userRepository,
+} from "../repositories";
 
-const inviteUsers = async (data: InvitationData, userId?: string) => {
-  if (!userId) throw new HttpError(403, "Forbidden");
+const inviteUsers = async (data: InvitationOptions, userId: string) => {
   const usernames = data.users;
   const eventTitle = data.plan.title;
   const user = await userRepository.getUserById(userId);
@@ -56,8 +56,9 @@ const addPreferences = async (user: IUser, categories: ICategory[]) => {
   await user.save();
 };
 
-const getUser = async (userQuery: UserQuery): Promise<IUser | null> => {
+const getUser = async (userQuery: UserOptions): Promise<IUser> => {
   const user = await userRepository.getUser(userQuery);
+  if (!user) throw new HttpError(404, "User not found");
   return user;
 };
 
@@ -129,6 +130,12 @@ const getUserFriends = async (userId: string) => {
   return user.friends;
 };
 
+const getUserPayload = async (token?: string) => {
+  const result = validateToken(token);
+  if (typeof result === "string") throw new HttpError(401, "Unauthorized");
+  return result.payload;
+};
+
 export default {
   inviteUsers,
   addPreferences,
@@ -141,5 +148,6 @@ export default {
   addFriend,
   removeUserFriend,
   getUserFriends,
+  getUserPayload,
   login,
 };

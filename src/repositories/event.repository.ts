@@ -1,7 +1,6 @@
-import { EventQuery } from "../interfaces/Event";
+import { ICategory, IEvent } from "../interfaces/entities";
+import { EventOptions } from "../interfaces/options";
 import { Event } from "../models";
-import { IEvent } from "../models/Event";
-import { ICategory } from "../models/Category";
 
 type WhereClause = {
   event_date?: { $gte: Date };
@@ -13,7 +12,7 @@ type WhereClause = {
   ];
 };
 
-const getEvents = async (query: EventQuery = {}) => {
+const getEvents = async (query: EventOptions = {}) => {
   const where: WhereClause = {};
   const { future, preferences, categoryId, searchTerm } = query;
 

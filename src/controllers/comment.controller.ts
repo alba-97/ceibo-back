@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { commentService } from "../services";
-import { handleError } from "../utils/handleError";
+import handleError from "../utils/handleError";
 
 export const addComment = async (req: Request, res: Response) => {
   try {

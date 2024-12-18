@@ -1,4 +1,4 @@
-export interface UserQuery {
+export default interface UserOptions {
   username?: string;
   email?: string;
 }

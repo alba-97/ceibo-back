@@ -1,4 +1,4 @@
-import { RoleDto } from "../dto/role.dto";
+import { RoleDto } from "../interfaces/dto";
 import { Role } from "../models";
 
 const fromRoleDtoToEntity = (roleDto: RoleDto) => {

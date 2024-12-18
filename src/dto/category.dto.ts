@@ -1,3 +1,0 @@
-interface CategoryDto {
-  name: string;
-}

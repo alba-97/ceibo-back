@@ -1,5 +1,5 @@
-import fromCategoryDtoToEntity from "../mappers/fromCategoryDtoToEntity";
-import categoryRepository from "../repositories/category.repository";
+import { fromCategoryDtoToEntity } from "../mappers";
+import { categoryRepository } from "../repositories";
 
 const listCategories = async () => {
   let categories = categoryRepository.getCategories();

@@ -1,5 +1,5 @@
+import { ICategory } from "../interfaces/entities";
 import { Category } from "../models";
-import { ICategory } from "../models/Category";
 
 const findByName = async (name: string) => {
   const category = await Category.findOne({ name });

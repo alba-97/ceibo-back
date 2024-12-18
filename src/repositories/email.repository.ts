@@ -1,9 +1,9 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import { IMailOptions } from "../interfaces/Email";
+import { EmailOptions } from "../interfaces/options";
 dotenv.config();
 
-const sendEmail = async (mailOptions: IMailOptions) => {
+const sendEmail = async (mailOptions: EmailOptions) => {
   const from = process.env.EMAIL_USER;
   if (!from) return;
   const domain = from.split("@")[1];

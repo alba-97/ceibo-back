@@ -1,31 +1,6 @@
 import { Schema, model, Error } from "mongoose";
-import { IUser } from "./User";
-import { IComment } from "./Comment";
-import { ICategory } from "./Category";
-import { isURL } from "validator";
-
-export interface IEvent {
-  _id: string;
-  title: string;
-  description: string;
-  img?: string;
-  event_date: string;
-  event_location: string;
-  created_at: string;
-  min_age: number;
-  max_age: number;
-  min_to_pay: number;
-  total_to_pay: number;
-  link_to_pay: string;
-  deadline_to_pay: string;
-  category: ICategory;
-  start_time: string;
-  end_time: string;
-  comments: IComment[];
-  private: boolean;
-  ended: boolean;
-  save: () => {};
-}
+import { isDate } from "validator";
+import { IUser, IEvent } from "../interfaces/entities";
 
 const EventSchema = new Schema<IEvent>({
   title: { type: String, required: [true, "Ingrese el título del evento"] },
@@ -33,7 +8,7 @@ const EventSchema = new Schema<IEvent>({
     type: String,
     required: [true, "Ingrese la descripción del evento"],
   },
-  img: { type: String, validate: isURL },
+  img: { type: String, validate: isDate },
   event_date: {
     type: String,
     required: [true, "Ingrese una fecha para el evento"],

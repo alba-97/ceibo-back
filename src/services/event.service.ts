@@ -1,15 +1,13 @@
-import { EventQuery } from "../interfaces/Event";
-import { ICategory } from "../models/Category";
-import { IEvent } from "../models/Event";
-import { IRole } from "../models/Role";
-import { IUser } from "../models/User";
-import categoryRepository from "../repositories/category.repository";
-import roleRepository from "../repositories/role.repository";
-import { HttpError } from "../interfaces/HttpError";
-import { EventDto } from "../dto/event.dto";
-import eventRepository from "../repositories/event.repository";
-import { CategoryQuery } from "../interfaces/Category";
-import fromEventDtoToEntity from "../mappers/fromEventDtoToEntity";
+import { EventOptions, CategoryOptions } from "../interfaces/options";
+import {
+  categoryRepository,
+  roleRepository,
+  eventRepository,
+} from "../repositories";
+import HttpError from "../interfaces/HttpError";
+import { fromEventDtoToEntity } from "../mappers";
+import { ICategory, IEvent, IRole, IUser } from "../interfaces/entities";
+import { EventDto } from "../interfaces/dto";
 
 const createNewEvent = async (eventData: EventDto) => {
   const category = await categoryRepository.findByName(eventData.category);
@@ -36,7 +34,7 @@ const getEventsByUserPreferences = async (preferences: ICategory[]) => {
   return events;
 };
 
-const getEventsByCategory = async (query: CategoryQuery) => {
+const getEventsByCategory = async (query: CategoryOptions) => {
   if (!query.name) throw new HttpError(400, "No category name specified");
   const category = await categoryRepository.findByName(query.name);
   if (!category) throw new HttpError(404, "Event not found");
@@ -52,7 +50,7 @@ const getEventsByUser = async (user: IUser) => {
   return events;
 };
 
-const getEventsByQuery = async (query: EventQuery) => {
+const getEventsByQuery = async (query: EventOptions) => {
   const { searchTerm } = query;
   const events = await eventRepository.getEvents({ searchTerm });
   return events;
@@ -91,8 +89,8 @@ const updateEventData = async (
 
 const checkEdit = async (eventId: string, userId: string) => {
   const role = await roleRepository.getRole({ eventId, userId });
-  if (!role) return false;
-  return role.role === "Organizer";
+  if (!role) throw new HttpError(404, "Role not found");
+  if (role.role !== "Organizer") throw new HttpError(401, "Access denied");
 };
 
 const getOrganizerAvgRating = async (eventId: string) => {

@@ -1,28 +1,19 @@
-import { RoleDto } from "../dto/role.dto";
-import { HttpError } from "../interfaces/HttpError";
-import fromRoleDtoToEntity from "../mappers/fromRoleDtoToEntity";
-import eventRepository from "../repositories/event.repository";
-import roleRepository from "../repositories/role.repository";
-import userRepository from "../repositories/user.repository";
+import { RoleDto } from "../interfaces/dto";
+import HttpError from "../interfaces/HttpError";
+import { fromRoleDtoToEntity } from "../mappers";
+import {
+  eventRepository,
+  roleRepository,
+  userRepository,
+} from "../repositories";
 
-const createNewRole = async (
-  userId: string,
-  eventId: string,
-  role: string,
-  rating?: number
-) => {
-  const roleDto: RoleDto = {
-    userId,
-    eventId,
-    rating,
-    role,
-  };
+const createNewRole = async (roleDto: RoleDto) => {
   const roleEntity = fromRoleDtoToEntity(roleDto);
-  const user = await userRepository.getUserById(userId);
+  const user = await userRepository.getUserById(roleDto.userId);
   if (!user) throw new HttpError(404, "User not found");
   roleEntity.user = user;
 
-  const event = await eventRepository.getEventById(eventId);
+  const event = await eventRepository.getEventById(roleDto.eventId);
   if (!event) throw new HttpError(404, "Event not found");
   roleEntity.event = event;
 

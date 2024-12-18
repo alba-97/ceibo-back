@@ -1,6 +1,6 @@
-import { RoleQuery } from "../interfaces/RoleQuery";
+import { IRole } from "../interfaces/entities";
+import { RoleOptions } from "../interfaces/options";
 import { Role } from "../models";
-import { IRole } from "../models/Role";
 
 const addRole = async (role: IRole) => {
   const newRole = await new Role(role);
@@ -8,7 +8,7 @@ const addRole = async (role: IRole) => {
   return newRole;
 };
 
-const getRoles = async (query: RoleQuery) => {
+const getRoles = async (query: RoleOptions) => {
   const role = await Role.find(query).populate({
     path: "event",
     model: "Event",
@@ -21,7 +21,7 @@ const getRoles = async (query: RoleQuery) => {
   return role;
 };
 
-const getRole = async (query: RoleQuery) => {
+const getRole = async (query: RoleOptions) => {
   const role = await Role.findOne(query).populate({
     path: "event",
     model: "Event",
@@ -84,7 +84,7 @@ const removeRoleById = async (id: string) => {
   await Role.findByIdAndRemove(id);
 };
 
-const removeRoles = async (query: RoleQuery) => {
+const removeRoles = async (query: RoleOptions) => {
   await Role.deleteMany(query);
 };
 

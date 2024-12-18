@@ -1,6 +1,6 @@
-import { ICategory } from "../models/Category";
+import { ICategory } from "../entities";
 
-export interface EventQuery {
+export default interface EventOptions {
   searchTerm?: string;
   categoryId?: string;
   username?: string;

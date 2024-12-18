@@ -1,12 +1,5 @@
 import { model, Schema } from "mongoose";
-import { IUser } from "./User";
-import { IEvent } from "./Event";
-
-export interface IComment {
-  text: string;
-  user: IUser;
-  event: IEvent;
-}
+import { IComment } from "../interfaces/entities";
 
 const CommentSchema = new Schema<IComment>({
   text: { type: String, required: true },

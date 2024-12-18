@@ -1,8 +1,10 @@
-import { HttpError } from "../interfaces/HttpError";
-import fromCommentDtoToEntity from "../mappers/fromCommentDtoToEntity";
-import commentRepository from "../repositories/comment.repository";
-import userRepository from "../repositories/user.repository";
-import eventService from "./event.service";
+import HttpError from "../interfaces/HttpError";
+import { fromCommentDtoToEntity } from "../mappers";
+import {
+  commentRepository,
+  eventRepository,
+  userRepository,
+} from "../repositories";
 
 const addComment = async (eventId: string, userId: string, text: string) => {
   const comment = fromCommentDtoToEntity({
@@ -11,7 +13,7 @@ const addComment = async (eventId: string, userId: string, text: string) => {
     eventId,
   });
 
-  const event = await eventService.findEventById(eventId);
+  const event = await eventRepository.getEventById(eventId);
   if (!event) throw new HttpError(404, "Event not found");
   comment.event = event;
 

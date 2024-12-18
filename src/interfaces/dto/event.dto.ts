@@ -1,4 +1,4 @@
-export interface EventDto {
+export default interface EventDto {
   title: string;
   description: string;
   img?: string;

@@ -1,3 +1,4 @@
+import { CategoryDto } from "../interfaces/dto";
 import { Category } from "../models";
 
 const fromCategoryDtoToEntity = (categoryDto: CategoryDto) => {

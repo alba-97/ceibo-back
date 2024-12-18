@@ -1,4 +1,4 @@
-import { EventDto } from "../dto/event.dto";
+import { EventDto } from "../interfaces/dto";
 import { Event } from "../models";
 
 const fromEventDtoToEntity = (eventDto: EventDto | Partial<EventDto>) => {

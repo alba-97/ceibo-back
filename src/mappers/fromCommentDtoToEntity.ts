@@ -1,4 +1,4 @@
-import { CommentDto } from "../dto/comment.dto";
+import { CommentDto } from "../interfaces/dto";
 import { Comment } from "../models";
 
 const fromCommentDtoToEntity = (commentDto: CommentDto) => {
