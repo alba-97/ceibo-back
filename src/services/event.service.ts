@@ -3,17 +3,16 @@ import { ICategory } from "../models/Category";
 import { IEvent } from "../models/Event";
 import { IRole } from "../models/Role";
 import { IUser } from "../models/User";
-import { Event, Role, Category } from "../models";
 import categoryRepository from "../repositories/category.repository";
 import roleRepository from "../repositories/role.repository";
 import { HttpError } from "../interfaces/HttpError";
 import { EventDto } from "../dto/event.dto";
 import eventRepository from "../repositories/event.repository";
-import fromEventDtoToEntity from "../mappers/fromEventDtotoEntity";
 import { CategoryQuery } from "../interfaces/Category";
+import fromEventDtoToEntity from "../mappers/fromEventDtoToEntity";
 
 const createNewEvent = async (eventData: EventDto) => {
-  const category = await Category.findOne({ name: eventData.category });
+  const category = await categoryRepository.findByName(eventData.category);
   if (!category) throw new HttpError(404, "Category not found");
   const event = fromEventDtoToEntity(eventData);
   const newEvent = await eventRepository.addEvent(event);
@@ -46,15 +45,7 @@ const getEventsByCategory = async (query: CategoryQuery) => {
 };
 
 const getEventsByUser = async (user: IUser) => {
-  const roles = await Role.find({ user: user._id, private: false }).populate({
-    path: "event",
-    model: "Event",
-    populate: {
-      path: "category",
-      select: "name",
-      model: "Category",
-    },
-  });
+  const roles = await roleRepository.getRoles({ userId: user._id });
   const events = roles
     .filter((role: IRole) => role.event)
     .map((role: IRole) => role.event);
@@ -63,33 +54,13 @@ const getEventsByUser = async (user: IUser) => {
 
 const getEventsByQuery = async (query: EventQuery) => {
   const { searchTerm } = query;
-  const events = await Event.find({
-    private: false,
-    $or: [
-      { title: { $regex: searchTerm, $options: "i" } },
-      { description: { $regex: searchTerm, $options: "i" } },
-    ],
-  })
-    .populate({
-      path: "category",
-      model: "Category",
-    })
-    .exec();
+  const events = await eventRepository.getEvents({ searchTerm });
   return events;
 };
 
 const getUserEvents = async (userId: string) => {
-  const roles = await Role.find({
-    user: userId,
-  }).populate({
-    path: "event",
-    model: "Event",
-    populate: {
-      path: "category",
-      select: "name",
-      model: "Category",
-    },
-  });
+  const roles = await roleRepository.getRoles({ userId });
+
   const events = roles
     .filter((role: IRole) => role.event)
     .map((role: IRole) => role.event);
@@ -101,24 +72,25 @@ const getUserEvents = async (userId: string) => {
 };
 
 const removeEvent = async (eventId: string, userId: string) => {
-  await Event.findByIdAndRemove(eventId);
-  await Role.deleteMany({ event: eventId, user: userId });
+  await eventRepository.removeEventById(eventId);
+  await roleRepository.removeRoles({ eventId, userId });
 };
 
 const updateEventData = async (
   eventId: string,
-  updatedData: Omit<Partial<IEvent>, "category"> & { category: string }
+  updatedData: Partial<EventDto>
 ) => {
-  const updatedEvent: Partial<IEvent> = { ...updatedData, category: undefined };
+  const event = fromEventDtoToEntity(updatedData);
   if (updatedData.category) {
     const category = await categoryRepository.findByName(updatedData.category);
-    if (category) updatedEvent.category = category;
+    if (!category) throw new HttpError(404, "Category not found");
+    event.category = category;
   }
-  await Event.findByIdAndUpdate(eventId, updatedData);
+  await eventRepository.updateEventById(eventId, event);
 };
 
 const checkEdit = async (eventId: string, userId: string) => {
-  const role = await Role.findOne({ event: eventId, user: userId });
+  const role = await roleRepository.getRole({ eventId, userId });
   if (!role) return false;
   return role.role === "Organizer";
 };

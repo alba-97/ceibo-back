@@ -8,6 +8,19 @@ const addRole = async (role: IRole) => {
   return newRole;
 };
 
+const getRoles = async (query: RoleQuery) => {
+  const role = await Role.find(query).populate({
+    path: "event",
+    model: "Event",
+    populate: {
+      path: "category",
+      select: "name",
+      model: "Category",
+    },
+  });
+  return role;
+};
+
 const getRole = async (query: RoleQuery) => {
   const role = await Role.findOne(query).populate({
     path: "event",
@@ -71,8 +84,13 @@ const removeRoleById = async (id: string) => {
   await Role.findByIdAndRemove(id);
 };
 
+const removeRoles = async (query: RoleQuery) => {
+  await Role.deleteMany(query);
+};
+
 export default {
   getRole,
+  getRoles,
   getOrganizerFromEvent,
   getEventIdsFromOrganizer,
   getRatingsFromEventIds,
@@ -80,4 +98,5 @@ export default {
   addRole,
   rateEvent,
   removeRoleById,
+  removeRoles,
 };
