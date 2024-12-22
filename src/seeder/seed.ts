@@ -1,6 +1,6 @@
-import data from "../data.json";
+import data from "./data.json";
 import { IEvent, IUser } from "../interfaces/entities";
-import { User, Event, Role, Comment } from "../models";
+import { User, Comment } from "../models";
 import {
   eventRepository,
   roleRepository,
@@ -9,7 +9,6 @@ import {
 import {
   eventService,
   roleService,
-  userService,
   commentService,
   categoryService,
 } from "../services";

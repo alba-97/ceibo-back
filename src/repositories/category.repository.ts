@@ -7,7 +7,7 @@ const findByName = async (name: string) => {
 };
 
 const getCategories = async (query = {}) => {
-  const categories = await Category.find(query).populate("events");
+  const categories = await Category.find(query);
   return categories;
 };
 
