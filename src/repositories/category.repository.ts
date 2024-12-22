@@ -1,4 +1,4 @@
-import { ICategory } from "../interfaces/entities";
+import { AddCategory } from "../interfaces/entities/create";
 import { Category } from "../models";
 
 const findByName = async (name: string) => {
@@ -11,7 +11,7 @@ const getCategories = async (query = {}) => {
   return categories;
 };
 
-const addCategory = async (category: ICategory) => {
+const addCategory = async (category: AddCategory) => {
   const newCategory = new Category(category);
   await newCategory.save();
   return newCategory;

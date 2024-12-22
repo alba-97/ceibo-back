@@ -1,10 +1,10 @@
 import { RoleDto } from "../interfaces/dto";
-import { IRole } from "../interfaces/entities";
-import { Role } from "../models";
+import { AddRole } from "../interfaces/entities/create";
 
 const fromRoleDtoToEntity = (roleDto: RoleDto) => {
-  const { rating, role } = roleDto;
-  const roleEntity: IRole = new Role({ rating, role });
+  const { role } = roleDto;
+  const roleEntity: AddRole = { role };
+  if (roleDto.rating) roleEntity.rating = roleDto.rating;
   return roleEntity;
 };
 

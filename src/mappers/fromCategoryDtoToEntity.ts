@@ -1,11 +1,10 @@
 import { CategoryDto } from "../interfaces/dto";
-import { ICategory } from "../interfaces/entities";
-import { Category } from "../models";
+import { AddCategory } from "../interfaces/entities/create";
 
 const fromCategoryDtoToEntity = (categoryDto: CategoryDto) => {
   const { name } = categoryDto;
-  const category: ICategory = new Category({ name });
-  return category;
+  const categoryEntity: AddCategory = { name };
+  return categoryEntity;
 };
 
 export default fromCategoryDtoToEntity;

@@ -1,7 +1,7 @@
-import { IComment } from "../interfaces/entities";
+import { AddComment } from "../interfaces/entities/create";
 import { Comment } from "../models";
 
-const addComment = async (data: IComment) => {
+const addComment = async (data: AddComment) => {
   const comment = new Comment(data);
   await comment.populate({
     path: "user",

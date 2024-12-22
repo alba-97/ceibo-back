@@ -1,4 +1,5 @@
-import { ICategory, IEvent } from "../interfaces/entities";
+import { ICategory } from "../interfaces/entities";
+import { AddEvent } from "../interfaces/entities/create";
 import { EventOptions } from "../interfaces/options";
 import { Event } from "../models";
 
@@ -67,7 +68,7 @@ const getEventById = async (id: string) => {
   return event;
 };
 
-const addEvent = async (eventData: IEvent) => {
+const addEvent = async (eventData: AddEvent) => {
   const event = new Event(eventData);
   await event.populate({
     path: "category",
@@ -79,7 +80,7 @@ const addEvent = async (eventData: IEvent) => {
   return event;
 };
 
-const updateEventById = async (id: string, eventData: IEvent) => {
+const updateEventById = async (id: string, eventData: AddEvent) => {
   await Event.findByIdAndUpdate(id, eventData);
 };
 

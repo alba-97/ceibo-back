@@ -1,15 +1,16 @@
 import { IRole } from "../interfaces/entities";
+import { AddRole } from "../interfaces/entities/create";
 import { RoleOptions } from "../interfaces/options";
 import { Role } from "../models";
 
-const addRole = async (role: IRole) => {
+const addRole = async (role: AddRole) => {
   const newRole = await new Role(role);
   await newRole.save();
   return newRole;
 };
 
 const getRoles = async (query: RoleOptions = {}) => {
-  const role = await Role.find(query).populate({
+  const roles = await Role.find(query).populate({
     path: "event",
     model: "Event",
     populate: {
@@ -18,7 +19,7 @@ const getRoles = async (query: RoleOptions = {}) => {
       model: "Category",
     },
   });
-  return role;
+  return roles;
 };
 
 const getRole = async (query: RoleOptions) => {
@@ -51,11 +52,13 @@ const getOrganizerFromEvent = async (eventId: string) => {
 };
 
 const getEventIdsFromOrganizer = async (organizerId: string) => {
-  const events = await Role.find({
+  const roles = await Role.find({
     role: "Organizer",
     user: organizerId,
   }).populate({ path: "event", model: "Event" });
-  return events.map((item: IRole) => item.event._id);
+  return roles
+    .map((item: IRole) => item.event?._id)
+    .filter((item?: string) => item !== undefined);
 };
 
 const getRatingsFromEventIds = async (events: string[]) => {

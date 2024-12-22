@@ -1,14 +1,14 @@
-import { IUser } from "../interfaces/entities";
+import { AddUser } from "../interfaces/entities/create";
 import { UserOptions } from "../interfaces/options";
 import { User } from "../models";
 
-const addUser = async (userData: IUser) => {
+const addUser = async (userData: AddUser) => {
   const user = new User(userData);
   await user.validate();
   await user.save();
 };
 
-const updateById = async (userId: string, userData: Partial<IUser>) => {
+const updateById = async (userId: string, userData: Partial<AddUser>) => {
   return await User.findByIdAndUpdate(userId, userData).select({
     password: 0,
     salt: 0,

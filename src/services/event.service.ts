@@ -60,8 +60,8 @@ const getUserEvents = async (userId: string) => {
   const roles = await roleRepository.getRoles({ userId });
 
   const events = roles
-    .filter((role: IRole) => role.event)
-    .map((role: IRole) => role.event);
+    .map((role: IRole) => role.event)
+    .filter((event?: IEvent) => event !== undefined);
 
   const pastEvents = events.filter(
     (item: IEvent) => new Date(item.start_date) <= new Date()
