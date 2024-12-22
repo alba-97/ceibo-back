@@ -51,7 +51,9 @@ const login = async (username: string, password: string) => {
   return token;
 };
 
-const addPreferences = async (user: IUser, categories: ICategory[]) => {
+const addPreferences = async (userId: string, categories: ICategory[]) => {
+  const user = await userRepository.getUserById(userId);
+  if (!user) throw new HttpError(404, "User not found");
   user.preferences = [...categories];
   await user.save();
 };

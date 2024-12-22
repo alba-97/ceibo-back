@@ -64,7 +64,7 @@ const getUserEvents = async (userId: string) => {
     .map((role: IRole) => role.event);
 
   const pastEvents = events.filter(
-    (item: IEvent) => new Date(item.event_date) <= new Date()
+    (item: IEvent) => new Date(item.start_date) <= new Date()
   );
   return pastEvents;
 };
@@ -74,10 +74,7 @@ const removeEvent = async (eventId: string, userId: string) => {
   await roleRepository.removeRoles({ eventId, userId });
 };
 
-const updateEventData = async (
-  eventId: string,
-  updatedData: Partial<EventDto>
-) => {
+const updateEventData = async (eventId: string, updatedData: EventDto) => {
   const event = fromEventDtoToEntity(updatedData);
   if (updatedData.category) {
     const category = await categoryRepository.findByName(updatedData.category);

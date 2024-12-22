@@ -153,7 +153,7 @@ const updateEventData = async (req: Request, res: Response) => {
       req.params.id,
       req.body
     );
-    res.status(201).send(updatedEvent);
+    return res.status(201).send(updatedEvent);
   } catch (err) {
     return handleError(res, err);
   }
@@ -161,8 +161,8 @@ const updateEventData = async (req: Request, res: Response) => {
 
 const getOrganizerAvgRating = async (req: Request, res: Response) => {
   try {
-    const organizer = await eventService.getOrganizerAvgRating(req.params.id);
-    res.send(organizer);
+    const rating = await eventService.getOrganizerAvgRating(req.params.id);
+    return res.status(200).send({ rating });
   } catch (err) {
     return handleError(res, err);
   }
@@ -171,7 +171,7 @@ const getOrganizerAvgRating = async (req: Request, res: Response) => {
 const rateEvent = async (req: Request, res: Response) => {
   try {
     await roleService.rateEvent(req.user._id, req.params.id, +req.body.rating);
-    res.send({ message: "Se calificó el evento" });
+    return res.status(200).send({ message: "Se calificó el evento" });
   } catch (err) {
     return handleError(res, err);
   }

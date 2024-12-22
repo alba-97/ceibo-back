@@ -35,8 +35,7 @@ const signup = async (req: Request, res: Response) => {
 
 const addPreferences = async (req: Request, res: Response) => {
   try {
-    const user = await userService.getUserById(req.user._id);
-    await userService.addPreferences(user, req.body);
+    await userService.addPreferences(req.user._id, req.body);
     return res.status(200).send("Preferences added");
   } catch (err) {
     handleError(res, err);

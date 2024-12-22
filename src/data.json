@@ -6,7 +6,7 @@
       "first_name": "Ceibo",
       "last_name": "Digital",
       "email": "ceibodigital@example.com",
-      "birthdate": "2023-05-30",
+      "birthdate": "2024-05-30",
       "address": "calle falsa 123"
     },
     {
@@ -131,73 +131,66 @@
     {
       "title": "Lanzamiento de nuevo producto",
       "description": "Presentación del nuevo producto de la compañía con una fiesta en grande",
-      "event_date": "2023-09-15",
+      "start_date": "2024-09-15T17:00:00.000Z",
+      "end_date": "2024-09-15T18:00:00.000Z",
       "event_location": "Centro de convenciones",
       "img": "https://cdn.pixabay.com/photo/2016/08/16/09/53/international-conference-1597531_1280.jpg",
-      "category": "Conferencia",
-      "start_time": "17",
-      "end_time": "18"
+      "category": "Conferencia"
     },
     {
       "title": "Boda de María y Juan",
       "description": "Boda de María y Juan en la iglesia del pueblo seguida de una recepción en el jardín",
-      "event_date": "2023-07-18",
       "event_location": "Iglesia San José, Calle Principal 123, Pueblo Nuevo",
       "img": "https://cdn.pixabay.com/photo/2014/09/13/04/59/couple-443600_1280.jpg",
       "category": "Fiesta",
-      "start_time": "21",
-      "end_time": "22"
+      "start_date": "2024-07-18T21:00:00.000Z",
+      "end_date": "2024-07-18T22:00:00.000Z"
     },
     {
       "title": "Fiesta de cumpleaños",
       "description": "Celebración del cumpleaños número 30 de Ana con música y comida",
-      "event_date": "2023-12-05",
       "event_location": "Casa de Ana, calle Flores 456",
       "img": "https://cdn.pixabay.com/photo/2014/06/10/20/01/cake-366346_1280.jpg",
       "category": "Fiesta",
-      "start_time": "14",
-      "end_time": "16"
+      "start_date": "2024-12-05T14:00:00.000Z",
+      "end_date": "2024-12-05T16:00:00.000Z"
     },
     {
       "title": "Concierto de rock",
       "description": "Concierto de rock en el estadio con las bandas más populares",
-      "event_date": "2023-07-22",
       "event_location": "Estadio Nacional",
       "img": "https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_1280.jpg",
       "category": "Música",
-      "start_time": "21",
-      "end_time": "23"
+      "start_date": "2024-07-22T21:00:00.000Z",
+      "end_date": "2024-07-22T23:00:00.000Z"
     },
     {
       "title": "Fiesta de graduación",
       "description": "Fiesta para celebrar la graduación de los alumnos de la promoción 2022",
-      "event_date": "2023-03-25",
       "event_location": "Salón de recepciones Grand Plaza",
       "img": "https://cdn.pixabay.com/photo/2017/02/05/00/08/graduation-2038864_1280.jpg",
       "category": "Fiesta",
-      "start_time": "17",
-      "end_time": "18"
+      "start_date": "2025-03-25T17:00:00.000Z",
+      "end_date": "2025-03-25T18:00:00.000Z"
     },
     {
       "title": "Festival de cine",
       "description": "Festival de cine que proyectará películas independientes de diferentes países",
-      "event_date": "2023-04-08",
       "event_location": "Cine Palacio",
       "img": "https://cdn.pixabay.com/photo/2019/11/07/20/48/cinema-4609877_1280.jpg",
       "category": "Arte y cultura",
-      "start_time": "15",
-      "end_time": "16"
+      "start_date": "2024-05-08T15:00:00.000Z",
+      "end_date": "2024-05-08T20:00:00.000Z"
     },
     {
       "title": "Feria gastronómica",
       "description": "Feria gastronómica con platos de diferentes culturas y países",
-      "event_date": "2023-01-30",
       "event_location": "Plaza de Armas",
       "img": "https://cdn.pixabay.com/photo/2018/05/04/10/08/cheese-3373604_1280.jpg",
       "category": "Comidas y bebidas",
-      "start_time": "13",
-      "end_time": "15",
-      "private": true
+      "private": true,
+      "start_date": "2024-01-30T13:00:00.000Z",
+      "end_date": "2024-01-30T15:00:00.000Z"
     }
   ],
   "roles": [
@@ -218,11 +211,13 @@
     "Fiesta de cumpleaños": [
       "Feliz cumpleaños",
       "¡Feliz cumple! Pasala bien.",
-      "¡Felicidades en tu día especial!",
-      "¡Hoy es tu día! Te deseo un año lleno de éxitos y felicidad.",
-      "Espero que la torta esté buena"
+      "Feliz cumpleaños! Te deseo un año lleno de éxitos y felicidad."
     ],
-    "Fiesta de graduación": ["buenisimo", "Felicitaciones a los egresados!"],
+    "Fiesta de graduación": [
+      "Felicidades",
+      "buenisimo",
+      "Felicitaciones a los egresados!"
+    ],
     "Festival de cine": [
       "Que bueno!! qué películas pasan?",
       "Buenísimo, ahi me anoto",
@@ -230,8 +225,8 @@
     ],
     "Concierto de rock": [
       "quienes van a estar?",
-      "La rompen estos pibes che",
-      "aguante metallica"
+      "La rompen estos pibes",
+      "va a estar metallica?"
     ],
     "Feria gastronómica": ["Que ricooo!", "Tiene buena pinta"],
     "Boda de María y Juan": ["Que bueno!!!", "Felicidades a los 2"]

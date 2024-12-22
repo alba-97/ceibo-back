@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import generateData from "./seed";
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017";
 
@@ -11,6 +12,7 @@ mongoose
       await collection.drop();
     }
     console.log("All collections dropped");
+    await generateData();
     mongoose.connection.close();
   })
   .catch((err: unknown) => {

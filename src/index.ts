@@ -35,7 +35,6 @@ mongoose
     autoIndex: true,
   })
   .then(() => {
-    generateData();
     console.log("Connected to MongoDB Atlas");
     app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
   })

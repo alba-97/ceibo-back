@@ -1,5 +1,5 @@
 import { Schema, model, Error } from "mongoose";
-import { isDate } from "validator";
+import { isDate, isURL } from "validator";
 import { IUser, IEvent } from "../interfaces/entities";
 
 const EventSchema = new Schema<IEvent>({
@@ -8,10 +8,16 @@ const EventSchema = new Schema<IEvent>({
     type: String,
     required: [true, "Ingrese la descripción del evento"],
   },
-  img: { type: String, validate: isDate },
-  event_date: {
-    type: String,
+  img: { type: String, validate: isURL },
+  start_date: {
+    type: Date,
+    validate: isDate,
     required: [true, "Ingrese una fecha para el evento"],
+  },
+  end_date: {
+    type: Date,
+    validate: isDate,
+    required: [true, "Ingrese una fecha de finalización del evento"],
   },
   event_location: {
     type: String,
@@ -27,36 +33,28 @@ const EventSchema = new Schema<IEvent>({
   total_to_pay: { type: Number, default: 0 },
   link_to_pay: { type: String, default: "" },
   deadline_to_pay: {
-    type: String,
+    type: Date,
     default: function () {
-      return this.event_date;
+      return this.start_date;
     },
   },
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",
   },
-  start_time: {
-    type: String,
-    required: [true, "Seleccione la hora de inicio y finalización del evento"],
-  },
-  end_time: {
-    type: String,
-    required: [true, "Seleccione la hora de inicio y finalización del evento"],
-  },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   private: { type: Boolean, default: false },
 });
 
 EventSchema.index(
-  { title: 1, event_date: 1, event_location: 1 },
+  { title: 1, start_date: 1, event_location: 1 },
   { unique: true }
 );
 
 EventSchema.set("toJSON", { getters: true, virtuals: true });
 
 EventSchema.virtual("ended").get(function () {
-  return new Date(this.event_date) < new Date();
+  return this.start_date < new Date();
 });
 
 EventSchema.post(

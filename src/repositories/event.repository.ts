@@ -3,7 +3,7 @@ import { EventOptions } from "../interfaces/options";
 import { Event } from "../models";
 
 type WhereClause = {
-  event_date?: { $gte: Date };
+  start_date?: { $gte: Date };
   category?: { $in: ICategory[] };
   categoryId?: string;
   $or?: [
@@ -12,11 +12,23 @@ type WhereClause = {
   ];
 };
 
+const getEvent = async (query: EventOptions = {}) => {
+  const event = await Event.findOne({
+    private: false,
+    ...query,
+  }).populate({
+    path: "category",
+    model: "Category",
+  });
+
+  return event;
+};
+
 const getEvents = async (query: EventOptions = {}) => {
   const where: WhereClause = {};
   const { future, preferences, categoryId, searchTerm } = query;
 
-  if (future) where.event_date = { $gte: new Date() };
+  if (future) where.start_date = { $gte: new Date() };
   if (preferences) where.category = { $in: preferences };
   if (categoryId) where.categoryId = categoryId;
   if (searchTerm)
@@ -77,6 +89,7 @@ const removeEventById = async (id: string) => {
 
 export default {
   getEventById,
+  getEvent,
   addEvent,
   getEvents,
   updateEventById,

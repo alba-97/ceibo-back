@@ -1,5 +1,11 @@
 import data from "../data.json";
+import { IEvent, IUser } from "../interfaces/entities";
 import { User, Event, Role, Comment } from "../models";
+import {
+  eventRepository,
+  roleRepository,
+  userRepository,
+} from "../repositories";
 import {
   eventService,
   roleService,
@@ -23,6 +29,7 @@ const generateData = async () => {
       await newUser.save();
       console.log(`Usuario ${newUser.username} creado`);
     } catch (error) {
+      console.log("Error creating users: ", error);
       continue;
     }
   }
@@ -31,6 +38,7 @@ const generateData = async () => {
     try {
       await categoryService.createNewCategory(data.categories[i]);
     } catch (error) {
+      console.log("Error creating categories: ", error);
       continue;
     }
   }
@@ -41,36 +49,35 @@ const generateData = async () => {
         title: data.events[i].title,
         description: data.events[i].description,
         event_location: data.events[i].event_location,
-        event_date: data.events[i].event_date,
+        start_date: data.events[i].start_date,
+        end_date: data.events[i].end_date,
         img: data.events[i].img,
         category: data.events[i].category,
-        start_time: data.events[i].start_time,
-        end_time: data.events[i].end_time,
         private: data.events[i].private,
       });
       console.log(`Evento ${event.title} creado`);
-    } catch {
+    } catch (error) {
+      console.log("Error creating events: ", error);
       continue;
     }
   }
 
-  let users = [];
-  let events = [];
+  let users: IUser[] = [];
+  let events: IEvent[] = [];
 
-  const allRoles = await Role.find();
+  const allRoles = await roleRepository.getRoles();
   const nRoles = allRoles.length;
+
   const allComments = await Comment.find();
   const nComments = allComments.length;
 
   for (let i = 0; i < data.roles.length; i++) {
-    const user = await userService.getUser({ username: data.roles[i].user });
-    const event = await Event.findOne({ title: data.roles[i].event });
-    if (user) {
-      users.push(user);
-    }
-    if (event) {
-      events.push(event);
-    }
+    const user = await userRepository.getUser({ username: data.roles[i].user });
+    const event = await eventRepository.getEvent({
+      title: data.roles[i].event,
+    });
+    if (user) users.push(user);
+    if (event) events.push(event);
   }
 
   if (nRoles == 0) {

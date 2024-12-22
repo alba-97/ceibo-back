@@ -15,10 +15,14 @@
  *         img:
  *           type: string
  *           description: image related to event
- *         event_date:
+ *         start_date:
  *           type: string
  *           format: date
- *           description: the date of the event
+ *           description: start date of the event
+ *         end_date:
+ *           type: string
+ *           format: date
+ *           description: end date of the event
  *         min_age:
  *           type: number
  *           description:  the minimum age to assist at this event
@@ -41,28 +45,20 @@
  *         category:
  *           type: string
  *           description:  associated category id
- *         start_time:
- *           type: number
- *           description:  the start hour of the event
- *         end_time:
- *           type: number
- *           description:  the end hour of the event
  *       required:
  *         - title
  *         - description
- *         - event_date
+ *         - start_date
+ *         - end_date
  *         - min_to_pay
  *         - total_to_pay
- *         - start_time
- *         - end_time
  *       example:
  *          title: fakeEvent
  *          description: i'm a fake event
- *          event_date: 2023-06-06
+ *          start_date: 2023-06-06T00:00:00.000+00:00
+ *          end_date: 2023-06-07T00:00:00.000+00:00
  *          min_to_pay: 500
  *          total_to_pay: 2500
- *          start_time: 15:15
- *          end_time: 16:16
  */
 
 //DELETE EVENTS

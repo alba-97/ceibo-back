@@ -8,7 +8,7 @@ const addRole = async (role: IRole) => {
   return newRole;
 };
 
-const getRoles = async (query: RoleOptions) => {
+const getRoles = async (query: RoleOptions = {}) => {
   const role = await Role.find(query).populate({
     path: "event",
     model: "Event",
