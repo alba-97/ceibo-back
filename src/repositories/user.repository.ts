@@ -1,76 +1,55 @@
+import { IUser } from "../interfaces/entities";
 import { AddUser } from "../interfaces/entities/create";
 import { UserOptions } from "../interfaces/options";
 import { User } from "../models";
 
-const addUser = async (userData: AddUser) => {
-  const user = new User(userData);
-  await user.validate();
-  await user.save();
+type WhereClause = {
+  username?: string | { $in: string[] };
+  email?: string;
 };
 
-const updateById = async (userId: string, userData: Partial<AddUser>) => {
-  return await User.findByIdAndUpdate(userId, userData).select({
-    password: 0,
-    salt: 0,
-    __v: 0,
-  });
-};
+export default class UserRepository {
+  async createOne(userData: AddUser) {
+    const user = new User(userData);
+    await user.validate();
+    await user.save();
+  }
 
-const getUsers = async (query: UserOptions = {}) => {
-  const users = await User.find(query, "-password -salt -__v").populate({
-    path: "preferences",
-    model: "Category",
-  });
-  return users;
-};
+  async updateOneById(
+    userId: string,
+    userData: Partial<AddUser>
+  ): Promise<IUser | null> {
+    return await User.findByIdAndUpdate(userId, userData, {
+      select: "-password -salt -__v",
+    });
+  }
 
-const getUser = async (query: UserOptions) => {
-  const user = await User.findOne(query, "-password -salt -__v").populate({
-    path: "preferences",
-    model: "Category",
-  });
-  return user;
-};
+  async findAll(query: UserOptions = {}): Promise<IUser[]> {
+    const { username, email, usernames } = query;
 
-const getUserById = async (userId: string) => {
-  const user = await User.findById(userId, "-password -salt -__v").populate([
-    {
-      path: "preferences",
-      model: "Category",
-    },
-    { path: "friends", model: "User" },
-  ]);
-  return user;
-};
+    const where: WhereClause = {};
 
-const getUserByUsername = async (username: string) => {
-  const user = await User.findOne(
-    { username },
-    "-password -salt -__v"
-  ).populate({
-    path: "preferences",
-    model: "Category",
-  });
-  return user;
-};
+    if (username) where.username = username;
+    if (email) where.email = email;
+    if (usernames) where.username = { $in: usernames };
 
-const getUsersByUsernames = async (usernames: string[]) => {
-  const users = await User.find(
-    { username: { $in: usernames } },
-    "-password -salt -__v"
-  ).populate({
-    path: "preferences",
-    model: "Category",
-  });
-  return users;
-};
+    return await User.find(where, "-password -salt -__v").populate(
+      "preferences",
+      "Category"
+    );
+  }
 
-export default {
-  getUser,
-  getUserById,
-  getUserByUsername,
-  getUsersByUsernames,
-  getUsers,
-  addUser,
-  updateById,
-};
+  async findOne(query: UserOptions): Promise<IUser | null> {
+    return await User.findOne(query, "-password -salt -__v").populate(
+      "preferences",
+      "Category"
+    );
+  }
+
+  async findOneById(userId: string): Promise<IUser | null> {
+    return await User.findById(userId, "-password -salt -__v").populate([
+      "preferences",
+      "friends",
+    ]);
+  }
+}

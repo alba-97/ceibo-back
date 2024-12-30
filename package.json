@@ -12,6 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^8.0.2",
+    "awilix": "^12.0.4",
+    "awilix-express": "^9.0.2",
+    "awilix-router-core": "^2.1.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "cloudinary": "^1.37.1",
@@ -29,9 +32,9 @@
     "swagger-ui-express": "^4.6.3",
     "ts-node-dev": "^2.0.0",
     "twilio": "^4.12.0",
+    "typescript": "^5.6.2",
     "validator": "^13.9.0",
-    "whatsapp-web.js": "^1.21.0",
-    "typescript": "^5.6.2"
+    "whatsapp-web.js": "^1.21.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

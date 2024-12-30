@@ -1,24 +1,25 @@
+import { ICategory } from "../interfaces/entities";
 import { AddCategory } from "../interfaces/entities/create";
 import { Category } from "../models";
 
-const findByName = async (name: string) => {
-  const category = await Category.findOne({ name });
-  return category;
-};
+export default class CategoryRepository {
+  async findOne(name: string): Promise<ICategory | null> {
+    const category = await Category.findOne({ name });
+    return category;
+  }
 
-const getCategories = async (query = {}) => {
-  const categories = await Category.find(query);
-  return categories;
-};
+  async findAll(query = {}): Promise<ICategory[]> {
+    const categories = await Category.find(query);
+    return categories;
+  }
 
-const addCategory = async (category: AddCategory) => {
-  const newCategory = new Category(category);
-  await newCategory.save();
-  return newCategory;
-};
+  async createOne(category: AddCategory): Promise<ICategory> {
+    const newCategory = new Category(category);
+    await newCategory.save();
+    return newCategory;
+  }
 
-const removeCategoryById = async (id: string) => {
-  await Category.findByIdAndRemove(id);
-};
-
-export default { findByName, getCategories, addCategory, removeCategoryById };
+  async removeOneById(id: string): Promise<void> {
+    await Category.findByIdAndRemove(id);
+  }
+}

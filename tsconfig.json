@@ -14,5 +14,7 @@
     "resolveJsonModule": true,
     "typeRoots": ["./src/types", "./node_modules/@types"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "experimentalDecorators": true,
+  "emitDecoratorMetadata": true
 }
