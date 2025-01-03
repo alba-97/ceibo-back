@@ -10,10 +10,12 @@ import {
 import {
   CategoryRepository,
   CommentRepository,
+  EmailRepository,
   EventRepository,
   FileRepository,
   RoleRepository,
   UserRepository,
+  WhatsappRepository,
 } from "./repositories";
 import {
   CategoryController,
@@ -29,37 +31,39 @@ import {
   RoleMapper,
   UserMapper,
 } from "./mappers";
+import SeederService from "./services/seeder.service";
 
 const container = createContainer();
 
 container.register({
   categoryMapper: asClass(CategoryMapper).scoped(),
-  categoryRepository: asClass(CategoryRepository).scoped(),
-  categoryService: asClass(CategoryService).scoped(),
-  categoryController: asClass(CategoryController).scoped(),
-
   userMapper: asClass(UserMapper).scoped(),
-  userRepository: asClass(UserRepository).scoped(),
-  userService: asClass(UserService).scoped(),
-  userController: asClass(UserController).scoped(),
-
-  eventMapper: asClass(EventMapper).scoped(),
-  eventController: asClass(EventController).scoped(),
-  eventService: asClass(EventService).scoped(),
-  eventRepository: asClass(EventRepository).scoped(),
-
   roleMapper: asClass(RoleMapper).scoped(),
-  roleService: asClass(RoleService).scoped(),
-  roleRepository: asClass(RoleRepository).scoped(),
-
-  fileController: asClass(FileController).scoped(),
-  fileService: asClass(FileService).scoped(),
-  fileRepository: asClass(FileRepository).scoped(),
-
+  eventMapper: asClass(EventMapper).scoped(),
   commentMapper: asClass(CommentMapper).scoped(),
-  commentController: asClass(CommentController).scoped(),
-  commentService: asClass(CommentService).scoped(),
+
+  categoryRepository: asClass(CategoryRepository).scoped(),
+  emailRepository: asClass(EmailRepository).scoped(),
+  whatsappRepository: asClass(WhatsappRepository).scoped(),
+  userRepository: asClass(UserRepository).scoped(),
+  eventRepository: asClass(EventRepository).scoped(),
+  roleRepository: asClass(RoleRepository).scoped(),
+  fileRepository: asClass(FileRepository).scoped(),
   commentRepository: asClass(CommentRepository).scoped(),
+
+  userService: asClass(UserService).scoped(),
+  eventService: asClass(EventService).scoped(),
+  roleService: asClass(RoleService).scoped(),
+  fileService: asClass(FileService).scoped(),
+  commentService: asClass(CommentService).scoped(),
+  categoryService: asClass(CategoryService).scoped(),
+  seederService: asClass(SeederService).scoped(),
+
+  eventController: asClass(EventController).scoped(),
+  userController: asClass(UserController).scoped(),
+  fileController: asClass(FileController).scoped(),
+  commentController: asClass(CommentController).scoped(),
+  categoryController: asClass(CategoryController).scoped(),
 });
 
 export default container;

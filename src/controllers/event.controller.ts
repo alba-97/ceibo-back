@@ -4,7 +4,7 @@ import handleError from "../utils/handleError";
 import { UserOptions, CategoryOptions } from "../interfaces/options";
 import { DELETE, GET, POST, PUT, route } from "awilix-router-core";
 
-@route("events")
+@route("/events")
 export default class EventController {
   private eventService: EventService;
   private roleService: RoleService;
@@ -44,7 +44,7 @@ export default class EventController {
     }
   }
 
-  @route(":id/rating")
+  @route("/:id/rating")
   @GET()
   async userRating(req: Request, res: Response) {
     try {
@@ -58,7 +58,7 @@ export default class EventController {
     }
   }
 
-  @route("stop-participating/:eventId")
+  @route("/stop-participating/:eventId")
   @DELETE()
   async removeUserEvent(req: Request, res: Response) {
     try {
@@ -72,7 +72,7 @@ export default class EventController {
     }
   }
 
-  @route("enroll")
+  @route("/enroll")
   @POST()
   async addUserEvent(req: Request, res: Response) {
     try {
@@ -88,7 +88,7 @@ export default class EventController {
     }
   }
 
-  @route(":id")
+  @route("/:id")
   @GET()
   async getEvent(req: Request, res: Response) {
     try {
@@ -99,7 +99,7 @@ export default class EventController {
     }
   }
 
-  @route("history")
+  @route("/history")
   @GET()
   async getPastUserEvents(req: Request, res: Response) {
     try {
@@ -110,7 +110,7 @@ export default class EventController {
     }
   }
 
-  @route("my-events")
+  @route("/my-events")
   @GET()
   async getUserEvents(req: Request, res: Response) {
     try {
@@ -121,7 +121,7 @@ export default class EventController {
     }
   }
 
-  @route("filter")
+  @route("/filter")
   @GET()
   async getFilteredEvents(req: Request, res: Response) {
     try {
@@ -135,7 +135,7 @@ export default class EventController {
     }
   }
 
-  @route("search")
+  @route("/search")
   @GET()
   async getEventsByQuery(req: Request, res: Response) {
     try {
@@ -146,7 +146,7 @@ export default class EventController {
     }
   }
 
-  @route("search/category")
+  @route("/search/category")
   @GET()
   async getEventsByCategory(req: Request, res: Response) {
     try {
@@ -158,7 +158,7 @@ export default class EventController {
     }
   }
 
-  @route("search/user")
+  @route("/search/user")
   @GET()
   async getEventsByUsername(req: Request, res: Response) {
     try {
@@ -171,7 +171,7 @@ export default class EventController {
     }
   }
 
-  @route(":id")
+  @route("/:id")
   @DELETE()
   async deleteEvent(req: Request, res: Response) {
     try {
@@ -183,7 +183,7 @@ export default class EventController {
     }
   }
 
-  @route(":id/can-update")
+  @route("/:id/can-update")
   @GET()
   async checkUpdate(req: Request, res: Response) {
     try {
@@ -197,7 +197,7 @@ export default class EventController {
     }
   }
 
-  @route(":id")
+  @route("/:id")
   @PUT()
   async updateEventData(req: Request, res: Response) {
     try {
@@ -212,7 +212,7 @@ export default class EventController {
     }
   }
 
-  @route(":id/organizer")
+  @route("/:id/organizer")
   @GET()
   async getOrganizerAvgRating(req: Request, res: Response) {
     try {
@@ -225,7 +225,7 @@ export default class EventController {
     }
   }
 
-  @route(":id/rate")
+  @route("/:id/rate")
   @POST()
   async rateEvent(req: Request, res: Response) {
     try {

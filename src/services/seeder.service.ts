@@ -10,13 +10,24 @@ import {
 } from "../repositories/";
 
 export default class SeederService {
-  constructor(
-    private readonly categoryRepository: CategoryRepository,
-    private readonly eventRepository: EventRepository,
-    private readonly userRepository: UserRepository,
-    private readonly commentRepository: CommentRepository,
-    private readonly roleRepository: RoleRepository
-  ) {}
+  private categoryRepository: CategoryRepository;
+  private eventRepository: EventRepository;
+  private userRepository: UserRepository;
+  private commentRepository: CommentRepository;
+  private roleRepository: RoleRepository;
+  constructor(dependencies: {
+    categoryRepository: CategoryRepository;
+    eventRepository: EventRepository;
+    userRepository: UserRepository;
+    commentRepository: CommentRepository;
+    roleRepository: RoleRepository;
+  }) {
+    this.categoryRepository = dependencies.categoryRepository;
+    this.eventRepository = dependencies.eventRepository;
+    this.userRepository = dependencies.userRepository;
+    this.commentRepository = dependencies.commentRepository;
+    this.roleRepository = dependencies.roleRepository;
+  }
   async generateData() {
     for (let i = 0; i < data.users.length; i++) {
       try {

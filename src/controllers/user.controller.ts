@@ -6,14 +6,14 @@ import { GET, POST, PUT, route } from "awilix-router-core";
 
 dotenv.config();
 
-@route("users")
+@route("/users")
 export default class UserController {
   private userService: UserService;
   constructor(dependencies: { userService: UserService }) {
     this.userService = dependencies.userService;
   }
 
-  @route("invite")
+  @route("/invite")
   @POST()
   public async inviteUsers(req: Request, res: Response) {
     try {
@@ -24,7 +24,7 @@ export default class UserController {
     }
   }
 
-  @route("login")
+  @route("/login")
   @POST()
   public async login(req: Request, res: Response) {
     try {
@@ -36,7 +36,7 @@ export default class UserController {
     }
   }
 
-  @route("signup")
+  @route("/signup")
   @POST()
   public async signup(req: Request, res: Response) {
     try {
@@ -47,7 +47,7 @@ export default class UserController {
     }
   }
 
-  @route("preferences")
+  @route("/preferences")
   @POST()
   public async addPreferences(req: Request, res: Response) {
     try {
@@ -58,7 +58,7 @@ export default class UserController {
     }
   }
 
-  @route("secret")
+  @route("/secret")
   @GET()
   public async secret(req: Request, res: Response) {
     try {
@@ -82,7 +82,7 @@ export default class UserController {
     }
   }
 
-  @route("find-email")
+  @route("/find-email")
   @GET()
   public async findByEmail(req: Request, res: Response) {
     try {
@@ -94,7 +94,7 @@ export default class UserController {
     }
   }
 
-  @route("me")
+  @route("/me")
   @GET()
   public async me(req: Request, res: Response) {
     try {
@@ -106,7 +106,7 @@ export default class UserController {
     }
   }
 
-  @route(":id")
+  @route("/:id")
   @GET()
   public async getUser(req: Request, res: Response) {
     try {
@@ -127,7 +127,7 @@ export default class UserController {
     }
   }
 
-  @route("add-friend")
+  @route("/add-friend")
   @POST()
   public async addFriend(req: Request, res: Response) {
     try {
@@ -138,7 +138,7 @@ export default class UserController {
     }
   }
 
-  @route("remove-friend/:id")
+  @route("/remove-friend/:id")
   @PUT()
   public async removeUserFriend(req: Request, res: Response) {
     try {
@@ -149,7 +149,7 @@ export default class UserController {
     }
   }
 
-  @route("friends")
+  @route("/friends")
   @GET()
   public async getUserFriends(req: Request, res: Response) {
     try {

@@ -3,7 +3,7 @@ import handleError from "../utils/handleError";
 import { FileService } from "../services";
 import { POST, route } from "awilix-router-core";
 
-@route("files")
+@route("/files")
 export default class FileController {
   private fileService: FileService;
   constructor(dependencies: { fileService: FileService }) {

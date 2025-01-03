@@ -13,11 +13,8 @@ dotenv.config();
 const app = express();
 
 app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(docsData)));
-
 app.use(express.json());
-
 app.use(scopePerRequest(container));
-app.use(loadControllers("controllers/*.ts", { cwd: __dirname }));
 
 const PORT = process.env.PORT || 8000;
 const ORIGIN = process.env.ORIGIN || "http://localhost:3000";
@@ -30,6 +27,7 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(loadControllers("controllers/*.ts", { cwd: __dirname }));
 
 mongoose
   .connect(MONGODB_URI, {
