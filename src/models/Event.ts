@@ -34,9 +34,7 @@ const EventSchema = new Schema<IEvent>({
   link_to_pay: { type: String, default: "" },
   deadline_to_pay: {
     type: Date,
-    default: function () {
-      return this.start_date;
-    },
+    default: new Date(),
   },
   category: {
     type: Schema.Types.ObjectId,

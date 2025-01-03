@@ -3,103 +3,63 @@ import { AddRole } from "../interfaces/entities/create";
 import { RoleOptions } from "../interfaces/options";
 import { Role } from "../models";
 
-const addRole = async (role: AddRole) => {
-  const newRole = await new Role(role);
-  await newRole.save();
-  return newRole;
+type WhereClause = {
+  userId?: string;
+  eventId?: string | { $in: string[] };
+  role?: string;
 };
 
-const getRoles = async (query: RoleOptions = {}) => {
-  const roles = await Role.find(query).populate({
-    path: "event",
-    model: "Event",
-    populate: {
-      path: "category",
-      select: "name",
-      model: "Category",
-    },
-  });
-  return roles;
-};
-
-const getRole = async (query: RoleOptions) => {
-  const role = await Role.findOne(query).populate({
-    path: "event",
-    model: "Event",
-    populate: {
-      path: "category",
-      select: "name",
-      model: "Category",
-    },
-  });
-  return role;
-};
-
-const rateEvent = async (eventId: string, userId: string, rating: number) => {
-  const role = await Role.findOne({ user: userId, event: eventId });
-  if (role && role.role != "Organizer") {
-    await Role.updateOne({ _id: role._id }, { rating });
+export default class RoleRepository {
+  async createOne(role: AddRole): Promise<IRole> {
+    const newRole = await new Role(role);
+    await newRole.save();
+    return newRole;
   }
-};
 
-const getOrganizerFromEvent = async (eventId: string) => {
-  const role = await Role.findOne({
-    role: "Organizer",
-    event: eventId,
-  }).populate({ path: "user", model: "User", select: "-password -salt" });
+  async findAll(query: RoleOptions = {}): Promise<IRole[]> {
+    const { userId, eventId, role, eventIds } = query;
 
-  return role?.user;
-};
+    const where: WhereClause = {};
 
-const getEventIdsFromOrganizer = async (organizerId: string) => {
-  const roles = await Role.find({
-    role: "Organizer",
-    user: organizerId,
-  }).populate({ path: "event", model: "Event" });
-  return roles
-    .map((item: IRole) => item.event?._id)
-    .filter((item?: string) => item !== undefined);
-};
+    if (userId) where.userId = userId;
+    if (eventId) where.eventId = eventId;
+    if (role) where.role = role;
+    if (eventIds) where.eventId = { $in: eventIds };
 
-const getRatingsFromEventIds = async (events: string[]) => {
-  const roles = await Role.find({
-    role: { $ne: "Organizer" },
-    event: { $in: events },
-  });
+    const roles = await Role.find(query).populate({
+      path: "event",
+      model: "Event",
+      populate: {
+        path: "category",
+        select: "name",
+        model: "Category",
+      },
+    });
+    return roles;
+  }
 
-  const ratings: number[] = roles
-    .map((item: IRole) => item.rating)
-    .filter((item?: number) => item !== undefined);
+  async findOne(query: RoleOptions = {}): Promise<IRole | null> {
+    const role = await Role.findOne(query).populate({
+      path: "event",
+      model: "Event",
+      populate: {
+        path: "category",
+        select: "name",
+        model: "Category",
+      },
+    });
+    return role;
+  }
 
-  return ratings;
-};
+  async updateOneById(id: string, role: Partial<AddRole>): Promise<void> {
+    await Role.findByIdAndUpdate(id, role);
+  }
 
-const getAvgRating = async (ratings: number[]) => {
-  const sumRating = ratings.reduce(
-    (total: number, rating: number) => total + rating,
-    0
-  );
-  const avgRating = sumRating / ratings.length;
-  return avgRating;
-};
+  async removeOneById(id: string): Promise<void> {
+    await Role.findByIdAndRemove(id);
+  }
 
-const removeRoleById = async (id: string) => {
-  await Role.findByIdAndRemove(id);
-};
-
-const removeRoles = async (query: RoleOptions) => {
-  await Role.deleteMany(query);
-};
-
-export default {
-  getRole,
-  getRoles,
-  getOrganizerFromEvent,
-  getEventIdsFromOrganizer,
-  getRatingsFromEventIds,
-  getAvgRating,
-  addRole,
-  rateEvent,
-  removeRoleById,
-  removeRoles,
-};
+  async removeMany(query: RoleOptions): Promise<void> {
+    await Role.deleteMany(query);
+  }
+}

@@ -3,153 +3,164 @@ import { ICategory, IUser } from "../interfaces/entities";
 import HttpError from "../interfaces/HttpError";
 import { InvitationOptions } from "../interfaces/options";
 import { UserOptions } from "../interfaces/options";
+import { UserMapper } from "../mappers";
 import {
-  emailRepository,
-  twilioRepository,
-  userRepository,
+  UserRepository,
+  WhatsappRepository,
+  EmailRepository,
 } from "../repositories";
 
-const inviteUsers = async (data: InvitationOptions, userId: string) => {
-  const usernames = data.users;
-  const eventTitle = data.plan.title;
-  const user = await userRepository.getUserById(userId);
-  if (!user) return;
+export default class UserService {
+  private userRepository: UserRepository;
+  private emailRepository: EmailRepository;
+  private whatsappRepository: WhatsappRepository;
+  private userMapper: UserMapper;
+  constructor(dependencies: {
+    userRepository: UserRepository;
+    emailRepository: EmailRepository;
+    whatsappRepository: WhatsappRepository;
+    userMapper: UserMapper;
+  }) {
+    this.userRepository = dependencies.userRepository;
+    this.emailRepository = dependencies.emailRepository;
+    this.whatsappRepository = dependencies.whatsappRepository;
+    this.userMapper = dependencies.userMapper;
+  }
 
-  const invitedUsers = await userRepository.getUsersByUsernames(usernames);
-  invitedUsers.forEach(async (invitedUser) => {
-    switch (data.method) {
-      case "email":
-        await emailRepository.sendEmail({
-          email: invitedUser.email,
-          username: user.username,
-          eventId: data.plan._id,
-          eventTitle,
-        });
-        break;
-      case "phone":
-        if (!invitedUser.phone) return;
-        await twilioRepository.sendWhatsapp({
-          username: invitedUser.username,
-          eventTitle,
-          eventId: data.plan._id,
-          to: invitedUser.phone,
-        });
-        break;
-    }
-  });
-};
+  async inviteUsers(data: InvitationOptions, userId: string) {
+    const usernames = data.users;
+    const eventTitle = data.plan.title;
+    const user = await this.userRepository.findOneById(userId);
+    if (!user) return;
 
-const login = async (username: string, password: string) => {
-  const user = await userRepository.getUserByUsername(username);
-  if (!user) throw new HttpError(401, "Invalid username or password");
+    const invitedUsers = await this.userRepository.findAll({ usernames });
+    invitedUsers.forEach(async (invitedUser) => {
+      switch (data.method) {
+        case "email":
+          await this.emailRepository.send({
+            email: invitedUser.email,
+            username: user.username,
+            eventId: data.plan._id,
+            eventTitle,
+          });
+          break;
+        case "phone":
+          if (!invitedUser.phone) return;
+          await this.whatsappRepository.send({
+            username: invitedUser.username,
+            eventTitle,
+            eventId: data.plan._id,
+            to: invitedUser.phone,
+          });
+          break;
+      }
+    });
+  }
 
-  const isValid = await user.validatePassword(password);
-  if (!isValid) throw new HttpError(401, "Invalid username or password");
+  async login(username: string, password: string) {
+    const user = await this.userRepository.findOne({ username });
+    if (!user) throw new HttpError(401, "Invalid username or password");
 
-  let { _id, email } = user;
-  const token = generateToken({ _id, username, email });
-  return token;
-};
+    const isValid = await user.validatePassword(password);
+    if (!isValid) throw new HttpError(401, "Invalid username or password");
 
-const addPreferences = async (userId: string, categories: ICategory[]) => {
-  const user = await userRepository.getUserById(userId);
-  if (!user) throw new HttpError(404, "User not found");
-  user.preferences = [...categories];
-  await user.save();
-};
+    let { _id, email } = user;
+    const token = generateToken({ _id, username, email });
+    return token;
+  }
 
-const getUser = async (userQuery: UserOptions): Promise<IUser> => {
-  const user = await userRepository.getUser(userQuery);
-  if (!user) throw new HttpError(404, "User not found");
-  return user;
-};
+  async addPreferences(userId: string, categories: ICategory[]) {
+    const user = await this.userRepository.findOneById(userId);
+    if (!user) throw new HttpError(404, "User not found");
+    await this.userRepository.updateOneById(userId, {
+      preferences: [...categories],
+    });
+  }
 
-const validateUserPassword = async (user: IUser, password: string) => {
-  const isValid = await user.validatePassword(password);
-  return isValid;
-};
+  async getUser(userQuery: UserOptions): Promise<IUser> {
+    const user = await this.userRepository.findOne(userQuery);
+    if (!user) throw new HttpError(404, "User not found");
+    return user;
+  }
 
-const addUser = async (userData: IUser) => {
-  await userRepository.addUser(userData);
-};
+  async validateUserPassword(user: IUser, password: string) {
+    const isValid = await user.validatePassword(password);
+    return isValid;
+  }
 
-const getUsers = async () => {
-  return await userRepository.getUsers();
-};
+  async addUser(userData: IUser) {
+    await this.userRepository.createOne(userData);
+  }
 
-const getUserById = async (userId: string) => {
-  const user = await userRepository.getUserById(userId);
-  if (!user) throw new HttpError(404, "User not found");
-  return user;
-};
+  async getUsers() {
+    return await this.userRepository.findAll();
+  }
 
-const updateUser = async (userId: string, userData: Partial<IUser>) => {
-  const user = await userRepository.updateById(userId, userData);
-  return user;
-};
+  async getUserById(userId: string) {
+    const user = await this.userRepository.findOneById(userId);
+    if (!user) throw new HttpError(404, "User not found");
+    return user;
+  }
 
-const addFriend = async (userId: string, friendId: string) => {
-  const user = await userRepository.getUserById(userId);
-  if (!user) return;
+  async updateUser(userId: string, userData: Partial<IUser>) {
+    const user = await this.userRepository.updateOneById(userId, userData);
+    return user;
+  }
 
-  const friend = await userRepository.getUserById(friendId);
-  if (!friend) return;
+  async addFriend(userId: string, friendId: string) {
+    const user = await this.userRepository.findOneById(userId);
+    if (!user) return;
 
-  user.friends.push(friend);
-  await user.save();
+    const friend = await this.userRepository.findOneById(friendId);
+    if (!friend) return;
 
-  friend.friends.push(user);
-  await friend.save();
-};
+    const friends = user.friends;
+    const updatedUserFriends = this.userMapper.addUser(friends, friend);
+    const updatedFriendFriends = this.userMapper.addUser(friends, friend);
 
-const removeUserFriend = async (userId: string, friendId: string) => {
-  const user = await userRepository.getUserById(userId);
-  if (!user) return;
+    await this.userRepository.updateOneById(user._id, {
+      friends: updatedUserFriends,
+    });
+    await this.userRepository.updateOneById(friend._id, {
+      friends: updatedFriendFriends,
+    });
+  }
 
-  const friend = await userRepository.getUserById(friendId);
-  if (!friend) return;
+  async removeUserFriend(userId: string, friendId: string) {
+    const user = await this.userRepository.findOneById(userId);
+    if (!user) return;
 
-  const userFriends = await getUserFriends(userId);
-  if (!userFriends) return;
+    const friend = await this.userRepository.findOneById(friendId);
+    if (!friend) return;
 
-  const friendFriends = await getUserFriends(friendId);
-  if (!friendFriends) return;
+    const userFriends = await this.getUserFriends(userId);
+    if (!userFriends) return;
 
-  user.friends = userFriends.filter(
-    (_friend: IUser) => friend._id !== _friend._id
-  );
-  await user.save();
+    const friendFriends = await this.getUserFriends(friendId);
+    if (!friendFriends) return;
 
-  friend.friends = friendFriends.filter(
-    (_friend) => _friend._id !== friend._id
-  );
-  await friend.save();
-};
+    const friends = user.friends;
+    const updatedUserFriends = this.userMapper.removeUser(friends, friend);
+    const updatedFriendFriends = this.userMapper.removeUser(friends, friend);
 
-const getUserFriends = async (userId: string) => {
-  const user = await userRepository.getUserById(userId);
-  if (!user) throw new HttpError(404, "User not found");
-  return user.friends;
-};
+    await this.userRepository.updateOneById(user._id, {
+      friends: updatedUserFriends,
+    });
 
-const getUserPayload = async (token?: string) => {
-  const result = validateToken(token);
-  if (typeof result === "string") throw new HttpError(401, "Unauthorized");
-  return result.payload;
-};
+    await this.userRepository.updateOneById(friend._id, {
+      friends: updatedFriendFriends,
+    });
+  }
 
-export default {
-  inviteUsers,
-  addPreferences,
-  getUser,
-  validateUserPassword,
-  addUser,
-  getUsers,
-  getUserById,
-  updateUser,
-  addFriend,
-  removeUserFriend,
-  getUserFriends,
-  getUserPayload,
-  login,
-};
+  async getUserFriends(userId: string) {
+    const user = await this.userRepository.findOneById(userId);
+    if (!user) throw new HttpError(404, "User not found");
+    return user.friends;
+  }
+
+  async getUserPayload(token?: string) {
+    const result = validateToken(token);
+    if (typeof result === "string") throw new HttpError(401, "Unauthorized");
+    return result.payload;
+  }
+}

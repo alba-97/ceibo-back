@@ -1,11 +1,7 @@
-import fromCategoryDtoToEntity from "./fromCategoryDtoToEntity";
-import fromCommentDtoToEntity from "./fromCommentDtoToEntity";
-import fromEventDtoToEntity from "./fromEventDtoToEntity";
-import fromRoleDtoToEntity from "./fromRoleDtoToEntity";
+import CategoryMapper from "./category.mapper";
+import CommentMapper from "./comment.mapper";
+import EventMapper from "./event.mapper";
+import RoleMapper from "./role.mapper";
+import UserMapper from "./user.mapper";
 
-export {
-  fromCategoryDtoToEntity,
-  fromCommentDtoToEntity,
-  fromEventDtoToEntity,
-  fromRoleDtoToEntity,
-};
+export { CategoryMapper, CommentMapper, EventMapper, RoleMapper, UserMapper };

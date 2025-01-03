@@ -1,30 +1,49 @@
 import HttpError from "../interfaces/HttpError";
-import { fromCommentDtoToEntity } from "../mappers";
+import { CommentMapper } from "../mappers";
 import {
-  commentRepository,
-  eventRepository,
-  userRepository,
-} from "../repositories";
+  EventRepository,
+  CommentRepository,
+  UserRepository,
+} from "../repositories/";
 
-const addComment = async (eventId: string, userId: string, text: string) => {
-  const comment = fromCommentDtoToEntity({
-    userId,
-    text,
-    eventId,
-  });
+export default class CommentsService {
+  private commentRepository: CommentRepository;
+  private eventRepository: EventRepository;
+  private userRepository: UserRepository;
+  private commentMapper: CommentMapper;
+  constructor(dependencies: {
+    commentRepository: CommentRepository;
+    eventRepository: EventRepository;
+    userRepository: UserRepository;
+    commentMapper: CommentMapper;
+  }) {
+    this.commentRepository = dependencies.commentRepository;
+    this.eventRepository = dependencies.eventRepository;
+    this.userRepository = dependencies.userRepository;
+    this.commentMapper = dependencies.commentMapper;
+  }
 
-  const event = await eventRepository.getEventById(eventId);
-  if (!event) throw new HttpError(404, "Event not found");
-  comment.event = event;
+  async addComment(eventId: string, userId: string, text: string) {
+    const comment = this.commentMapper.fromDtoToEntity({
+      userId,
+      text,
+      eventId,
+    });
 
-  const user = await userRepository.getUserById(userId);
-  if (!user) throw new HttpError(404, "User not found");
-  comment.user = user;
+    const event = await this.eventRepository.findOneById(eventId);
+    if (!event) throw new HttpError(404, "Event not found");
+    comment.event = event;
 
-  const newComment = await commentRepository.addComment(comment);
-  event.comments = [...event.comments, newComment];
-  await event.save();
-  return newComment;
-};
+    const user = await this.userRepository.findOneById(userId);
+    if (!user) throw new HttpError(404, "User not found");
+    comment.user = user;
 
-export default { addComment };
+    const newComment = await this.commentRepository.createOne(comment);
+
+    await this.eventRepository.updateOneById(eventId, {
+      comments: [...event.comments, newComment],
+    });
+
+    return newComment;
+  }
+}

@@ -1,19 +1,30 @@
-import { fromCategoryDtoToEntity } from "../mappers";
-import { categoryRepository } from "../repositories";
+import { CategoryMapper } from "../mappers";
+import { CategoryRepository } from "../repositories";
 
-const listCategories = async () => {
-  let categories = categoryRepository.getCategories();
-  return categories;
-};
+export default class CategoryService {
+  categoryRepository: CategoryRepository;
+  categoryMapper: CategoryMapper;
 
-const createNewCategory = async (name: string) => {
-  const category = fromCategoryDtoToEntity({ name });
-  let newCategory = await categoryRepository.addCategory(category);
-  return newCategory;
-};
+  constructor(dependencies: {
+    categoryRepository: CategoryRepository;
+    categoryMapper: CategoryMapper;
+  }) {
+    this.categoryRepository = dependencies.categoryRepository;
+    this.categoryMapper = dependencies.categoryMapper;
+  }
 
-const removeCategory = async (categoryId: string) => {
-  await categoryRepository.removeCategoryById(categoryId);
-};
+  async listCategories() {
+    const categories = await this.categoryRepository.findAll();
+    return categories;
+  }
 
-export default { listCategories, createNewCategory, removeCategory };
+  async createNewCategory(name: string) {
+    const category = this.categoryMapper.fromDtoToEntity({ name });
+    let newCategory = await this.categoryRepository.createOne(category);
+    return newCategory;
+  }
+
+  async removeCategory(categoryId: string) {
+    await this.categoryRepository.removeOneById(categoryId);
+  }
+}

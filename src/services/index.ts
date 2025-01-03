@@ -1,15 +1,15 @@
-import categoryService from "./category.service";
-import commentService from "./comment.service";
-import eventService from "./event.service";
-import roleService from "./role.service";
-import userService from "./user.service";
-import fileService from "./file.service";
+import CategoryService from "./category.service";
+import CommentService from "./comment.service";
+import EventService from "./event.service";
+import RoleService from "./role.service";
+import UserService from "./user.service";
+import FileService from "./file.service";
 
 export {
-  categoryService,
-  commentService,
-  eventService,
-  roleService,
-  userService,
-  fileService,
+  CategoryService,
+  CommentService,
+  EventService,
+  RoleService,
+  UserService,
+  FileService,
 };

@@ -1,9 +1,14 @@
 import HttpError from "../interfaces/HttpError";
-import { fileRepository } from "../repositories";
+import { FileRepository } from "../repositories";
 
-const uploadFile = async (file?: Express.Multer.File) => {
-  if (!file) throw new HttpError(404, "File not found");
-  return await fileRepository.uploadFile(file);
-};
+export default class FileService {
+  private fileRepository: FileRepository;
+  constructor(dependencies: { fileRepository: FileRepository }) {
+    this.fileRepository = dependencies.fileRepository;
+  }
 
-export default { uploadFile };
+  async uploadFile(file?: Express.Multer.File) {
+    if (!file) throw new HttpError(404, "File not found");
+    return await this.fileRepository.upload(file);
+  }
+}
