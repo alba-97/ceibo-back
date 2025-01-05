@@ -3,4 +3,6 @@ export default interface RoleOptions {
   eventId?: string;
   role?: string;
   eventIds?: string[];
+  minDate?: Date;
+  maxDate?: Date;
 }

@@ -20,9 +20,9 @@ export default class EventController {
   }
 
   @GET()
-  async getAllEvents(_: Request, res: Response) {
+  async getEvents(req: Request, res: Response) {
     try {
-      const events = await this.eventService.getAllEvents();
+      const events = await this.eventService.getEvents(req.query);
       res.status(200).send(events);
     } catch (err) {
       return handleError(res, err);
@@ -125,9 +125,8 @@ export default class EventController {
   @GET()
   async getFilteredEvents(req: Request, res: Response) {
     try {
-      const user = await this.userService.getUserById(req.user._id);
       const events = await this.eventService.getEventsByUserPreferences(
-        user.preferences
+        req.user.preferences
       );
       res.status(200).send(events);
     } catch (error) {

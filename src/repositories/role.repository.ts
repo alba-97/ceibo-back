@@ -7,6 +7,7 @@ type WhereClause = {
   userId?: string;
   eventId?: string | { $in: string[] };
   role?: string;
+  event?: { start_date: { $gte?: Date; $lte?: Date } };
 };
 
 export default class RoleRepository {
@@ -17,7 +18,7 @@ export default class RoleRepository {
   }
 
   async findAll(query: RoleOptions = {}): Promise<IRole[]> {
-    const { userId, eventId, role, eventIds } = query;
+    const { userId, eventId, role, eventIds, minDate, maxDate } = query;
 
     const where: WhereClause = {};
 
@@ -25,6 +26,9 @@ export default class RoleRepository {
     if (eventId) where.eventId = eventId;
     if (role) where.role = role;
     if (eventIds) where.eventId = { $in: eventIds };
+
+    if (minDate) where.event = { start_date: { $gte: minDate } };
+    if (maxDate) where.event = { start_date: { $lte: maxDate } };
 
     const roles = await Role.find(query).populate({
       path: "event",

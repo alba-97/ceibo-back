@@ -8,7 +8,7 @@ import {
   EventRepository,
   RoleRepository,
 } from "../repositories";
-import { EventMapper, RoleMapper } from "../mappers";
+import { CategoryMapper, EventMapper, RoleMapper } from "../mappers";
 
 export default class EventService {
   eventRepository: EventRepository;
@@ -16,18 +16,21 @@ export default class EventService {
   categoryRepository: CategoryRepository;
   eventMapper: EventMapper;
   roleMapper: RoleMapper;
+  categoryMapper: CategoryMapper;
   constructor(dependencies: {
     eventRepository: EventRepository;
     roleRepository: RoleRepository;
     categoryRepository: CategoryRepository;
     eventMapper: EventMapper;
     roleMapper: RoleMapper;
+    categoryMapper: CategoryMapper;
   }) {
     this.eventRepository = dependencies.eventRepository;
     this.roleRepository = dependencies.roleRepository;
     this.categoryRepository = dependencies.categoryRepository;
     this.eventMapper = dependencies.eventMapper;
     this.roleMapper = dependencies.roleMapper;
+    this.categoryMapper = dependencies.categoryMapper;
   }
   async createNewEvent(eventData: EventDto) {
     const category = await this.categoryRepository.findOne(eventData.category);
@@ -42,14 +45,13 @@ export default class EventService {
     return event;
   }
 
-  async getAllEvents() {
-    return await this.eventRepository.findAll();
+  async getEvents(options: EventOptions) {
+    return await this.eventRepository.findAll(options);
   }
 
   async getEventsByUserPreferences(preferences: ICategory[]) {
     const events = await this.eventRepository.findAll({
-      future: true,
-      preferences,
+      preferences: this.categoryMapper.fromEntitiesToArray(preferences),
     });
     return events;
   }
@@ -77,16 +79,12 @@ export default class EventService {
   }
 
   async getUserEvents(userId: string) {
-    const roles = await this.roleRepository.findAll({ userId });
-
-    const events = roles
-      .map((role: IRole) => role.event)
-      .filter((event?: IEvent) => event !== undefined);
-
-    const pastEvents = events.filter(
-      (item: IEvent) => new Date(item.start_date) <= new Date()
-    );
-    return pastEvents;
+    const roles = await this.roleRepository.findAll({
+      userId,
+      maxDate: new Date(),
+    });
+    const events = this.roleMapper.getEvents(roles);
+    return events;
   }
 
   async removeEvent(eventId: string, userId: string) {

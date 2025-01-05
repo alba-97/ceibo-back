@@ -1,10 +1,10 @@
-import { ICategory } from "../entities";
-
 export default interface EventOptions {
   title?: string;
+  search?: string;
   searchTerm?: string;
   categoryId?: string;
   username?: string;
-  future?: boolean;
-  preferences?: ICategory[];
+  minDate?: Date;
+  maxDate?: Date;
+  preferences?: string[];
 }
