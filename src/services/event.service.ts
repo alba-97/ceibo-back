@@ -67,7 +67,9 @@ export default class EventService {
   }
 
   async getEventsByUser(user: IUser) {
-    const roles = await this.roleRepository.findAll({ userId: user._id });
+    const { data: roles } = await this.roleRepository.findAll({
+      userId: user._id,
+    });
     const events = this.roleMapper.getEvents(roles);
     return events;
   }
@@ -79,7 +81,7 @@ export default class EventService {
   }
 
   async getUserEvents(userId: string) {
-    const roles = await this.roleRepository.findAll({
+    const { data: roles } = await this.roleRepository.findAll({
       userId,
       maxDate: new Date(),
     });
@@ -116,21 +118,6 @@ export default class EventService {
       eventId,
     });
     if (!role || !role.user) throw new HttpError(404, "Organizer not found");
-
-    const roles = await this.roleRepository.findAll({
-      role: "Organizer",
-      userId: role.user._id,
-    });
-
-    const eventIds = this.roleMapper.getEventIds(roles);
-
-    const rolesWithRating = await this.roleRepository.findAll({
-      eventIds,
-      role: "Member",
-    });
-
-    const ratings = this.roleMapper.getRatings(rolesWithRating);
-    const avg = getAvg(ratings);
-    return avg;
+    return role.user.rating;
   }
 }

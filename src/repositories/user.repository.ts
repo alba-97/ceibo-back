@@ -1,6 +1,7 @@
 import { IUser } from "../interfaces/entities";
 import { AddUser } from "../interfaces/entities/create";
 import { UserOptions } from "../interfaces/options";
+import Paginated from "../interfaces/Paginated";
 import { User } from "../models";
 
 type WhereClause = {
@@ -24,7 +25,7 @@ export default class UserRepository {
     });
   }
 
-  async findAll(query: UserOptions = {}): Promise<IUser[]> {
+  async findAll(query: UserOptions = {}): Promise<Paginated<IUser>> {
     const { username, email, usernames } = query;
 
     const where: WhereClause = {};
@@ -33,23 +34,33 @@ export default class UserRepository {
     if (email) where.email = email;
     if (usernames) where.username = { $in: usernames };
 
-    return await User.find(where, "-password -salt -__v").populate(
-      "preferences",
-      "Category"
-    );
+    const [data, total] = await Promise.all([
+      User.find(where, "-password -salt -__v").populate({
+        path: "preferences",
+        model: "Category",
+      }),
+      User.countDocuments(where),
+    ]);
+    return { data, total };
   }
 
   async findOne(query: UserOptions): Promise<IUser | null> {
-    return await User.findOne(query, "-password -salt -__v").populate(
-      "preferences",
-      "Category"
-    );
+    return await User.findOne(query, "-password -salt -__v").populate({
+      path: "preferences",
+      model: "Category",
+    });
   }
 
   async findOneById(userId: string): Promise<IUser | null> {
     return await User.findById(userId, "-password -salt -__v").populate([
-      "preferences",
-      "friends",
+      {
+        path: "preferences",
+        model: "Category",
+      },
+      {
+        path: "friends",
+        model: "User",
+      },
     ]);
   }
 }

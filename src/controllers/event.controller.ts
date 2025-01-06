@@ -25,6 +25,7 @@ export default class EventController {
       const events = await this.eventService.getEvents(req.query);
       res.status(200).send(events);
     } catch (err) {
+      console.log(err);
       return handleError(res, err);
     }
   }

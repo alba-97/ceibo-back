@@ -84,7 +84,7 @@ export default class SeederService {
     let users: IUser[] = [];
     let events: IEvent[] = [];
 
-    const allRoles = await this.roleRepository.findAll();
+    const { data: allRoles } = await this.roleRepository.findAll();
     const nRoles = allRoles.length;
 
     const allComments = await Comment.find();

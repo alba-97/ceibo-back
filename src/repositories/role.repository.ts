@@ -1,6 +1,7 @@
 import { IRole } from "../interfaces/entities";
 import { AddRole } from "../interfaces/entities/create";
 import { RoleOptions } from "../interfaces/options";
+import Paginated from "../interfaces/Paginated";
 import { Role } from "../models";
 
 type WhereClause = {
@@ -17,7 +18,10 @@ export default class RoleRepository {
     return newRole;
   }
 
-  async findAll(query: RoleOptions = {}): Promise<IRole[]> {
+  async findAll(
+    query: RoleOptions = {},
+    pagination = { skip: 0, limit: 20 }
+  ): Promise<Paginated<IRole>> {
     const { userId, eventId, role, eventIds, minDate, maxDate } = query;
 
     const where: WhereClause = {};
@@ -30,16 +34,25 @@ export default class RoleRepository {
     if (minDate) where.event = { start_date: { $gte: minDate } };
     if (maxDate) where.event = { start_date: { $lte: maxDate } };
 
-    const roles = await Role.find(query).populate({
-      path: "event",
-      model: "Event",
-      populate: {
-        path: "category",
-        select: "name",
-        model: "Category",
-      },
-    });
-    return roles;
+    const { skip, limit } = pagination;
+
+    const [data, total] = await Promise.all([
+      Role.find(query)
+        .skip(skip)
+        .limit(limit)
+        .populate({
+          path: "event",
+          model: "Event",
+          populate: {
+            path: "category",
+            select: "name",
+            model: "Category",
+          },
+        }),
+      Role.countDocuments(query),
+    ]);
+
+    return { data, total };
   }
 
   async findOne(query: RoleOptions = {}): Promise<IRole | null> {
