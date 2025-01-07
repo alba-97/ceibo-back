@@ -1,6 +1,6 @@
 import { RoleDto } from "../interfaces/dto";
 import HttpError from "../interfaces/HttpError";
-import { RoleMapper } from "../mappers";
+import { EventMapper, RoleMapper } from "../mappers";
 import {
   EventRepository,
   RoleRepository,
@@ -37,10 +37,23 @@ export default class RoleService {
     return await this.roleRepository.createOne(role);
   }
 
+  async getUserRating(username: string) {}
+
   async rateEvent(userId: string, eventId: string, rating: number) {
     const role = await this.roleRepository.findOne({ userId, eventId });
-    if (role && role._id && role.role != "Organizer")
-      await this.roleRepository.updateOneById(role._id, { rating });
+    if (!role || !role._id) throw new HttpError(404, "User or event not found");
+    if (role.role === "Organizer") throw new HttpError(401, "Not allowed");
+    if (!role.user) throw new HttpError(404, "User not found");
+
+    await this.roleRepository.updateOneById(role._id, { rating });
+
+    const { total } = await this.userRepository.getOrganizerRatings(userId);
+    const userRating = role.user.rating;
+    const avgRating = userRating ? (userRating + rating) / total : rating;
+
+    await this.userRepository.updateOneById(role.user._id, {
+      rating: avgRating,
+    });
   }
 
   async userRating(eventId: string, userId: string) {

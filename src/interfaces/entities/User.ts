@@ -15,6 +15,7 @@ export default interface IUser {
   preferences: ICategory[];
   new_user: boolean;
   friends: IUser[];
+  rating?: number;
   validatePassword(password: string): Promise<boolean>;
   save: () => {};
 }

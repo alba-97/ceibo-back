@@ -1,6 +1,5 @@
 import data from "../seeder/data.json";
 import { IEvent, IUser } from "../interfaces/entities";
-import { User, Comment } from "../models";
 import {
   CategoryRepository,
   EventRepository,
@@ -31,13 +30,13 @@ export default class SeederService {
   async generateData() {
     for (let i = 0; i < data.users.length; i++) {
       try {
-        const newUser = new User({
+        const newUser = await this.userRepository.createOne({
           username: data.users[i].username,
           password: data.users[i].password,
           email: data.users[i].email,
           first_name: data.users[i].first_name,
           last_name: data.users[i].last_name,
-          birthdate: data.users[i].birthdate,
+          birthdate: new Date(data.users[i].birthdate),
           address: data.users[i].address,
         });
         await newUser.save();
@@ -84,10 +83,10 @@ export default class SeederService {
     let users: IUser[] = [];
     let events: IEvent[] = [];
 
-    const allRoles = await this.roleRepository.findAll();
+    const { data: allRoles } = await this.roleRepository.findAll();
     const nRoles = allRoles.length;
 
-    const allComments = await Comment.find();
+    const { data: allComments } = await this.commentRepository.findAll();
     const nComments = allComments.length;
 
     for (let i = 0; i < data.roles.length; i++) {
@@ -103,14 +102,17 @@ export default class SeederService {
 
     if (nRoles == 0) {
       for (let i = 0; i < users.length; i++) {
+        let ratings = [];
         for (let j = 0; j < events.length; j++) {
           const role = j == i ? "Organizer" : "Member";
           const user = users[i];
           const event = events[j];
-          const rating =
-            role !== "Organizer" && user.username !== "clubDelPlan"
-              ? Math.random() * 5
-              : 0;
+
+          let rating;
+          if (role !== "Organizer") {
+            rating = Math.random() * 5;
+            ratings.push(rating);
+          }
 
           await this.roleRepository.createOne({
             user,
@@ -123,6 +125,10 @@ export default class SeederService {
             `${user.username} agregado a ${event.title} como ${role} (${rating})`
           );
         }
+        const avgRating = ratings.reduce((a, b) => a + b) / ratings.length;
+        await this.userRepository.updateOneById(users[i]._id, {
+          rating: avgRating,
+        });
       }
     }
     if (nComments == 0) {

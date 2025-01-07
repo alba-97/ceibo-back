@@ -1,11 +1,10 @@
 import { RoleDto } from "../interfaces/dto";
 import { IEvent, IRole } from "../interfaces/entities";
-import { AddRole } from "../interfaces/entities/create";
 
 export default class RoleMapper {
   fromDtoToEntity(roleDto: RoleDto) {
     const { role } = roleDto;
-    const roleEntity: AddRole = { role };
+    const roleEntity: Partial<IRole> = { role };
     if (roleDto.rating) roleEntity.rating = roleDto.rating;
     return roleEntity;
   }

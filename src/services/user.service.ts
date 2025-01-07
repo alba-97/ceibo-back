@@ -33,7 +33,9 @@ export default class UserService {
     const user = await this.userRepository.findOneById(userId);
     if (!user) return;
 
-    const invitedUsers = await this.userRepository.findAll({ usernames });
+    const { data: invitedUsers } = await this.userRepository.findAll({
+      usernames,
+    });
     invitedUsers.forEach(async (invitedUser) => {
       switch (data.method) {
         case "email":

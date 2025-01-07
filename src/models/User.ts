@@ -54,6 +54,7 @@ const UserSchema = new Schema<IUser>({
       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     validate: isURL,
   },
+  rating: { type: Number },
   address: { type: String },
   preferences: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   new_user: { type: Boolean, default: true },
