@@ -1,10 +1,10 @@
 import { CommentDto } from "../interfaces/dto";
-import { AddComment } from "../interfaces/entities/create";
+import { IComment } from "../interfaces/entities";
 
 export default class CategoryMapper {
   fromDtoToEntity(commentDto: CommentDto) {
     const { text } = commentDto;
-    const commentEntity: AddComment = { text };
+    const commentEntity: Partial<IComment> = { text };
     return commentEntity;
   }
 }

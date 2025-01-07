@@ -1,5 +1,4 @@
 import { ICategory } from "../interfaces/entities";
-import { AddCategory } from "../interfaces/entities/create";
 import Paginated from "../interfaces/Paginated";
 import { Category } from "../models";
 
@@ -21,7 +20,7 @@ export default class CategoryRepository {
     return { data, total };
   }
 
-  async createOne(category: AddCategory): Promise<ICategory> {
+  async createOne(category: Partial<ICategory>): Promise<ICategory> {
     const newCategory = new Category(category);
     await newCategory.save();
     return newCategory;

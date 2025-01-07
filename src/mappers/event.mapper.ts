@@ -1,5 +1,5 @@
 import { EventDto } from "../interfaces/dto";
-import { AddEvent } from "../interfaces/entities/create";
+import { IEvent } from "../interfaces/entities";
 
 export default class EventMapper {
   fromDtoToEntity(eventDto: EventDto) {
@@ -19,7 +19,7 @@ export default class EventMapper {
       private: _private,
     } = eventDto;
 
-    const eventEntity: AddEvent = {
+    const eventEntity: Partial<IEvent> = {
       title,
       description,
       event_location,
@@ -39,5 +39,8 @@ export default class EventMapper {
     if (_private) eventEntity.private = _private;
 
     return eventEntity;
+  }
+  getEventIds(events: IEvent[]): string[] {
+    return events.map((item: IEvent) => item._id);
   }
 }

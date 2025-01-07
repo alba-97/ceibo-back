@@ -1,18 +1,19 @@
 import { IRole } from "../interfaces/entities";
-import { AddRole } from "../interfaces/entities/create";
 import { RoleOptions } from "../interfaces/options";
 import Paginated from "../interfaces/Paginated";
 import { Role } from "../models";
 
 type WhereClause = {
-  userId?: string;
-  eventId?: string | { $in: string[] };
+  user?: string;
   role?: string;
-  event?: { start_date: { $gte?: Date; $lte?: Date } };
+  event?:
+    | { start_date: { $gte?: Date; $lte?: Date } }
+    | string
+    | { $in: string[] };
 };
 
 export default class RoleRepository {
-  async createOne(role: AddRole): Promise<IRole> {
+  async createOne(role: Partial<IRole>): Promise<IRole> {
     const newRole = await new Role(role);
     await newRole.save();
     return newRole;
@@ -26,10 +27,10 @@ export default class RoleRepository {
 
     const where: WhereClause = {};
 
-    if (userId) where.userId = userId;
-    if (eventId) where.eventId = eventId;
+    if (userId) where.user = userId;
+    if (eventId) where.event = eventId;
     if (role) where.role = role;
-    if (eventIds) where.eventId = { $in: eventIds };
+    if (eventIds) where.event = { $in: eventIds };
 
     if (minDate) where.event = { start_date: { $gte: minDate } };
     if (maxDate) where.event = { start_date: { $lte: maxDate } };
@@ -40,15 +41,21 @@ export default class RoleRepository {
       Role.find(query)
         .skip(skip)
         .limit(limit)
-        .populate({
-          path: "event",
-          model: "Event",
-          populate: {
-            path: "category",
-            select: "name",
-            model: "Category",
+        .populate([
+          {
+            path: "event",
+            model: "Event",
+            populate: {
+              path: "category",
+              select: "name",
+              model: "Category",
+            },
           },
-        }),
+          {
+            path: "user",
+            model: "User",
+          },
+        ]),
       Role.countDocuments(query),
     ]);
 
@@ -56,19 +63,31 @@ export default class RoleRepository {
   }
 
   async findOne(query: RoleOptions = {}): Promise<IRole | null> {
-    const role = await Role.findOne(query).populate({
-      path: "event",
-      model: "Event",
-      populate: {
-        path: "category",
-        select: "name",
-        model: "Category",
+    const { eventId, userId, role: _role } = query;
+    const where: WhereClause = {};
+    if (eventId) where.event = eventId;
+    if (userId) where.user = userId;
+    if (_role) where.role = _role;
+
+    const role = await Role.findOne(where).populate([
+      {
+        path: "event",
+        model: "Event",
+        populate: {
+          path: "category",
+          model: "Category",
+        },
       },
-    });
+      {
+        path: "user",
+        model: "User",
+      },
+    ]);
+
     return role;
   }
 
-  async updateOneById(id: string, role: Partial<AddRole>): Promise<void> {
+  async updateOneById(id: string, role: Partial<IRole>): Promise<void> {
     await Role.findByIdAndUpdate(id, role);
   }
 

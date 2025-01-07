@@ -16,7 +16,7 @@ export default interface IEvent {
   total_to_pay?: number;
   link_to_pay?: string;
   deadline_to_pay?: Date;
-  category?: ICategory;
+  category: ICategory;
   comments: IComment[];
   private: boolean;
   ended?: boolean;

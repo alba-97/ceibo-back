@@ -1,6 +1,6 @@
 import { IEvent } from "../interfaces/entities";
-import { AddEvent } from "../interfaces/entities/create";
 import { EventOptions } from "../interfaces/options";
+import Paginated from "../interfaces/Paginated";
 import { Event } from "../models";
 
 type Search = { $regex: string; $options: string };
@@ -26,8 +26,12 @@ export default class EventRepository {
     return event;
   }
 
-  async findByUsername(searchTerm: string) {
-    return await Event.aggregate([
+  async findByUsername(
+    searchTerm: string,
+    pagination = { skip: 0, limit: 20 }
+  ) {
+    const { skip, limit } = pagination;
+    const result = await Event.aggregate([
       {
         $lookup: {
           from: "roles",
@@ -71,11 +75,35 @@ export default class EventRepository {
           "organizerDetails.0": { $exists: true },
         },
       },
+      {
+        $facet: {
+          paginatedResults: [
+            {
+              $skip: skip,
+            },
+            {
+              $limit: limit,
+            },
+          ],
+          totalCount: [
+            {
+              $count: "totalCount",
+            },
+          ],
+        },
+      },
     ]);
+    const data = result[0].paginatedResults;
+    const total = result[0].totalCount[0]?.totalCount ?? 0;
+    return { data, total };
   }
 
-  async findByCategory(searchTerm: string) {
-    return await Event.aggregate([
+  async findByCategory(
+    searchTerm: string,
+    pagination = { skip: 0, limit: 20 }
+  ) {
+    const { skip, limit } = pagination;
+    const result = await Event.aggregate([
       {
         $lookup: {
           from: "categories",
@@ -89,10 +117,33 @@ export default class EventRepository {
           "categoryDetails.name": { $regex: searchTerm, $options: "i" },
         },
       },
+      {
+        $facet: {
+          paginatedResults: [
+            {
+              $skip: skip,
+            },
+            {
+              $limit: limit,
+            },
+          ],
+          totalCount: [
+            {
+              $count: "totalCount",
+            },
+          ],
+        },
+      },
     ]);
+    const data = result[0].paginatedResults;
+    const total = result[0].totalCount[0]?.totalCount ?? 0;
+    return { data, total };
   }
 
-  async findAll(query: EventOptions = {}): Promise<IEvent[]> {
+  async findAll(
+    query: EventOptions = {},
+    pagination = { skip: 0, limit: 20 }
+  ): Promise<Paginated<IEvent>> {
     const where: WhereClause = {};
     const {
       minDate,
@@ -117,20 +168,27 @@ export default class EventRepository {
         ];
         break;
       case "user":
-        return await this.findByUsername(searchTerm);
+        return await this.findByUsername(searchTerm, pagination);
       case "category":
-        return await this.findByCategory(searchTerm);
+        return await this.findByCategory(searchTerm, pagination);
     }
 
-    const events = await Event.find({
-      private: false,
-      ...where,
-    }).populate({
-      path: "category",
-      model: "Category",
-    });
+    const { skip, limit } = pagination;
+    const [data, total] = await Promise.all([
+      Event.find({
+        private: false,
+        ...where,
+      })
+        .populate({
+          path: "category",
+          model: "Category",
+        })
+        .skip(skip)
+        .limit(limit),
+      Event.countDocuments(query),
+    ]);
 
-    return events;
+    return { data, total };
   }
 
   async findOneById(id: string): Promise<IEvent | null> {
@@ -152,7 +210,7 @@ export default class EventRepository {
     return event;
   }
 
-  async createOne(eventData: AddEvent): Promise<IEvent> {
+  async createOne(eventData: Partial<IEvent>): Promise<IEvent> {
     const event = new Event(eventData);
     await event.populate({
       path: "category",
@@ -164,7 +222,7 @@ export default class EventRepository {
     return event;
   }
 
-  async updateOneById(id: string, eventData: Partial<AddEvent>): Promise<void> {
+  async updateOneById(id: string, eventData: Partial<IEvent>): Promise<void> {
     await Event.findByIdAndUpdate(id, eventData);
   }
   async removeOneById(id: string): Promise<void> {
