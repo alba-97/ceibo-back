@@ -1,5 +1,6 @@
 import ICategory from "./Category";
 import IComment from "./Comment";
+import IUser from "./User";
 
 export default interface IEvent {
   _id: string;
@@ -17,6 +18,7 @@ export default interface IEvent {
   link_to_pay?: string;
   deadline_to_pay?: Date;
   category: ICategory;
+  createdBy: IUser;
   comments: IComment[];
   private: boolean;
   ended?: boolean;

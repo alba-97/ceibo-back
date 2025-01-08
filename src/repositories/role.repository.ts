@@ -29,7 +29,6 @@ export default class RoleRepository {
 
     if (userId) where.user = userId;
     if (eventId) where.event = eventId;
-    if (role) where.role = role;
     if (eventIds) where.event = { $in: eventIds };
 
     if (minDate) where.event = { start_date: { $gte: minDate } };
@@ -67,7 +66,6 @@ export default class RoleRepository {
     const where: WhereClause = {};
     if (eventId) where.event = eventId;
     if (userId) where.user = userId;
-    if (_role) where.role = _role;
 
     const role = await Role.findOne(where).populate([
       {

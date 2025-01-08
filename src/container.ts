@@ -13,6 +13,7 @@ import {
   EmailRepository,
   EventRepository,
   FileRepository,
+  RatingRepository,
   RoleRepository,
   UserRepository,
   WhatsappRepository,
@@ -50,6 +51,7 @@ container.register({
   roleRepository: asClass(RoleRepository).scoped(),
   fileRepository: asClass(FileRepository).scoped(),
   commentRepository: asClass(CommentRepository).scoped(),
+  ratingRepository: asClass(RatingRepository).scoped(),
 
   userService: asClass(UserService).scoped(),
   eventService: asClass(EventService).scoped(),

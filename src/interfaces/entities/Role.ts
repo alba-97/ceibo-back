@@ -6,5 +6,4 @@ export default interface IRole {
   user?: IUser;
   event?: IEvent;
   role: string;
-  rating?: number;
 }

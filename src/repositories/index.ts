@@ -6,6 +6,7 @@ import EmailRepository from "./email.repository";
 import WhatsappRepository from "./whatsapp.repository";
 import FileRepository from "./file.repository";
 import CommentRepository from "./comment.repository";
+import RatingRepository from "./rating.repository";
 
 export {
   CategoryRepository,
@@ -16,4 +17,5 @@ export {
   WhatsappRepository,
   FileRepository,
   CommentRepository,
+  RatingRepository,
 };

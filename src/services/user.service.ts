@@ -8,12 +8,14 @@ import {
   UserRepository,
   WhatsappRepository,
   EmailRepository,
+  RatingRepository,
 } from "../repositories";
 
 export default class UserService {
   private userRepository: UserRepository;
   private emailRepository: EmailRepository;
   private whatsappRepository: WhatsappRepository;
+  private ratingRepository: RatingRepository;
   private userMapper: UserMapper;
   constructor(dependencies: {
     userRepository: UserRepository;

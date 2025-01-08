@@ -135,7 +135,8 @@
       "end_date": "2024-09-15T18:00:00.000Z",
       "event_location": "Centro de convenciones",
       "img": "https://cdn.pixabay.com/photo/2016/08/16/09/53/international-conference-1597531_1280.jpg",
-      "category": "Conferencia"
+      "category": "Conferencia",
+      "createdBy": "ironman"
     },
     {
       "title": "Boda de María y Juan",
@@ -144,7 +145,8 @@
       "img": "https://cdn.pixabay.com/photo/2014/09/13/04/59/couple-443600_1280.jpg",
       "category": "Fiesta",
       "start_date": "2024-07-18T21:00:00.000Z",
-      "end_date": "2024-07-18T22:00:00.000Z"
+      "end_date": "2024-07-18T22:00:00.000Z",
+      "createdBy": "wadewinston"
     },
     {
       "title": "Fiesta de cumpleaños",
@@ -153,7 +155,8 @@
       "img": "https://cdn.pixabay.com/photo/2014/06/10/20/01/cake-366346_1280.jpg",
       "category": "Fiesta",
       "start_date": "2024-12-05T14:00:00.000Z",
-      "end_date": "2024-12-05T16:00:00.000Z"
+      "end_date": "2024-12-05T16:00:00.000Z",
+      "createdBy": "clubDelPlan"
     },
     {
       "title": "Concierto de rock",
@@ -162,7 +165,8 @@
       "img": "https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_1280.jpg",
       "category": "Música",
       "start_date": "2024-07-22T21:00:00.000Z",
-      "end_date": "2024-07-22T23:00:00.000Z"
+      "end_date": "2024-07-22T23:00:00.000Z",
+      "createdBy": "brucewayne"
     },
     {
       "title": "Fiesta de graduación",
@@ -171,7 +175,8 @@
       "img": "https://cdn.pixabay.com/photo/2017/02/05/00/08/graduation-2038864_1280.jpg",
       "category": "Fiesta",
       "start_date": "2025-03-25T17:00:00.000Z",
-      "end_date": "2025-03-25T18:00:00.000Z"
+      "end_date": "2025-03-25T18:00:00.000Z",
+      "createdBy": "superman"
     },
     {
       "title": "Festival de cine",
@@ -180,7 +185,8 @@
       "img": "https://cdn.pixabay.com/photo/2019/11/07/20/48/cinema-4609877_1280.jpg",
       "category": "Arte y cultura",
       "start_date": "2024-05-08T15:00:00.000Z",
-      "end_date": "2024-05-08T20:00:00.000Z"
+      "end_date": "2024-05-08T20:00:00.000Z",
+      "createdBy": "aquaman"
     },
     {
       "title": "Feria gastronómica",
@@ -190,45 +196,152 @@
       "category": "Comidas y bebidas",
       "private": true,
       "start_date": "2024-01-30T13:00:00.000Z",
-      "end_date": "2024-01-30T15:00:00.000Z"
+      "end_date": "2024-01-30T15:00:00.000Z",
+      "createdBy": "johndoe"
     }
   ],
   "roles": [
-    { "user": "clubDelPlan", "event": "Fiesta de cumpleaños" },
-    { "user": "johndoe", "event": "Feria gastronómica" },
-    { "user": "superman", "event": "Fiesta de graduación" },
-    { "user": "aquaman", "event": "Festival de cine" },
-    { "user": "brucewayne", "event": "Concierto de rock" },
-    { "user": "wadewinston", "event": "Boda de María y Juan" },
-    { "user": "ironman", "event": "Lanzamiento de nuevo producto" }
+    { "user": "johndoe", "event": "Fiesta de cumpleaños" },
+    { "user": "superman", "event": "Fiesta de cumpleaños" },
+    { "user": "aquaman", "event": "Fiesta de cumpleaños" },
+
+    { "user": "ironman", "event": "Feria gastronómica" },
+    { "user": "wadewinston", "event": "Feria gastronómica" },
+    { "user": "brucewayne", "event": "Feria gastronómica" },
+
+    { "user": "aquaman", "event": "Fiesta de graduación" },
+    { "user": "ironman", "event": "Fiesta de graduación" },
+
+    { "user": "johndoe", "event": "Festival de cine" },
+    { "user": "superman", "event": "Festival de cine" },
+
+    { "user": "wadewinston", "event": "Concierto de rock" },
+
+    { "user": "ironman", "event": "Boda de María y Juan" },
+    { "user": "superman", "event": "Boda de María y Juan" },
+    { "user": "johndoe", "event": "Boda de María y Juan" },
+
+    { "user": "wadewinston", "event": "Lanzamiento de nuevo producto" }
   ],
-  "comments": {
-    "Lanzamiento de nuevo producto": [
-      "que bueno!!!",
-      "que van a presentar en el evento?",
-      "Alguien sabe si hay comida y bebida en el lugar?"
-    ],
-    "Fiesta de cumpleaños": [
-      "Feliz cumpleaños",
-      "¡Feliz cumple! Pasala bien.",
-      "Feliz cumpleaños! Te deseo un año lleno de éxitos y felicidad."
-    ],
-    "Fiesta de graduación": [
-      "Felicidades",
-      "buenisimo",
-      "Felicitaciones a los egresados!"
-    ],
-    "Festival de cine": [
-      "Que bueno!! qué películas pasan?",
-      "Buenísimo, ahi me anoto",
-      "Habrá cortometrajes?"
-    ],
-    "Concierto de rock": [
-      "quienes van a estar?",
-      "La rompen estos pibes",
-      "va a estar metallica?"
-    ],
-    "Feria gastronómica": ["Que ricooo!", "Tiene buena pinta"],
-    "Boda de María y Juan": ["Que bueno!!!", "Felicidades a los 2"]
-  }
+  "comments": [
+    {
+      "event": "Lanzamiento de nuevo producto",
+      "user": "wadewinston",
+      "text": "Que bueno!!"
+    },
+    {
+      "event": "Lanzamiento de nuevo producto",
+      "user": "wadewinston",
+      "text": "Que van a presentar en el evento?"
+    },
+
+    {
+      "event": "Fiesta de cumpleaños",
+      "user": "johndoe",
+      "text": "Feliz cumpleaños"
+    },
+    {
+      "event": "Fiesta de cumpleaños",
+      "user": "superman",
+      "text": "¡Feliz cumple! Pasala bien."
+    },
+    {
+      "event": "Fiesta de cumpleaños",
+      "user": "aquaman",
+      "text": "Feliz cumpleaños! Te deseo un año lleno de éxitos y felicidad."
+    },
+
+    {
+      "event": "Fiesta de graduación",
+      "user": "aquaman",
+      "text": "Felicidades"
+    },
+    {
+      "event": "Fiesta de graduación",
+      "user": "ironman",
+      "text": "Felicitaciones a los egresados!"
+    },
+
+    {
+      "event": "Festival de cine",
+      "user": "johndoe",
+      "text": "Que bueno!! qué películas pasan?"
+    },
+    {
+      "event": "Festival de cine",
+      "user": "superman",
+      "text": "Buenísimo, ahi me anoto"
+    },
+
+    {
+      "event": "Concierto de rock",
+      "user": "wadewinston",
+      "text": "quienes van a estar?"
+    },
+
+    {
+      "event": "Feria gastronómica",
+      "user": "ironman",
+      "text": "Tiene buena pinta"
+    },
+
+    {
+      "event": "Boda de María y Juan",
+      "user": "superman",
+      "text": "Felicidades a los 2"
+    }
+  ],
+
+  "ratings": [
+    {
+      "ratedEvent": "Lanzamiento de nuevo producto",
+      "ratedBy": "wadewinston",
+      "rating": 5
+    },
+    {
+      "ratedEvent": "Lanzamiento de nuevo producto",
+      "ratedBy": "wadewinston",
+      "rating": 3
+    },
+    {
+      "ratedEvent": "Fiesta de cumpleaños",
+      "ratedBy": "johndoe",
+      "rating": 4
+    },
+    {
+      "ratedEvent": "Fiesta de cumpleaños",
+      "ratedBy": "superman",
+      "rating": 5
+    },
+    {
+      "ratedEvent": "Fiesta de cumpleaños",
+      "ratedBy": "aquaman",
+      "rating": 5
+    },
+    {
+      "ratedEvent": "Festival de cine",
+      "ratedBy": "johndoe",
+      "rating": 3
+    },
+    {
+      "ratedEvent": "Festival de cine",
+      "ratedBy": "superman",
+      "rating": 4
+    },
+    {
+      "ratedEvent": "Concierto de rock",
+      "ratedBy": "wadewinston",
+      "rating": 2
+    },
+    {
+      "ratedEvent": "Feria gastronómica",
+      "ratedBy": "ironman",
+      "rating": 4
+    },
+    {
+      "ratedEvent": "Boda de María y Juan",
+      "ratedBy": "superman",
+      "rating": 4
+    }
+  ]
 }

@@ -40,6 +40,10 @@ const EventSchema = new Schema<IEvent>({
     type: Schema.Types.ObjectId,
     ref: "Category",
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   private: { type: Boolean, default: false },
 });

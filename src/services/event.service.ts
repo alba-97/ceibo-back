@@ -6,6 +6,7 @@ import getAvg from "../utils/getAvg";
 import {
   CategoryRepository,
   EventRepository,
+  RatingRepository,
   RoleRepository,
 } from "../repositories";
 import { CategoryMapper, EventMapper, RoleMapper } from "../mappers";
@@ -14,6 +15,7 @@ export default class EventService {
   eventRepository: EventRepository;
   roleRepository: RoleRepository;
   categoryRepository: CategoryRepository;
+  ratingRepository: RatingRepository;
   eventMapper: EventMapper;
   roleMapper: RoleMapper;
   categoryMapper: CategoryMapper;
@@ -21,6 +23,7 @@ export default class EventService {
     eventRepository: EventRepository;
     roleRepository: RoleRepository;
     categoryRepository: CategoryRepository;
+    ratingRepository: RatingRepository;
     eventMapper: EventMapper;
     roleMapper: RoleMapper;
     categoryMapper: CategoryMapper;
@@ -28,14 +31,17 @@ export default class EventService {
     this.eventRepository = dependencies.eventRepository;
     this.roleRepository = dependencies.roleRepository;
     this.categoryRepository = dependencies.categoryRepository;
+    this.ratingRepository = dependencies.ratingRepository;
     this.eventMapper = dependencies.eventMapper;
     this.roleMapper = dependencies.roleMapper;
     this.categoryMapper = dependencies.categoryMapper;
   }
-  async createNewEvent(eventData: EventDto) {
+  async createNewEvent(eventData: EventDto, user: IUser) {
     const category = await this.categoryRepository.findOne(eventData.category);
     if (!category) throw new HttpError(404, "Category not found");
     const event = this.eventMapper.fromDtoToEntity(eventData);
+    event.category = category;
+    event.createdBy = user;
     const newEvent = await this.eventRepository.createOne(event);
     return newEvent;
   }
@@ -107,17 +113,17 @@ export default class EventService {
   }
 
   async checkEdit(eventId: string, userId: string) {
-    const role = await this.roleRepository.findOne({ eventId, userId });
-    if (!role) throw new HttpError(404, "Role not found");
-    if (role.role !== "Organizer") throw new HttpError(401, "Access denied");
+    const event = await this.eventRepository.findOneById(eventId);
+    if (!event) throw new HttpError(404, "Event not found");
+    return event.createdBy._id === userId;
   }
 
   async getOrganizerAvgRating(eventId: string) {
-    const role = await this.roleRepository.findOne({
-      role: "Organizer",
-      eventId,
+    const event = await this.eventRepository.findOneById(eventId);
+    if (!event) throw new HttpError(404, "Event not found");
+    const avgRating = await this.ratingRepository.getAverage({
+      ratedUser: event.createdBy._id,
     });
-    if (!role || !role.user) throw new HttpError(404, "Organizer not found");
-    return role.user.rating;
+    return avgRating;
   }
 }

@@ -6,6 +6,7 @@ import {
   UserRepository,
   CommentRepository,
   RoleRepository,
+  RatingRepository,
 } from "../repositories/";
 
 export default class SeederService {
@@ -14,144 +15,117 @@ export default class SeederService {
   private userRepository: UserRepository;
   private commentRepository: CommentRepository;
   private roleRepository: RoleRepository;
+  private ratingRepository: RatingRepository;
   constructor(dependencies: {
     categoryRepository: CategoryRepository;
     eventRepository: EventRepository;
     userRepository: UserRepository;
     commentRepository: CommentRepository;
     roleRepository: RoleRepository;
+    ratingRepository: RatingRepository;
   }) {
     this.categoryRepository = dependencies.categoryRepository;
     this.eventRepository = dependencies.eventRepository;
     this.userRepository = dependencies.userRepository;
     this.commentRepository = dependencies.commentRepository;
     this.roleRepository = dependencies.roleRepository;
+    this.ratingRepository = dependencies.ratingRepository;
   }
   async generateData() {
     for (let i = 0; i < data.users.length; i++) {
-      try {
-        const newUser = await this.userRepository.createOne({
-          username: data.users[i].username,
-          password: data.users[i].password,
-          email: data.users[i].email,
-          first_name: data.users[i].first_name,
-          last_name: data.users[i].last_name,
-          birthdate: new Date(data.users[i].birthdate),
-          address: data.users[i].address,
-        });
-        await newUser.save();
-        console.log(`Usuario ${newUser.username} creado`);
-      } catch (error) {
-        console.log("Error creating users: ", error);
-        continue;
-      }
+      const newUser = await this.userRepository.createOne({
+        username: data.users[i].username,
+        password: data.users[i].password,
+        email: data.users[i].email,
+        first_name: data.users[i].first_name,
+        last_name: data.users[i].last_name,
+        birthdate: new Date(data.users[i].birthdate),
+        address: data.users[i].address,
+      });
+      console.log(`Usuario ${newUser.username} creado`);
     }
 
     for (let i = 0; i < data.categories.length; i++) {
-      try {
-        await this.categoryRepository.createOne({ name: data.categories[i] });
-      } catch (error) {
-        console.log("Error creating categories: ", error);
-        continue;
-      }
+      await this.categoryRepository.createOne({ name: data.categories[i] });
     }
 
     for (let i = 0; i < data.events.length; i++) {
-      try {
-        const category = await this.categoryRepository.findOne(
-          data.events[i].category
-        );
-        if (!category) throw new Error("Category not found");
-        const event = await this.eventRepository.createOne({
-          title: data.events[i].title,
-          description: data.events[i].description,
-          event_location: data.events[i].event_location,
-          start_date: new Date(data.events[i].start_date),
-          end_date: new Date(data.events[i].end_date),
-          img: data.events[i].img,
-          category,
-          private: false,
-          comments: [],
-        });
-        console.log(`Evento ${event.title} creado`);
-      } catch (error) {
-        console.log("Error creating events: ", error);
-        continue;
-      }
+      const category = await this.categoryRepository.findOne(
+        data.events[i].category
+      );
+      if (!category) throw new Error("Category not found");
+
+      const createdBy = await this.userRepository.findOne({
+        username: data.events[i].createdBy,
+      });
+      if (!createdBy) throw new Error("User not found");
+
+      const event = await this.eventRepository.createOne({
+        title: data.events[i].title,
+        description: data.events[i].description,
+        event_location: data.events[i].event_location,
+        start_date: new Date(data.events[i].start_date),
+        end_date: new Date(data.events[i].end_date),
+        img: data.events[i].img,
+        category,
+        private: false,
+        createdBy,
+      });
+      console.log(`Evento ${event.title} creado`);
     }
-
-    let users: IUser[] = [];
-    let events: IEvent[] = [];
-
-    const { data: allRoles } = await this.roleRepository.findAll();
-    const nRoles = allRoles.length;
-
-    const { data: allComments } = await this.commentRepository.findAll();
-    const nComments = allComments.length;
 
     for (let i = 0; i < data.roles.length; i++) {
       const user = await this.userRepository.findOne({
         username: data.roles[i].user,
       });
+      if (!user) throw new Error("User not found");
       const event = await this.eventRepository.findOne({
         title: data.roles[i].event,
       });
-      if (user) users.push(user);
-      if (event) events.push(event);
+      if (!event) throw new Error("Event not found");
+      await this.roleRepository.createOne({
+        user,
+        event,
+        role: "member",
+      });
     }
 
-    if (nRoles == 0) {
-      for (let i = 0; i < users.length; i++) {
-        let ratings = [];
-        for (let j = 0; j < events.length; j++) {
-          const role = j == i ? "Organizer" : "Member";
-          const user = users[i];
-          const event = events[j];
-
-          let rating;
-          if (role !== "Organizer") {
-            rating = Math.random() * 5;
-            ratings.push(rating);
-          }
-
-          await this.roleRepository.createOne({
-            user,
-            event,
-            role,
-            rating,
-          });
-
-          console.log(
-            `${user.username} agregado a ${event.title} como ${role} (${rating})`
-          );
-        }
-        const avgRating = ratings.reduce((a, b) => a + b) / ratings.length;
-        await this.userRepository.updateOneById(users[i]._id, {
-          rating: avgRating,
-        });
-      }
+    for (let i = 0; i < data.comments.length; i++) {
+      const user = await this.userRepository.findOne({
+        username: data.comments[i].user,
+      });
+      if (!user) throw new Error("User not found");
+      const event = await this.eventRepository.findOne({
+        title: data.comments[i].event,
+      });
+      if (!event) throw new Error("Event not found");
+      const comment = await this.commentRepository.createOne({
+        user,
+        event,
+        text: data.comments[i].text,
+      });
+      await this.eventRepository.updateOneById(event._id, {
+        comments: [...event.comments, comment],
+      });
     }
-    if (nComments == 0) {
-      for (let i = 0; i < events.length; i++) {
-        const title = events[i].title;
-        const commentsObj = data.comments as { [key: string]: string[] };
-        const comments = commentsObj[title];
-        let counter = 0;
-        for (let j = 0; j < users.length; j++) {
-          if (j !== i && counter < comments.length) {
-            await this.commentRepository.createOne({
-              event: events[i],
-              user: users[j],
-              text: comments[counter],
-            });
-            console.log(
-              `Comentario ${counter} de ${users[j].username} agregado a ${events[i].title}`
-            );
-            counter++;
-          }
-        }
-      }
+
+    for (let i = 0; i < data.ratings.length; i++) {
+      const ratedBy = await this.userRepository.findOne({
+        username: data.ratings[i].ratedBy,
+      });
+      if (!ratedBy) throw new Error("User not found");
+      const ratedEvent = await this.eventRepository.findOne({
+        title: data.ratings[i].ratedEvent,
+      });
+      if (!ratedEvent) throw new Error("Event not found");
+      await this.ratingRepository.createOne({
+        ratedBy,
+        ratedEvent,
+        ratedUser: ratedEvent.createdBy,
+        rating: data.ratings[i].rating,
+      });
     }
+
     console.log("Datos falsos creados");
   }
 }

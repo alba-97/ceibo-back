@@ -5,6 +5,7 @@ import EmailOptions from "./Email";
 import InvitationOptions from "./Invitation";
 import UserOptions from "./User";
 import WhatsappOptions from "./Whatsapp";
+import RatingOptions from "./Rating";
 
 export {
   CategoryOptions,
@@ -14,4 +15,5 @@ export {
   InvitationOptions,
   UserOptions,
   WhatsappOptions,
+  RatingOptions,
 };

@@ -1,26 +1,31 @@
 import { RoleDto } from "../interfaces/dto";
+import { IUser } from "../interfaces/entities";
 import HttpError from "../interfaces/HttpError";
-import { EventMapper, RoleMapper } from "../mappers";
+import { RoleMapper } from "../mappers";
 import {
   EventRepository,
   RoleRepository,
   UserRepository,
 } from "../repositories";
+import RatingRepository from "../repositories/rating.repository";
 
 export default class RoleService {
   private roleRepository: RoleRepository;
   private eventRepository: EventRepository;
   private userRepository: UserRepository;
+  private ratingRepository: RatingRepository;
   private roleMapper: RoleMapper;
   constructor(dependencies: {
     roleRepository: RoleRepository;
     eventRepository: EventRepository;
     userRepository: UserRepository;
+    ratingRepository: RatingRepository;
     roleMapper: RoleMapper;
   }) {
     this.roleRepository = dependencies.roleRepository;
     this.eventRepository = dependencies.eventRepository;
     this.userRepository = dependencies.userRepository;
+    this.ratingRepository = dependencies.ratingRepository;
     this.roleMapper = dependencies.roleMapper;
   }
 
@@ -37,28 +42,22 @@ export default class RoleService {
     return await this.roleRepository.createOne(role);
   }
 
-  async getUserRating(username: string) {}
+  async rateEvent(ratedBy: IUser, eventId: string, rating: number) {
+    const ratedEvent = await this.eventRepository.findOneById(eventId);
+    if (!ratedEvent) throw new HttpError(404, "Event not found");
+    const ratedUser = ratedEvent.createdBy;
 
-  async rateEvent(userId: string, eventId: string, rating: number) {
-    const role = await this.roleRepository.findOne({ userId, eventId });
-    if (!role || !role._id) throw new HttpError(404, "User or event not found");
-    if (role.role === "Organizer") throw new HttpError(401, "Not allowed");
-    if (!role.user) throw new HttpError(404, "User not found");
-
-    await this.roleRepository.updateOneById(role._id, { rating });
-
-    const { total } = await this.userRepository.getOrganizerRatings(userId);
-    const userRating = role.user.rating;
-    const avgRating = userRating ? (userRating + rating) / total : rating;
-
-    await this.userRepository.updateOneById(role.user._id, {
-      rating: avgRating,
+    await this.ratingRepository.createOne({
+      ratedEvent,
+      ratedUser,
+      rating,
+      ratedBy,
     });
   }
 
-  async userRating(eventId: string, userId: string) {
-    const role = await this.roleRepository.findOne({ userId, eventId });
-    return role?.rating;
+  async userRating(user: IUser) {
+    if (!user) throw new HttpError(404, "User not found");
+    return user.rating;
   }
 
   async removeRoleByEventId(userId: string, eventId: string) {

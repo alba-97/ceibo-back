@@ -5,7 +5,6 @@ export default class RoleMapper {
   fromDtoToEntity(roleDto: RoleDto) {
     const { role } = roleDto;
     const roleEntity: Partial<IRole> = { role };
-    if (roleDto.rating) roleEntity.rating = roleDto.rating;
     return roleEntity;
   }
   getEventIds(roles: IRole[]): string[] {
@@ -17,10 +16,5 @@ export default class RoleMapper {
     return roles
       .map((role: IRole) => role.event)
       .filter((event?: IEvent) => event !== undefined);
-  }
-  getRatings(roles: IRole[]): number[] {
-    return roles
-      .map((role: IRole) => role.rating)
-      .filter((value?: number) => value !== undefined);
   }
 }

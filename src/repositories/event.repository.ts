@@ -194,6 +194,10 @@ export default class EventRepository {
   async findOneById(id: string): Promise<IEvent | null> {
     const event = await Event.findById(id).populate([
       {
+        path: "createdBy",
+        model: "User",
+      },
+      {
         path: "comments",
         model: "Comment",
         populate: {

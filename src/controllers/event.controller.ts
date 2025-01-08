@@ -32,7 +32,7 @@ export default class EventController {
   @POST()
   async createNewEvent(req: Request, res: Response) {
     try {
-      const event = await this.eventService.createNewEvent(req.body);
+      const event = await this.eventService.createNewEvent(req.body, req.user);
       await this.roleService.createNewRole({
         userId: req.user._id,
         eventId: event._id,
@@ -48,9 +48,8 @@ export default class EventController {
   @GET()
   async userRating(req: Request, res: Response) {
     try {
-      const rating = await this.roleService.userRating(
-        req.params.id,
-        req.user._id
+      const rating = await this.eventService.getOrganizerAvgRating(
+        req.params.id
       );
       res.status(200).send({ rating });
     } catch (err) {
@@ -211,25 +210,12 @@ export default class EventController {
     }
   }
 
-  @route("/:id/organizer")
-  @GET()
-  async getOrganizerAvgRating(req: Request, res: Response) {
-    try {
-      const rating = await this.eventService.getOrganizerAvgRating(
-        req.params.id
-      );
-      return res.status(200).send({ rating });
-    } catch (err) {
-      return handleError(res, err);
-    }
-  }
-
   @route("/:id/rate")
   @POST()
   async rateEvent(req: Request, res: Response) {
     try {
       await this.roleService.rateEvent(
-        req.user._id,
+        req.user,
         req.params.id,
         +req.body.rating
       );
