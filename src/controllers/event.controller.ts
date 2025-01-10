@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { RoleService, EventService, UserService } from "../services";
 import handleError from "../utils/handleError";
 import { UserOptions, CategoryOptions } from "../interfaces/options";
-import { DELETE, GET, POST, PUT, route } from "awilix-router-core";
+import { before, DELETE, GET, POST, PUT, route } from "awilix-router-core";
+import validateUser from "../middleware/auth";
 
 @route("/events")
 export default class EventController {
@@ -29,6 +30,7 @@ export default class EventController {
     }
   }
 
+  @before([validateUser])
   @POST()
   async createNewEvent(req: Request, res: Response) {
     try {
@@ -58,6 +60,7 @@ export default class EventController {
   }
 
   @route("/stop-participating/:eventId")
+  @before([validateUser])
   @DELETE()
   async removeUserEvent(req: Request, res: Response) {
     try {
@@ -72,6 +75,7 @@ export default class EventController {
   }
 
   @route("/enroll")
+  @before([validateUser])
   @POST()
   async addUserEvent(req: Request, res: Response) {
     try {
@@ -87,18 +91,8 @@ export default class EventController {
     }
   }
 
-  @route("/:id")
-  @GET()
-  async getEvent(req: Request, res: Response) {
-    try {
-      const event = await this.eventService.findEventById(req.params.id);
-      res.status(200).send(event);
-    } catch (err) {
-      return handleError(res, err);
-    }
-  }
-
   @route("/history")
+  @before([validateUser])
   @GET()
   async getPastUserEvents(req: Request, res: Response) {
     try {
@@ -110,17 +104,20 @@ export default class EventController {
   }
 
   @route("/my-events")
+  @before([validateUser])
   @GET()
   async getUserEvents(req: Request, res: Response) {
     try {
       const events = await this.eventService.getUserEvents(req.user._id);
       res.status(200).send(events);
     } catch (err) {
+      console.log(err);
       return handleError(res, err);
     }
   }
 
   @route("/filter")
+  @before([validateUser])
   @GET()
   async getFilteredEvents(req: Request, res: Response) {
     try {
@@ -170,6 +167,18 @@ export default class EventController {
   }
 
   @route("/:id")
+  @GET()
+  async getEvent(req: Request, res: Response) {
+    try {
+      const event = await this.eventService.findEventById(req.params.id);
+      res.status(200).send(event);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
+
+  @route("/:id")
+  @before([validateUser])
   @DELETE()
   async deleteEvent(req: Request, res: Response) {
     try {
@@ -182,6 +191,7 @@ export default class EventController {
   }
 
   @route("/:id/can-update")
+  @before([validateUser])
   @GET()
   async checkUpdate(req: Request, res: Response) {
     try {
@@ -196,6 +206,7 @@ export default class EventController {
   }
 
   @route("/:id")
+  @before([validateUser])
   @PUT()
   async updateEventData(req: Request, res: Response) {
     try {

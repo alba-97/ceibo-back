@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { CommentService } from "../services";
 import handleError from "../utils/handleError";
-import { POST, route } from "awilix-router-core";
+import { before, POST, route } from "awilix-router-core";
+import validateUser from "../middleware/auth";
 
 @route("/comments")
 export default class CommentController {
@@ -11,6 +12,7 @@ export default class CommentController {
   }
 
   @route("/:id")
+  @before([validateUser])
   @POST()
   async addComment(req: Request, res: Response) {
     try {

@@ -25,6 +25,13 @@ export default class UserRepository {
     });
   }
 
+  async getPayload(query: UserOptions = {}): Promise<IUser | null> {
+    return await User.findOne(query).populate({
+      path: "preferences",
+      model: "Category",
+    });
+  }
+
   async findAll(query: UserOptions = {}): Promise<Paginated<IUser>> {
     const { username, email, usernames } = query;
 

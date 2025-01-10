@@ -13,7 +13,7 @@ const generateToken = (payload: Partial<IUser>) => {
 };
 
 const validateToken = (token: string = "") => {
-  return jwt.verify(token.split(" ")[1], secret);
+  return jwt.verify(token, secret);
 };
 
 export { generateToken, validateToken };

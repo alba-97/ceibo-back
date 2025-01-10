@@ -62,15 +62,14 @@ export default class UserService {
   }
 
   async login(username: string, password: string) {
-    const user = await this.userRepository.findOne({ username });
-    if (!user) throw new HttpError(401, "Invalid username or password");
+    const userPayload = await this.userRepository.getPayload({ username });
+    if (!userPayload) throw new HttpError(401, "Invalid username or password");
 
-    const isValid = await user.validatePassword(password);
+    const isValid = await userPayload.validatePassword(password);
     if (!isValid) throw new HttpError(401, "Invalid username or password");
 
-    let { _id, email } = user;
-    const token = generateToken({ _id, username, email });
-    return token;
+    const token = generateToken(userPayload);
+    return { token, userPayload };
   }
 
   async addPreferences(userId: string, categories: ICategory[]) {

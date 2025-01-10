@@ -69,9 +69,7 @@ const UserSchema = new Schema<IUser>({
 });
 
 UserSchema.methods.validatePassword = async function (password: string) {
-  const hash = await bcrypt.hash(password, this.salt);
-  const checking = hash === this.password;
-  return checking;
+  return bcrypt.compare(password, this.password);
 };
 
 UserSchema.pre("save", function (next) {

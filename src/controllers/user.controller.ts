@@ -2,7 +2,8 @@ import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { UserService } from "../services";
 import handleError from "../utils/handleError";
-import { GET, POST, PUT, route } from "awilix-router-core";
+import { before, GET, POST, PUT, route } from "awilix-router-core";
+import validateUser from "../middleware/auth";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ export default class UserController {
   }
 
   @route("/invite")
+  @before([validateUser])
   @POST()
   public async inviteUsers(req: Request, res: Response) {
     try {
@@ -29,7 +31,11 @@ export default class UserController {
   public async login(req: Request, res: Response) {
     try {
       const { username, password } = req.body;
-      const token = await this.userService.login(username, password);
+      const { token, userPayload } = await this.userService.login(
+        username,
+        password
+      );
+      req.user = userPayload;
       return res.status(200).send({ token });
     } catch (err) {
       handleError(res, err);
@@ -48,25 +54,12 @@ export default class UserController {
   }
 
   @route("/preferences")
+  @before([validateUser])
   @POST()
   public async addPreferences(req: Request, res: Response) {
     try {
       await this.userService.addPreferences(req.user._id, req.body);
       return res.status(200).send("Preferences added");
-    } catch (err) {
-      handleError(res, err);
-    }
-  }
-
-  @route("/secret")
-  @GET()
-  public async secret(req: Request, res: Response) {
-    try {
-      const userPayload = await this.userService.getUserPayload(
-        req.headers.authorization
-      );
-      req.user = userPayload;
-      return res.send(userPayload);
     } catch (err) {
       handleError(res, err);
     }
@@ -95,6 +88,7 @@ export default class UserController {
   }
 
   @route("/me")
+  @before([validateUser])
   @GET()
   public async me(req: Request, res: Response) {
     try {
@@ -117,6 +111,7 @@ export default class UserController {
     }
   }
 
+  @before([validateUser])
   @PUT()
   public async updateUser(req: Request, res: Response) {
     try {
@@ -128,6 +123,7 @@ export default class UserController {
   }
 
   @route("/add-friend")
+  @before([validateUser])
   @POST()
   public async addFriend(req: Request, res: Response) {
     try {
@@ -150,6 +146,7 @@ export default class UserController {
   }
 
   @route("/friends")
+  @before([validateUser])
   @GET()
   public async getUserFriends(req: Request, res: Response) {
     try {
