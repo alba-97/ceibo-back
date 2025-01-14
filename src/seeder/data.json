@@ -1,0 +1,347 @@
+{
+  "users": [
+    {
+      "username": "clubDelPlan",
+      "password": "clubDelPlan",
+      "first_name": "Ceibo",
+      "last_name": "Digital",
+      "email": "ceibodigital@example.com",
+      "birthdate": "2024-05-30",
+      "address": "calle falsa 123"
+    },
+    {
+      "username": "johndoe",
+      "password": "Jd123456",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "johndoe@example.com",
+      "birthdate": "1985-10-15"
+    },
+    {
+      "username": "janedoe",
+      "password": "janeQwerty",
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "email": "janedoe@example.com",
+      "birthdate": "1990-05-22"
+    },
+    {
+      "username": "peterparker",
+      "password": "SpiderMan",
+      "first_name": "Peter",
+      "last_name": "Parker",
+      "email": "peterparker@example.com",
+      "birthdate": "1997-08-04"
+    },
+    {
+      "username": "brucewayne",
+      "password": "soyBatman",
+      "first_name": "Bruce",
+      "last_name": "Wayne",
+      "email": "brucewayne@example.com",
+      "birthdate": "1978-06-15"
+    },
+    {
+      "username": "superman",
+      "password": "clarkKent",
+      "first_name": "Clark",
+      "last_name": "Kent",
+      "email": "clarkkent@example.com",
+      "birthdate": "1983-03-23"
+    },
+    {
+      "username": "ironman",
+      "password": "tonyStark",
+      "first_name": "Tony",
+      "last_name": "Stark",
+      "email": "tonystark@example.com",
+      "birthdate": "1970-05-29"
+    },
+    {
+      "username": "natasharomanoff",
+      "password": "blackWidow",
+      "first_name": "Natasha",
+      "last_name": "Romanoff",
+      "email": "natasharomanoff@example.com",
+      "birthdate": "1984-11-22"
+    },
+    {
+      "username": "wadewinston",
+      "password": "deadPool",
+      "first_name": "Wade",
+      "last_name": "Winston",
+      "email": "wadewinston@example.com",
+      "birthdate": "1979-02-04"
+    },
+    {
+      "username": "aquaman",
+      "password": "arthurSmith",
+      "first_name": "Arthur",
+      "last_name": "Smith",
+      "email": "arthursmith@example.com",
+      "birthdate": "1989-01-05"
+    },
+    {
+      "username": "dianaprince",
+      "password": "wonderWoman",
+      "first_name": "Diana",
+      "last_name": "Prince",
+      "email": "dianaprince@example.com",
+      "birthdate": "1981-07-20"
+    }
+  ],
+  "categories": [
+    "Aficiones y manualidades",
+    "Conferencia",
+    "Fiesta",
+    "Apoyo",
+    "Arte y cultura",
+    "Vehiculos",
+    "Danza",
+    "Negocios",
+    "Fantasía y ciencia ficción",
+    "Cine y películas",
+    "Comidas y bebidas",
+    "Comunidad y medioambiente",
+    "Salud física",
+    "Deportes",
+    "Educación",
+    "Escritura",
+    "Estilo de vida",
+    "Fenómenos paranormales",
+    "Fotografía",
+    "Idiomas",
+    "Juegos",
+    "LGBT",
+    "Libros",
+    "Mascotas y animales",
+    "Moda y belleza",
+    "Política",
+    "Música",
+    "Naturaleza y aventura",
+    "New Age y espiritualidad",
+    "Padres y familia",
+    "Personas solteras",
+    "Religión y creencias",
+    "Salud y bienestar",
+    "Tecnología",
+    "Vida social"
+  ],
+  "events": [
+    {
+      "title": "Lanzamiento de nuevo producto",
+      "description": "Presentación del nuevo producto de la compañía con una fiesta en grande",
+      "start_date": "2024-09-15T17:00:00.000Z",
+      "end_date": "2024-09-15T18:00:00.000Z",
+      "event_location": "Centro de convenciones",
+      "img": "https://cdn.pixabay.com/photo/2016/08/16/09/53/international-conference-1597531_1280.jpg",
+      "category": "Conferencia",
+      "createdBy": "ironman"
+    },
+    {
+      "title": "Boda de María y Juan",
+      "description": "Boda de María y Juan en la iglesia del pueblo seguida de una recepción en el jardín",
+      "event_location": "Iglesia San José, Calle Principal 123, Pueblo Nuevo",
+      "img": "https://cdn.pixabay.com/photo/2014/09/13/04/59/couple-443600_1280.jpg",
+      "category": "Fiesta",
+      "start_date": "2024-07-18T21:00:00.000Z",
+      "end_date": "2024-07-18T22:00:00.000Z",
+      "createdBy": "wadewinston"
+    },
+    {
+      "title": "Fiesta de cumpleaños",
+      "description": "Celebración del cumpleaños número 30 de Ana con música y comida",
+      "event_location": "Casa de Ana, calle Flores 456",
+      "img": "https://cdn.pixabay.com/photo/2014/06/10/20/01/cake-366346_1280.jpg",
+      "category": "Fiesta",
+      "start_date": "2024-12-05T14:00:00.000Z",
+      "end_date": "2024-12-05T16:00:00.000Z",
+      "createdBy": "clubDelPlan"
+    },
+    {
+      "title": "Concierto de rock",
+      "description": "Concierto de rock en el estadio con las bandas más populares",
+      "event_location": "Estadio Nacional",
+      "img": "https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_1280.jpg",
+      "category": "Música",
+      "start_date": "2024-07-22T21:00:00.000Z",
+      "end_date": "2024-07-22T23:00:00.000Z",
+      "createdBy": "brucewayne"
+    },
+    {
+      "title": "Fiesta de graduación",
+      "description": "Fiesta para celebrar la graduación de los alumnos de la promoción 2022",
+      "event_location": "Salón de recepciones Grand Plaza",
+      "img": "https://cdn.pixabay.com/photo/2017/02/05/00/08/graduation-2038864_1280.jpg",
+      "category": "Fiesta",
+      "start_date": "2025-03-25T17:00:00.000Z",
+      "end_date": "2025-03-25T18:00:00.000Z",
+      "createdBy": "superman"
+    },
+    {
+      "title": "Festival de cine",
+      "description": "Festival de cine que proyectará películas independientes de diferentes países",
+      "event_location": "Cine Palacio",
+      "img": "https://cdn.pixabay.com/photo/2019/11/07/20/48/cinema-4609877_1280.jpg",
+      "category": "Arte y cultura",
+      "start_date": "2024-05-08T15:00:00.000Z",
+      "end_date": "2024-05-08T20:00:00.000Z",
+      "createdBy": "aquaman"
+    },
+    {
+      "title": "Feria gastronómica",
+      "description": "Feria gastronómica con platos de diferentes culturas y países",
+      "event_location": "Plaza de Armas",
+      "img": "https://cdn.pixabay.com/photo/2018/05/04/10/08/cheese-3373604_1280.jpg",
+      "category": "Comidas y bebidas",
+      "private": true,
+      "start_date": "2024-01-30T13:00:00.000Z",
+      "end_date": "2024-01-30T15:00:00.000Z",
+      "createdBy": "johndoe"
+    }
+  ],
+  "roles": [
+    { "user": "johndoe", "event": "Fiesta de cumpleaños" },
+    { "user": "superman", "event": "Fiesta de cumpleaños" },
+    { "user": "aquaman", "event": "Fiesta de cumpleaños" },
+
+    { "user": "ironman", "event": "Feria gastronómica" },
+    { "user": "wadewinston", "event": "Feria gastronómica" },
+    { "user": "brucewayne", "event": "Feria gastronómica" },
+
+    { "user": "aquaman", "event": "Fiesta de graduación" },
+    { "user": "ironman", "event": "Fiesta de graduación" },
+
+    { "user": "johndoe", "event": "Festival de cine" },
+    { "user": "superman", "event": "Festival de cine" },
+
+    { "user": "wadewinston", "event": "Concierto de rock" },
+
+    { "user": "ironman", "event": "Boda de María y Juan" },
+    { "user": "superman", "event": "Boda de María y Juan" },
+    { "user": "johndoe", "event": "Boda de María y Juan" },
+
+    { "user": "wadewinston", "event": "Lanzamiento de nuevo producto" }
+  ],
+  "comments": [
+    {
+      "event": "Lanzamiento de nuevo producto",
+      "user": "wadewinston",
+      "text": "Que bueno!!"
+    },
+    {
+      "event": "Lanzamiento de nuevo producto",
+      "user": "wadewinston",
+      "text": "Que van a presentar en el evento?"
+    },
+
+    {
+      "event": "Fiesta de cumpleaños",
+      "user": "johndoe",
+      "text": "Feliz cumpleaños"
+    },
+    {
+      "event": "Fiesta de cumpleaños",
+      "user": "superman",
+      "text": "¡Feliz cumple! Pasala bien."
+    },
+    {
+      "event": "Fiesta de cumpleaños",
+      "user": "aquaman",
+      "text": "Feliz cumpleaños! Te deseo un año lleno de éxitos y felicidad."
+    },
+
+    {
+      "event": "Fiesta de graduación",
+      "user": "aquaman",
+      "text": "Felicidades"
+    },
+    {
+      "event": "Fiesta de graduación",
+      "user": "ironman",
+      "text": "Felicitaciones a los egresados!"
+    },
+
+    {
+      "event": "Festival de cine",
+      "user": "johndoe",
+      "text": "Que bueno!! qué películas pasan?"
+    },
+    {
+      "event": "Festival de cine",
+      "user": "superman",
+      "text": "Buenísimo, ahi me anoto"
+    },
+
+    {
+      "event": "Concierto de rock",
+      "user": "wadewinston",
+      "text": "quienes van a estar?"
+    },
+
+    {
+      "event": "Feria gastronómica",
+      "user": "ironman",
+      "text": "Tiene buena pinta"
+    },
+
+    {
+      "event": "Boda de María y Juan",
+      "user": "superman",
+      "text": "Felicidades a los 2"
+    }
+  ],
+
+  "ratings": [
+    {
+      "ratedEvent": "Lanzamiento de nuevo producto",
+      "ratedBy": "wadewinston",
+      "rating": 5
+    },
+    {
+      "ratedEvent": "Lanzamiento de nuevo producto",
+      "ratedBy": "wadewinston",
+      "rating": 3
+    },
+    {
+      "ratedEvent": "Fiesta de cumpleaños",
+      "ratedBy": "johndoe",
+      "rating": 4
+    },
+    {
+      "ratedEvent": "Fiesta de cumpleaños",
+      "ratedBy": "superman",
+      "rating": 5
+    },
+    {
+      "ratedEvent": "Fiesta de cumpleaños",
+      "ratedBy": "aquaman",
+      "rating": 5
+    },
+    {
+      "ratedEvent": "Festival de cine",
+      "ratedBy": "johndoe",
+      "rating": 3
+    },
+    {
+      "ratedEvent": "Festival de cine",
+      "ratedBy": "superman",
+      "rating": 4
+    },
+    {
+      "ratedEvent": "Concierto de rock",
+      "ratedBy": "wadewinston",
+      "rating": 2
+    },
+    {
+      "ratedEvent": "Feria gastronómica",
+      "ratedBy": "ironman",
+      "rating": 4
+    },
+    {
+      "ratedEvent": "Boda de María y Juan",
+      "ratedBy": "superman",
+      "rating": 4
+    }
+  ]
+}
