@@ -16,9 +16,9 @@ app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(docsData)));
 app.use(express.json());
 app.use(scopePerRequest(container));
 
-const PORT = process.env.PORT || 8000;
-const ORIGIN = process.env.ORIGIN || "http://localhost:3000";
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017";
+const PORT = process.env.PORT || "";
+const ORIGIN = process.env.ORIGIN || "";
+const MONGODB_URI = process.env.MONGODB_URI || "";
 
 app.use(
   cors({
@@ -27,7 +27,7 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(loadControllers("controllers/*.ts", { cwd: __dirname }));
+app.use(loadControllers("controllers/*.{js,ts}", { cwd: __dirname }));
 
 mongoose
   .connect(MONGODB_URI, {
