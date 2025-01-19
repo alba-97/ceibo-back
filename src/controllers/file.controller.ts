@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import handleError from "../utils/handleError";
 import { FileService } from "../services";
-import { POST, route } from "awilix-router-core";
+import { before, POST, route } from "awilix-router-core";
+import upload from "../middleware/uploadImage";
+import validateUser from "../middleware/auth";
 
 @route("/files")
 export default class FileController {
@@ -11,6 +13,7 @@ export default class FileController {
   }
 
   @POST()
+  @before(upload.single("image"))
   async uploadFile(req: Request, res: Response) {
     try {
       const url = await this.fileService.uploadFile(req.file);

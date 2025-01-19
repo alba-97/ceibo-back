@@ -7,7 +7,7 @@ export default class FileService {
     this.fileRepository = dependencies.fileRepository;
   }
 
-  async uploadFile(file?: Express.Multer.File) {
+  async uploadFile(file: Express.Multer.File) {
     if (!file) throw new HttpError(404, "File not found");
     return await this.fileRepository.upload(file);
   }

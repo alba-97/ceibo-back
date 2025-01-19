@@ -17,8 +17,8 @@ const UserSchema = new Schema<IUser>({
         isStrongPassword(str, {
           minLength: 8,
           minUppercase: 1,
-          minSymbols: 0,
-          minNumbers: 0,
+          minSymbols: 1,
+          minNumbers: 1,
           returnScore: false,
         }),
       "La contraseña debe tener mínimo 8 caracteres y 1 mayúscula",

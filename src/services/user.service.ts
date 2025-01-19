@@ -1,4 +1,5 @@
 import { generateToken, validateToken } from "../config/tokens";
+import UserDto from "../interfaces/dto/user.dto";
 import { ICategory, IUser } from "../interfaces/entities";
 import HttpError from "../interfaces/HttpError";
 import { InvitationOptions } from "../interfaces/options";
@@ -8,14 +9,12 @@ import {
   UserRepository,
   WhatsappRepository,
   EmailRepository,
-  RatingRepository,
 } from "../repositories";
 
 export default class UserService {
   private userRepository: UserRepository;
   private emailRepository: EmailRepository;
   private whatsappRepository: WhatsappRepository;
-  private ratingRepository: RatingRepository;
   private userMapper: UserMapper;
   constructor(dependencies: {
     userRepository: UserRepository;
@@ -91,8 +90,9 @@ export default class UserService {
     return isValid;
   }
 
-  async addUser(userData: IUser) {
-    await this.userRepository.createOne(userData);
+  async addUser(userData: UserDto) {
+    const user = this.userMapper.fromDtoToEntity(userData);
+    await this.userRepository.createOne(user);
   }
 
   async getUsers() {

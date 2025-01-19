@@ -111,7 +111,6 @@ export default class EventController {
       const events = await this.eventService.getUserEvents(req.user._id);
       res.status(200).send(events);
     } catch (err) {
-      console.log(err);
       return handleError(res, err);
     }
   }
