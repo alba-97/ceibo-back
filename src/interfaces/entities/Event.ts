@@ -22,4 +22,5 @@ export default interface IEvent {
   comments: IComment[];
   private: boolean;
   ended?: boolean;
+  users: IUser[];
 }

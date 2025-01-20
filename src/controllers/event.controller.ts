@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { RoleService, EventService, UserService } from "../services";
+import { EventService, UserService } from "../services";
 import handleError from "../utils/handleError";
 import { UserOptions, CategoryOptions } from "../interfaces/options";
 import { before, DELETE, GET, POST, PUT, route } from "awilix-router-core";
@@ -8,15 +8,12 @@ import validateUser from "../middleware/auth";
 @route("/events")
 export default class EventController {
   private eventService: EventService;
-  private roleService: RoleService;
   private userService: UserService;
   constructor(dependencies: {
     eventService: EventService;
-    roleService: RoleService;
     userService: UserService;
   }) {
     this.eventService = dependencies.eventService;
-    this.roleService = dependencies.roleService;
     this.userService = dependencies.userService;
   }
 
@@ -35,11 +32,6 @@ export default class EventController {
   async createNewEvent(req: Request, res: Response) {
     try {
       const event = await this.eventService.createNewEvent(req.body, req.user);
-      await this.roleService.createNewRole({
-        userId: req.user._id,
-        eventId: event._id,
-        role: "Organizer",
-      });
       res.status(201).send(event);
     } catch (err) {
       return handleError(res, err);
@@ -64,10 +56,7 @@ export default class EventController {
   @DELETE()
   async removeUserEvent(req: Request, res: Response) {
     try {
-      await this.roleService.removeRoleByEventId(
-        req.user._id,
-        req.params.eventId
-      );
+      await this.eventService.stopParticipating(req.user, req.params.eventId);
       res.status(200).send("Event deleted successfully");
     } catch (err) {
       return handleError(res, err);
@@ -77,13 +66,9 @@ export default class EventController {
   @route("/enroll")
   @before([validateUser])
   @POST()
-  async addUserEvent(req: Request, res: Response) {
+  async enroll(req: Request, res: Response) {
     try {
-      await this.roleService.createNewRole({
-        userId: req.user._id,
-        eventId: req.body.eventId,
-        role: "Member",
-      });
+      await this.eventService.enroll(req.body.eventId, req.user);
       const event = await this.eventService.findEventById(req.body.eventId);
       res.status(200).send(event);
     } catch (err) {
@@ -91,12 +76,12 @@ export default class EventController {
     }
   }
 
-  @route("/history")
+  @route("/created")
   @before([validateUser])
   @GET()
-  async getPastUserEvents(req: Request, res: Response) {
+  async getCreatedEvents(req: Request, res: Response) {
     try {
-      let events = await this.eventService.getUserEvents(req.user._id);
+      let events = await this.eventService.getCreatedEvents(req.user._id);
       res.status(200).send(events);
     } catch (err) {
       return handleError(res, err);
@@ -182,7 +167,7 @@ export default class EventController {
   async deleteEvent(req: Request, res: Response) {
     try {
       await this.eventService.checkEdit(req.params.id, req.user._id);
-      await this.eventService.removeEvent(req.params.id, req.user._id);
+      await this.eventService.removeEvent(req.params.id, req.user);
       res.status(201).send("Event deleted successfully");
     } catch (err) {
       return handleError(res, err);
@@ -224,7 +209,7 @@ export default class EventController {
   @POST()
   async rateEvent(req: Request, res: Response) {
     try {
-      await this.roleService.rateEvent(
+      await this.eventService.rateEvent(
         req.user,
         req.params.id,
         +req.body.rating

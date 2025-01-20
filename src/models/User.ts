@@ -66,6 +66,13 @@ const UserSchema = new Schema<IUser>({
       toJSON: { virtuals: true },
     },
   ],
+  events: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Event",
+      timestamps: true,
+    },
+  ],
 });
 
 UserSchema.methods.validatePassword = async function (password: string) {

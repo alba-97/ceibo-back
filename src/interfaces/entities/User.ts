@@ -1,4 +1,5 @@
 import ICategory from "./Category";
+import IEvent from "./Event";
 
 export default interface IUser {
   _id: string;
@@ -15,6 +16,7 @@ export default interface IUser {
   preferences: ICategory[];
   new_user: boolean;
   friends: IUser[];
+  events: IEvent[];
   rating?: number;
   validatePassword(password: string): Promise<boolean>;
   save: () => {};

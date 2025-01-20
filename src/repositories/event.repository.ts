@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { IEvent } from "../interfaces/entities";
 import { EventOptions } from "../interfaces/options";
 import Paginated from "../interfaces/Paginated";
@@ -8,6 +9,7 @@ type Search = { $regex: string; $options: string };
 type WhereClause = {
   start_date?: { $gte?: Date; $lte?: Date };
   category?: { name: { $in: string[] } | Search };
+  createdBy?: string;
   user?: { username: Search };
   categoryId?: string;
   $or?: [{ title: Search }, { description: Search }];
@@ -26,6 +28,20 @@ export default class EventRepository {
     return event;
   }
 
+  async removeUser(userId: string, eventId: string) {
+    await Event.updateOne(
+      { _id: new Types.ObjectId(eventId) },
+      { $pull: { users: new Types.ObjectId(userId) } }
+    );
+  }
+
+  async addUser(userId: string, eventId: string) {
+    await Event.updateOne(
+      { _id: new Types.ObjectId(eventId) },
+      { $push: { users: new Types.ObjectId(userId) } }
+    );
+  }
+
   async findByUsername(
     searchTerm: string,
     pagination = { skip: 0, limit: 20 }
@@ -34,45 +50,18 @@ export default class EventRepository {
     const result = await Event.aggregate([
       {
         $lookup: {
-          from: "roles",
-          let: { eventId: "$_id" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$event", "$$eventId"] },
-                    { $eq: ["$role", "Organizer"] },
-                  ],
-                },
-              },
-            },
-            {
-              $lookup: {
-                from: "users",
-                localField: "user",
-                foreignField: "_id",
-                as: "userDetails",
-              },
-            },
-            {
-              $unwind: "$userDetails",
-            },
-            {
-              $match: {
-                "userDetails.username": {
-                  $regex: searchTerm,
-                  $options: "i",
-                },
-              },
-            },
-          ],
-          as: "organizerDetails",
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdByUser",
         },
       },
       {
         $match: {
-          "organizerDetails.0": { $exists: true },
+          "createdByUser.username": {
+            $regex: searchTerm,
+            $options: "i",
+          },
         },
       },
       {
@@ -93,8 +82,8 @@ export default class EventRepository {
         },
       },
     ]);
-    const data = result[0].paginatedResults;
-    const total = result[0].totalCount[0]?.totalCount ?? 0;
+    const data = result[0]?.paginatedResults ?? [];
+    const total = result[0]?.totalCount[0]?.totalCount ?? 0;
     return { data, total };
   }
 
@@ -135,8 +124,8 @@ export default class EventRepository {
         },
       },
     ]);
-    const data = result[0].paginatedResults;
-    const total = result[0].totalCount[0]?.totalCount ?? 0;
+    const data = result[0]?.paginatedResults ?? [];
+    const total = result[0]?.totalCount[0]?.totalCount ?? 0;
     return { data, total };
   }
 
@@ -152,13 +141,14 @@ export default class EventRepository {
       categoryId,
       search,
       searchTerm = "",
+      createdBy,
     } = query;
 
     if (minDate) where.start_date = { $gte: new Date() };
     if (maxDate) where.start_date = { $lte: new Date() };
-
     if (preferences) where.category = { name: { $in: preferences } };
     if (categoryId) where.categoryId = categoryId;
+    if (createdBy) where.createdBy = createdBy;
 
     switch (search) {
       case "text":

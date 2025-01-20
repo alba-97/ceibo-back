@@ -76,6 +76,7 @@ export default class UserService {
     if (!user) throw new HttpError(404, "User not found");
     await this.userRepository.updateOneById(userId, {
       preferences: [...categories],
+      new_user: false,
     });
   }
 

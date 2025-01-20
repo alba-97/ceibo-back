@@ -1,5 +1,6 @@
+import { Types } from "mongoose";
 import { IUser } from "../interfaces/entities";
-import { UserOptions } from "../interfaces/options";
+import { EventOptions, UserOptions } from "../interfaces/options";
 import Paginated from "../interfaces/Paginated";
 import { User } from "../models";
 
@@ -16,6 +17,20 @@ export default class UserRepository {
     return user;
   }
 
+  async removeEvent(eventId: string, userId: string) {
+    await User.updateOne(
+      { _id: new Types.ObjectId(userId) },
+      { $pull: { events: new Types.ObjectId(eventId) } }
+    );
+  }
+
+  async addEvent(eventId: string, userId: string) {
+    await User.updateOne(
+      { _id: new Types.ObjectId(userId) },
+      { $push: { events: new Types.ObjectId(eventId) } }
+    );
+  }
+
   async updateOneById(
     userId: string,
     userData: Partial<IUser>
@@ -26,10 +41,75 @@ export default class UserRepository {
   }
 
   async getPayload(query: UserOptions = {}): Promise<IUser | null> {
-    return await User.findOne(query).populate({
-      path: "preferences",
-      model: "Category",
-    });
+    return await User.findOne(query).populate([
+      {
+        path: "preferences",
+        model: "Category",
+      },
+      {
+        path: "events",
+        model: "Event",
+      },
+    ]);
+  }
+
+  async findEvents(
+    userId: string,
+    options: EventOptions,
+    pagination = { skip: 0, limit: 20 }
+  ) {
+    const { maxDate } = options;
+    const { skip, limit } = pagination;
+
+    const result = await User.aggregate([
+      {
+        $match: {
+          _id: new Types.ObjectId(userId),
+        },
+      },
+      {
+        $lookup: {
+          from: "events",
+          localField: "_id",
+          foreignField: "users",
+          as: "events",
+        },
+      },
+      {
+        $unwind: "$events",
+      },
+      {
+        $match: {
+          "events.end_date": { $lt: maxDate },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          events: 1,
+        },
+      },
+      {
+        $facet: {
+          paginatedResults: [
+            {
+              $skip: skip,
+            },
+            {
+              $limit: limit,
+            },
+          ],
+          totalCount: [
+            {
+              $count: "totalCount",
+            },
+          ],
+        },
+      },
+    ]);
+    const data = result[0]?.paginatedResults ?? [];
+    const total = result[0]?.totalCount[0]?.totalCount ?? 0;
+    return { data, total };
   }
 
   async findAll(query: UserOptions = {}): Promise<Paginated<IUser>> {
@@ -52,10 +132,16 @@ export default class UserRepository {
   }
 
   async findOne(query: UserOptions): Promise<IUser | null> {
-    return await User.findOne(query, "-password -salt -__v").populate({
-      path: "preferences",
-      model: "Category",
-    });
+    return await User.findOne(query, "-password -salt -__v").populate([
+      {
+        path: "preferences",
+        model: "Category",
+      },
+      {
+        path: "friends",
+        model: "User",
+      },
+    ]);
   }
 
   async findOneById(userId: string): Promise<IUser | null> {

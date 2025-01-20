@@ -1,11 +1,9 @@
 import data from "../seeder/data.json";
-import { IEvent, IUser } from "../interfaces/entities";
 import {
   CategoryRepository,
   EventRepository,
   UserRepository,
   CommentRepository,
-  RoleRepository,
   RatingRepository,
 } from "../repositories/";
 
@@ -14,21 +12,18 @@ export default class SeederService {
   private eventRepository: EventRepository;
   private userRepository: UserRepository;
   private commentRepository: CommentRepository;
-  private roleRepository: RoleRepository;
   private ratingRepository: RatingRepository;
   constructor(dependencies: {
     categoryRepository: CategoryRepository;
     eventRepository: EventRepository;
     userRepository: UserRepository;
     commentRepository: CommentRepository;
-    roleRepository: RoleRepository;
     ratingRepository: RatingRepository;
   }) {
     this.categoryRepository = dependencies.categoryRepository;
     this.eventRepository = dependencies.eventRepository;
     this.userRepository = dependencies.userRepository;
     this.commentRepository = dependencies.commentRepository;
-    this.roleRepository = dependencies.roleRepository;
     this.ratingRepository = dependencies.ratingRepository;
   }
   async generateData() {
@@ -83,11 +78,8 @@ export default class SeederService {
         title: data.roles[i].event,
       });
       if (!event) throw new Error("Event not found");
-      await this.roleRepository.createOne({
-        user,
-        event,
-        role: "member",
-      });
+      await this.eventRepository.addUser(user._id, event._id);
+      await this.userRepository.addEvent(event._id, user._id);
     }
 
     for (let i = 0; i < data.comments.length; i++) {

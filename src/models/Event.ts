@@ -46,6 +46,7 @@ const EventSchema = new Schema<IEvent>({
   },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   private: { type: Boolean, default: false },
+  users: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 EventSchema.index(

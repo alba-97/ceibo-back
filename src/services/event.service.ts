@@ -1,41 +1,73 @@
 import { EventOptions, CategoryOptions } from "../interfaces/options";
 import HttpError from "../interfaces/HttpError";
-import { ICategory, IEvent, IRole, IUser } from "../interfaces/entities";
+import { ICategory, IUser } from "../interfaces/entities";
 import { EventDto } from "../interfaces/dto";
 import getAvg from "../utils/getAvg";
 import {
   CategoryRepository,
   EventRepository,
   RatingRepository,
-  RoleRepository,
+  UserRepository,
 } from "../repositories";
-import { CategoryMapper, EventMapper, RoleMapper } from "../mappers";
+import { CategoryMapper, EventMapper } from "../mappers";
 
 export default class EventService {
   eventRepository: EventRepository;
-  roleRepository: RoleRepository;
+  userRepository: UserRepository;
   categoryRepository: CategoryRepository;
   ratingRepository: RatingRepository;
   eventMapper: EventMapper;
-  roleMapper: RoleMapper;
   categoryMapper: CategoryMapper;
   constructor(dependencies: {
     eventRepository: EventRepository;
-    roleRepository: RoleRepository;
+    userRepository: UserRepository;
     categoryRepository: CategoryRepository;
     ratingRepository: RatingRepository;
     eventMapper: EventMapper;
-    roleMapper: RoleMapper;
     categoryMapper: CategoryMapper;
   }) {
     this.eventRepository = dependencies.eventRepository;
-    this.roleRepository = dependencies.roleRepository;
+    this.userRepository = dependencies.userRepository;
     this.categoryRepository = dependencies.categoryRepository;
     this.ratingRepository = dependencies.ratingRepository;
     this.eventMapper = dependencies.eventMapper;
-    this.roleMapper = dependencies.roleMapper;
     this.categoryMapper = dependencies.categoryMapper;
   }
+
+  async enroll(eventId: string, user: IUser) {
+    const event = await this.eventRepository.findOneById(eventId);
+    if (!event) throw new HttpError(404, "Event not found");
+
+    await this.eventRepository.addUser(eventId, user._id);
+    await this.userRepository.addEvent(user._id, eventId);
+  }
+
+  async rateEvent(ratedBy: IUser, eventId: string, rating: number) {
+    const ratedEvent = await this.eventRepository.findOneById(eventId);
+    if (!ratedEvent) throw new HttpError(404, "Event not found");
+    const ratedUser = ratedEvent.createdBy;
+
+    await this.ratingRepository.createOne({
+      ratedEvent,
+      ratedUser,
+      rating,
+      ratedBy,
+    });
+  }
+
+  async userRating(user: IUser) {
+    if (!user) throw new HttpError(404, "User not found");
+    return user.rating;
+  }
+
+  async stopParticipating(user: IUser, eventId: string) {
+    const event = await this.eventRepository.findOneById(eventId);
+    if (!event) throw new HttpError(404, "Event not found");
+
+    await this.eventRepository.removeUser(eventId, user._id);
+    await this.userRepository.removeEvent(user._id, eventId);
+  }
+
   async createNewEvent(eventData: EventDto, user: IUser) {
     const category = await this.categoryRepository.findOne(eventData.category);
     if (!category) throw new HttpError(404, "Category not found");
@@ -64,8 +96,10 @@ export default class EventService {
 
   async getEventsByCategory(query: CategoryOptions) {
     if (!query.name) throw new HttpError(400, "No category name specified");
+
     const category = await this.categoryRepository.findOne(query.name);
     if (!category) throw new HttpError(404, "Event not found");
+
     const events = await this.eventRepository.findAll({
       categoryId: category._id,
     });
@@ -73,11 +107,7 @@ export default class EventService {
   }
 
   async getEventsByUser(user: IUser) {
-    const { data: roles } = await this.roleRepository.findAll({
-      userId: user._id,
-    });
-    const events = this.roleMapper.getEvents(roles);
-    return events;
+    return user.events;
   }
 
   async getEventsByQuery(query: EventOptions) {
@@ -87,17 +117,35 @@ export default class EventService {
   }
 
   async getUserEvents(userId: string) {
-    const { data: roles } = await this.roleRepository.findAll({
-      userId,
+    const events = await this.userRepository.findEvents(userId, {
       maxDate: new Date(),
     });
-    const events = this.roleMapper.getEvents(roles);
+    events.data = events.data.map(({ events }: IUser) => events);
     return events;
   }
 
-  async removeEvent(eventId: string, userId: string) {
+  async getCreatedEvents(userId: string) {
+    const events = await this.eventRepository.findAll({
+      createdBy: userId,
+    });
+    return events;
+  }
+
+  async removeEvent(eventId: string, user: IUser) {
+    const event = await this.eventRepository.findOneById(eventId);
+    if (!event) throw new HttpError(404, "Event not found");
+
     await this.eventRepository.removeOneById(eventId);
-    await this.roleRepository.removeMany({ eventId, userId });
+
+    await this.eventRepository.removeUser(user._id, eventId);
+    await this.userRepository.removeEvent(eventId, user._id);
+
+    await this.eventRepository.updateOneById(event._id, {
+      users: event.users.filter(({ _id }) => _id !== user._id),
+    });
+    await this.userRepository.updateOneById(user._id, {
+      events: user.events.filter(({ _id }) => _id !== eventId),
+    });
   }
 
   async updateEventData(eventId: string, updatedData: EventDto) {

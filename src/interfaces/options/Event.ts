@@ -7,4 +7,5 @@ export default interface EventOptions {
   minDate?: Date;
   maxDate?: Date;
   preferences?: string[];
+  createdBy?: string;
 }

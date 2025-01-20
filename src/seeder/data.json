@@ -2,7 +2,7 @@
   "users": [
     {
       "username": "clubDelPlan",
-      "password": "clubDelPlan",
+      "password": "clubDelPlan-123",
       "first_name": "Ceibo",
       "last_name": "Digital",
       "email": "ceibodigital@example.com",
@@ -11,7 +11,7 @@
     },
     {
       "username": "johndoe",
-      "password": "Jd123456",
+      "password": "Jd-123456",
       "first_name": "John",
       "last_name": "Doe",
       "email": "johndoe@example.com",
@@ -19,7 +19,7 @@
     },
     {
       "username": "janedoe",
-      "password": "janeQwerty",
+      "password": "jane-Qwerty-123",
       "first_name": "Jane",
       "last_name": "Doe",
       "email": "janedoe@example.com",
@@ -27,7 +27,7 @@
     },
     {
       "username": "peterparker",
-      "password": "SpiderMan",
+      "password": "Spider-Man-123",
       "first_name": "Peter",
       "last_name": "Parker",
       "email": "peterparker@example.com",
@@ -35,7 +35,7 @@
     },
     {
       "username": "brucewayne",
-      "password": "soyBatman",
+      "password": "soy-Batman-123",
       "first_name": "Bruce",
       "last_name": "Wayne",
       "email": "brucewayne@example.com",
@@ -43,7 +43,7 @@
     },
     {
       "username": "superman",
-      "password": "clarkKent",
+      "password": "clark-Kent-123",
       "first_name": "Clark",
       "last_name": "Kent",
       "email": "clarkkent@example.com",
@@ -51,7 +51,7 @@
     },
     {
       "username": "ironman",
-      "password": "tonyStark",
+      "password": "tony-Stark-123",
       "first_name": "Tony",
       "last_name": "Stark",
       "email": "tonystark@example.com",
@@ -59,7 +59,7 @@
     },
     {
       "username": "natasharomanoff",
-      "password": "blackWidow",
+      "password": "black-Widow-123",
       "first_name": "Natasha",
       "last_name": "Romanoff",
       "email": "natasharomanoff@example.com",
@@ -67,7 +67,7 @@
     },
     {
       "username": "wadewinston",
-      "password": "deadPool",
+      "password": "dead-Pool-123",
       "first_name": "Wade",
       "last_name": "Winston",
       "email": "wadewinston@example.com",
@@ -75,7 +75,7 @@
     },
     {
       "username": "aquaman",
-      "password": "arthurSmith",
+      "password": "arthur-Smith-123",
       "first_name": "Arthur",
       "last_name": "Smith",
       "email": "arthursmith@example.com",
@@ -83,7 +83,7 @@
     },
     {
       "username": "dianaprince",
-      "password": "wonderWoman",
+      "password": "wonder-Woman-123",
       "first_name": "Diana",
       "last_name": "Prince",
       "email": "dianaprince@example.com",
