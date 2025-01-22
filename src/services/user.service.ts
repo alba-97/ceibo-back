@@ -71,11 +71,11 @@ export default class UserService {
     return { token, userPayload };
   }
 
-  async addPreferences(userId: string, categories: ICategory[]) {
+  async addPreferences(userId: string, categoryIds: string[]) {
     const user = await this.userRepository.findOneById(userId);
     if (!user) throw new HttpError(404, "User not found");
-    await this.userRepository.updateOneById(userId, {
-      preferences: [...categories],
+    await this.userRepository.addPreferences(userId, categoryIds);
+    await this.userRepository.updateOneById(user._id, {
       new_user: false,
     });
   }

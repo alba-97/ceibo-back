@@ -100,10 +100,10 @@ export default class EventController {
     }
   }
 
-  @route("/filter")
+  @route("/recommended")
   @before([validateUser])
   @GET()
-  async getFilteredEvents(req: Request, res: Response) {
+  async getRecommendedEvents(req: Request, res: Response) {
     try {
       const events = await this.eventService.getEventsByUserPreferences(
         req.user.preferences

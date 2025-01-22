@@ -31,6 +31,13 @@ export default class UserRepository {
     );
   }
 
+  async addPreferences(userId: string, categoryIds: string[]) {
+    await User.updateOne(
+      { _id: new Types.ObjectId(userId) },
+      { $set: { preferences: categoryIds } }
+    );
+  }
+
   async updateOneById(
     userId: string,
     userData: Partial<IUser>
