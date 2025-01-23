@@ -91,109 +91,109 @@
     }
   ],
   "categories": [
-    "Aficiones y manualidades",
-    "Conferencia",
-    "Fiesta",
-    "Apoyo",
-    "Arte y cultura",
-    "Vehiculos",
-    "Danza",
-    "Negocios",
-    "Fantasía y ciencia ficción",
-    "Cine y películas",
-    "Comidas y bebidas",
-    "Comunidad y medioambiente",
-    "Salud física",
-    "Deportes",
-    "Educación",
-    "Escritura",
-    "Estilo de vida",
-    "Fenómenos paranormales",
-    "Fotografía",
-    "Idiomas",
-    "Juegos",
+    "Hobbies & Crafts",
+    "Conference",
+    "Party",
+    "Support",
+    "Art & Culture",
+    "Vehicles",
+    "Dance",
+    "Business",
+    "Fantasy & Science Fiction",
+    "Cinema & Movies",
+    "Food & Drinks",
+    "Community & Environment",
+    "Physical Health",
+    "Sports",
+    "Education",
+    "Writing",
+    "Lifestyle",
+    "Paranormal Phenomena",
+    "Photography",
+    "Languages",
+    "Games",
     "LGBT",
-    "Libros",
-    "Mascotas y animales",
-    "Moda y belleza",
-    "Política",
-    "Música",
-    "Naturaleza y aventura",
-    "New Age y espiritualidad",
-    "Padres y familia",
-    "Personas solteras",
-    "Religión y creencias",
-    "Salud y bienestar",
-    "Tecnología",
-    "Vida social"
+    "Books",
+    "Pets & Animals",
+    "Fashion & Beauty",
+    "Politics",
+    "Music",
+    "Nature & Adventure",
+    "New Age & Spirituality",
+    "Parents & Family",
+    "Single People",
+    "Religion & Beliefs",
+    "Health & Wellness",
+    "Technology",
+    "Social Life"
   ],
   "events": [
     {
-      "title": "Lanzamiento de nuevo producto",
-      "description": "Presentación del nuevo producto de la compañía con una fiesta en grande",
+      "title": "New Product Launch",
+      "description": "Presentation of the company's new product with a grand party",
       "start_date": "2024-09-15T17:00:00.000Z",
       "end_date": "2024-09-15T18:00:00.000Z",
-      "event_location": "Centro de convenciones",
+      "event_location": "Convention Center",
       "img": "https://cdn.pixabay.com/photo/2016/08/16/09/53/international-conference-1597531_1280.jpg",
-      "category": "Conferencia",
+      "category": "Conference",
       "createdBy": "ironman"
     },
     {
-      "title": "Boda de María y Juan",
-      "description": "Boda de María y Juan en la iglesia del pueblo seguida de una recepción en el jardín",
-      "event_location": "Iglesia San José, Calle Principal 123, Pueblo Nuevo",
+      "title": "Maria & Juan's Wedding",
+      "description": "Maria and Juan's wedding at the town church, followed by a garden reception",
+      "event_location": "San José Church, Main Street 123, Pueblo Nuevo",
       "img": "https://cdn.pixabay.com/photo/2014/09/13/04/59/couple-443600_1280.jpg",
-      "category": "Fiesta",
+      "category": "Party",
       "start_date": "2024-07-18T21:00:00.000Z",
       "end_date": "2024-07-18T22:00:00.000Z",
       "createdBy": "wadewinston"
     },
     {
-      "title": "Fiesta de cumpleaños",
-      "description": "Celebración del cumpleaños número 30 de Ana con música y comida",
-      "event_location": "Casa de Ana, calle Flores 456",
+      "title": "Birthday Party",
+      "description": "Celebration of Ana's 30th birthday with music and food",
+      "event_location": "Ana's House, Flores Street 456",
       "img": "https://cdn.pixabay.com/photo/2014/06/10/20/01/cake-366346_1280.jpg",
-      "category": "Fiesta",
+      "category": "Party",
       "start_date": "2024-12-05T14:00:00.000Z",
       "end_date": "2024-12-05T16:00:00.000Z",
       "createdBy": "clubDelPlan"
     },
     {
-      "title": "Concierto de rock",
-      "description": "Concierto de rock en el estadio con las bandas más populares",
-      "event_location": "Estadio Nacional",
+      "title": "Rock Concert",
+      "description": "Rock concert at the stadium featuring the most popular bands",
+      "event_location": "National Stadium",
       "img": "https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_1280.jpg",
-      "category": "Música",
+      "category": "Music",
       "start_date": "2024-07-22T21:00:00.000Z",
       "end_date": "2024-07-22T23:00:00.000Z",
       "createdBy": "brucewayne"
     },
     {
-      "title": "Fiesta de graduación",
-      "description": "Fiesta para celebrar la graduación de los alumnos de la promoción 2022",
-      "event_location": "Salón de recepciones Grand Plaza",
+      "title": "Graduation Party",
+      "description": "Party to celebrate the graduation of the 2022 class",
+      "event_location": "Grand Plaza Reception Hall",
       "img": "https://cdn.pixabay.com/photo/2017/02/05/00/08/graduation-2038864_1280.jpg",
-      "category": "Fiesta",
+      "category": "Party",
       "start_date": "2025-03-25T17:00:00.000Z",
       "end_date": "2025-03-25T18:00:00.000Z",
       "createdBy": "superman"
     },
     {
-      "title": "Festival de cine",
-      "description": "Festival de cine que proyectará películas independientes de diferentes países",
-      "event_location": "Cine Palacio",
+      "title": "Film Festival",
+      "description": "Film festival showcasing independent films from various countries",
+      "event_location": "Palace Cinema",
       "img": "https://cdn.pixabay.com/photo/2019/11/07/20/48/cinema-4609877_1280.jpg",
-      "category": "Arte y cultura",
+      "category": "Art & Culture",
       "start_date": "2024-05-08T15:00:00.000Z",
       "end_date": "2024-05-08T20:00:00.000Z",
       "createdBy": "aquaman"
     },
     {
-      "title": "Feria gastronómica",
-      "description": "Feria gastronómica con platos de diferentes culturas y países",
+      "title": "Gastronomic Fair",
+      "description": "Gastronomic fair featuring dishes from different cultures and countries",
       "event_location": "Plaza de Armas",
       "img": "https://cdn.pixabay.com/photo/2018/05/04/10/08/cheese-3373604_1280.jpg",
-      "category": "Comidas y bebidas",
+      "category": "Food & Drinks",
       "private": true,
       "start_date": "2024-01-30T13:00:00.000Z",
       "end_date": "2024-01-30T15:00:00.000Z",
@@ -201,145 +201,139 @@
     }
   ],
   "roles": [
-    { "user": "johndoe", "event": "Fiesta de cumpleaños" },
-    { "user": "superman", "event": "Fiesta de cumpleaños" },
-    { "user": "aquaman", "event": "Fiesta de cumpleaños" },
+    { "user": "johndoe", "event": "Birthday Party" },
+    { "user": "superman", "event": "Birthday Party" },
+    { "user": "aquaman", "event": "Birthday Party" },
 
-    { "user": "ironman", "event": "Feria gastronómica" },
-    { "user": "wadewinston", "event": "Feria gastronómica" },
-    { "user": "brucewayne", "event": "Feria gastronómica" },
+    { "user": "ironman", "event": "Gastronomic Fair" },
+    { "user": "wadewinston", "event": "Gastronomic Fair" },
+    { "user": "brucewayne", "event": "Gastronomic Fair" },
 
-    { "user": "aquaman", "event": "Fiesta de graduación" },
-    { "user": "ironman", "event": "Fiesta de graduación" },
+    { "user": "aquaman", "event": "Graduation Party" },
+    { "user": "ironman", "event": "Graduation Party" },
 
-    { "user": "johndoe", "event": "Festival de cine" },
-    { "user": "superman", "event": "Festival de cine" },
+    { "user": "johndoe", "event": "Film Festival" },
+    { "user": "superman", "event": "Film Festival" },
 
-    { "user": "wadewinston", "event": "Concierto de rock" },
+    { "user": "wadewinston", "event": "Rock Concert" },
 
-    { "user": "ironman", "event": "Boda de María y Juan" },
-    { "user": "superman", "event": "Boda de María y Juan" },
-    { "user": "johndoe", "event": "Boda de María y Juan" },
+    { "user": "ironman", "event": "Maria & Juan's Wedding" },
+    { "user": "superman", "event": "Maria & Juan's Wedding" },
+    { "user": "johndoe", "event": "Maria & Juan's Wedding" },
 
-    { "user": "wadewinston", "event": "Lanzamiento de nuevo producto" }
+    { "user": "wadewinston", "event": "New Product Launch" }
   ],
   "comments": [
     {
-      "event": "Lanzamiento de nuevo producto",
+      "event": "New Product Launch",
       "user": "wadewinston",
-      "text": "Que bueno!!"
+      "text": "That's great!!"
     },
     {
-      "event": "Lanzamiento de nuevo producto",
+      "event": "New Product Launch",
       "user": "wadewinston",
-      "text": "Que van a presentar en el evento?"
+      "text": "What are you going to present at the event?"
     },
-
     {
-      "event": "Fiesta de cumpleaños",
+      "event": "Birthday Party",
       "user": "johndoe",
-      "text": "Feliz cumpleaños"
+      "text": "Happy Birthday"
     },
     {
-      "event": "Fiesta de cumpleaños",
+      "event": "Birthday Party",
       "user": "superman",
-      "text": "¡Feliz cumple! Pasala bien."
+      "text": "Happy birthday! Have fun."
     },
     {
-      "event": "Fiesta de cumpleaños",
+      "event": "Birthday Party",
       "user": "aquaman",
-      "text": "Feliz cumpleaños! Te deseo un año lleno de éxitos y felicidad."
+      "text": "Happy Birthday! I wish you a year full of success and happiness."
     },
-
     {
-      "event": "Fiesta de graduación",
+      "event": "Graduation Party",
       "user": "aquaman",
-      "text": "Felicidades"
+      "text": "Congratulations"
     },
     {
-      "event": "Fiesta de graduación",
+      "event": "Graduation Party",
       "user": "ironman",
-      "text": "Felicitaciones a los egresados!"
+      "text": "Congratulations to the graduates!"
     },
-
     {
-      "event": "Festival de cine",
+      "event": "Film Festival",
       "user": "johndoe",
-      "text": "Que bueno!! qué películas pasan?"
+      "text": "That's great!! What movies are playing?"
     },
     {
-      "event": "Festival de cine",
+      "event": "Film Festival",
       "user": "superman",
-      "text": "Buenísimo, ahi me anoto"
+      "text": "Awesome, I'm in"
     },
-
     {
-      "event": "Concierto de rock",
+      "event": "Rock Concert",
       "user": "wadewinston",
-      "text": "quienes van a estar?"
+      "text": "Who's performing?"
     },
-
     {
-      "event": "Feria gastronómica",
+      "event": "Gastronomic Fair",
       "user": "ironman",
-      "text": "Tiene buena pinta"
+      "text": "Looks good"
     },
-
     {
-      "event": "Boda de María y Juan",
+      "event": "Maria & Juan's Wedding",
       "user": "superman",
-      "text": "Felicidades a los 2"
+      "text": "Congratulations to both of you"
     }
   ],
 
   "ratings": [
     {
-      "ratedEvent": "Lanzamiento de nuevo producto",
+      "ratedEvent": "New Product Launch",
       "ratedBy": "wadewinston",
       "rating": 5
     },
     {
-      "ratedEvent": "Lanzamiento de nuevo producto",
+      "ratedEvent": "New Product Launch",
       "ratedBy": "wadewinston",
       "rating": 3
     },
     {
-      "ratedEvent": "Fiesta de cumpleaños",
+      "ratedEvent": "Birthday Party",
       "ratedBy": "johndoe",
       "rating": 4
     },
     {
-      "ratedEvent": "Fiesta de cumpleaños",
+      "ratedEvent": "Birthday Party",
       "ratedBy": "superman",
       "rating": 5
     },
     {
-      "ratedEvent": "Fiesta de cumpleaños",
+      "ratedEvent": "Birthday Party",
       "ratedBy": "aquaman",
       "rating": 5
     },
     {
-      "ratedEvent": "Festival de cine",
+      "ratedEvent": "Film Festival",
       "ratedBy": "johndoe",
       "rating": 3
     },
     {
-      "ratedEvent": "Festival de cine",
+      "ratedEvent": "Film Festival",
       "ratedBy": "superman",
       "rating": 4
     },
     {
-      "ratedEvent": "Concierto de rock",
+      "ratedEvent": "Rock Concert",
       "ratedBy": "wadewinston",
       "rating": 2
     },
     {
-      "ratedEvent": "Feria gastronómica",
+      "ratedEvent": "Gastronomic Fair",
       "ratedBy": "ironman",
       "rating": 4
     },
     {
-      "ratedEvent": "Boda de María y Juan",
+      "ratedEvent": "Maria & Juan's Wedding",
       "ratedBy": "superman",
       "rating": 4
     }

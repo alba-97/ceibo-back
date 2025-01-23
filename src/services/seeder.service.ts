@@ -37,7 +37,7 @@ export default class SeederService {
         birthdate: new Date(data.users[i].birthdate),
         address: data.users[i].address,
       });
-      console.log(`Usuario ${newUser.username} creado`);
+      console.log(`User ${newUser.username} created`);
     }
 
     for (let i = 0; i < data.categories.length; i++) {
@@ -66,7 +66,7 @@ export default class SeederService {
         private: false,
         createdBy,
       });
-      console.log(`Evento ${event.title} creado`);
+      console.log(`Event ${event.title} created`);
     }
 
     for (let i = 0; i < data.roles.length; i++) {
@@ -118,6 +118,6 @@ export default class SeederService {
       });
     }
 
-    console.log("Datos falsos creados");
+    console.log("Fake data created");
   }
 }
