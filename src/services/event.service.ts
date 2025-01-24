@@ -117,11 +117,14 @@ export default class EventService {
   }
 
   async getUserEvents(userId: string) {
-    const events = await this.userRepository.findEvents(userId, {
+    const paginatedUsers = await this.userRepository.findEvents(userId, {
       maxDate: new Date(),
     });
-    events.data = events.data.map(({ events }: IUser) => events);
-    return events;
+    const paginatedEvents = {
+      data: paginatedUsers.data.map(({ events }: IUser) => events),
+      total: paginatedUsers.total,
+    };
+    return paginatedEvents;
   }
 
   async getCreatedEvents(userId: string) {

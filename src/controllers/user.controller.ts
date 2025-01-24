@@ -100,17 +100,6 @@ export default class UserController {
     }
   }
 
-  @route("/:id")
-  @GET()
-  public async getUser(req: Request, res: Response) {
-    try {
-      const user = await this.userService.getUserById(req.params.id);
-      res.send(user);
-    } catch (err) {
-      handleError(res, err);
-    }
-  }
-
   @before([validateUser])
   @PUT()
   public async updateUser(req: Request, res: Response) {
@@ -152,6 +141,17 @@ export default class UserController {
     try {
       const userFriends = await this.userService.getUserFriends(req.user._id);
       res.send(userFriends).status(200);
+    } catch (err) {
+      handleError(res, err);
+    }
+  }
+
+  @route("/:id")
+  @GET()
+  public async getUser(req: Request, res: Response) {
+    try {
+      const user = await this.userService.getUserById(req.params.id);
+      res.send(user);
     } catch (err) {
       handleError(res, err);
     }

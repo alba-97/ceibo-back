@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IUser } from "../interfaces/entities";
+import { IEvent, IUser } from "../interfaces/entities";
 import { EventOptions, UserOptions } from "../interfaces/options";
 import Paginated from "../interfaces/Paginated";
 import { User } from "../models";
@@ -64,7 +64,7 @@ export default class UserRepository {
     userId: string,
     options: EventOptions,
     pagination = { skip: 0, limit: 20 }
-  ) {
+  ): Promise<Paginated<IUser>> {
     const { maxDate } = options;
     const { skip, limit } = pagination;
 
@@ -135,6 +135,58 @@ export default class UserRepository {
       }),
       User.countDocuments(where),
     ]);
+    return { data, total };
+  }
+
+  async findAllFriends(
+    userId: string,
+    pagination = { skip: 0, limit: 20 }
+  ): Promise<Paginated<IUser>> {
+    const { skip, limit } = pagination;
+
+    const result = await User.aggregate([
+      {
+        $match: { _id: new Types.ObjectId(userId) },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "friends",
+          foreignField: "_id",
+          as: "friends",
+        },
+      },
+      {
+        $unwind: "$friends",
+      },
+      {
+        $project: {
+          _id: 0,
+          friends: 1,
+        },
+      },
+      {
+        $facet: {
+          paginatedResults: [
+            {
+              $skip: skip,
+            },
+            {
+              $limit: limit,
+            },
+          ],
+          totalCount: [
+            {
+              $count: "totalCount",
+            },
+          ],
+        },
+      },
+    ]);
+
+    const data = result[0]?.paginatedResults ?? [];
+    const total = result[0]?.totalCount[0]?.totalCount ?? 0;
+
     return { data, total };
   }
 

@@ -157,9 +157,15 @@ export default class UserService {
   }
 
   async getUserFriends(userId: string) {
-    const user = await this.userRepository.findOneById(userId);
-    if (!user) throw new HttpError(404, "User not found");
-    return user.friends;
+    const paginatedUsers = await this.userRepository.findAllFriends(userId);
+    if (!paginatedUsers) throw new HttpError(404, "User not found");
+
+    const paginatedFriends = {
+      data: paginatedUsers.data.map(({ friends }: IUser) => friends),
+      total: paginatedUsers.total,
+    };
+
+    return paginatedFriends;
   }
 
   async getUserPayload(token?: string) {
