@@ -9,6 +9,6 @@ export default class CategoryMapper {
   }
 
   fromEntitiesToArray(entities: ICategory[]) {
-    return entities.map(({ name }: ICategory) => name);
+    return entities.map(({ _id }: ICategory) => _id);
   }
 }

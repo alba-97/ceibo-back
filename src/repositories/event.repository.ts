@@ -8,10 +8,9 @@ type Search = { $regex: string; $options: string };
 
 type WhereClause = {
   start_date?: { $gte?: Date; $lte?: Date };
-  category?: { name: { $in: string[] } | Search };
+  category?: { $in: string[] } | { name: Search } | string;
   createdBy?: string;
   user?: { username: Search };
-  categoryId?: string;
   $or?: [{ title: Search }, { description: Search }];
 };
 
@@ -146,8 +145,8 @@ export default class EventRepository {
 
     if (minDate) where.start_date = { $gte: new Date() };
     if (maxDate) where.start_date = { $lte: new Date() };
-    if (preferences) where.category = { name: { $in: preferences } };
-    if (categoryId) where.categoryId = categoryId;
+    if (preferences) where.category = { $in: preferences };
+    if (categoryId) where.category = categoryId;
     if (createdBy) where.createdBy = createdBy;
 
     switch (search) {
