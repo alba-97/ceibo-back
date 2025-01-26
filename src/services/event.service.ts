@@ -87,9 +87,12 @@ export default class EventService {
     return await this.eventRepository.findAll(options);
   }
 
-  async getEventsByUserPreferences(preferences: ICategory[]) {
+  async getEventsByUserPreferences(userId: string) {
+    const user = await this.userRepository.findOneById(userId);
+    if (!user) throw new HttpError(404, "User not found");
+
     const events = await this.eventRepository.findAll({
-      preferences: this.categoryMapper.fromEntitiesToArray(preferences),
+      preferences: this.categoryMapper.fromEntitiesToArray(user.preferences),
     });
     return events;
   }

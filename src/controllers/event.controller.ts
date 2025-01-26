@@ -106,7 +106,7 @@ export default class EventController {
   async getRecommendedEvents(req: Request, res: Response) {
     try {
       const events = await this.eventService.getEventsByUserPreferences(
-        req.user.preferences
+        req.user._id
       );
       res.status(200).send(events);
     } catch (error) {

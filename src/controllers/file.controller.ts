@@ -3,7 +3,6 @@ import handleError from "../utils/handleError";
 import { FileService } from "../services";
 import { before, POST, route } from "awilix-router-core";
 import upload from "../middleware/uploadImage";
-import validateUser from "../middleware/auth";
 
 @route("/files")
 export default class FileController {
