@@ -6,22 +6,23 @@ import { IUser } from "../interfaces/entities";
 const UserSchema = new Schema<IUser>({
   username: {
     type: String,
-    required: [true, "Ingrese un nombre de usuario"],
+    required: [true, "Username required"],
     unique: true,
   },
   password: {
     type: String,
-    required: [true, "Ingrese una contraseña"],
+    required: [true, "Password required"],
     validate: [
       (str: string) =>
         isStrongPassword(str, {
           minLength: 8,
           minUppercase: 1,
+          minLowercase: 1,
           minSymbols: 1,
           minNumbers: 1,
           returnScore: false,
         }),
-      "La contraseña debe tener mínimo 8 caracteres y 1 mayúscula",
+      "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one symbol",
     ],
   },
   salt: {
@@ -35,9 +36,9 @@ const UserSchema = new Schema<IUser>({
   },
   email: {
     type: String,
-    required: [true, "Ingrese un email"],
+    required: [true, "Email required"],
     unique: true,
-    validate: [isEmail, "Ingrese un email válido"],
+    validate: [isEmail, "Invalid email"],
   },
   birthdate: {
     type: Date,
@@ -46,7 +47,7 @@ const UserSchema = new Schema<IUser>({
     type: String,
     unique: true,
     sparse: true,
-    validate: [isMobilePhone, "Ingrese un número de teléfono válido"],
+    validate: [isMobilePhone, "Invalid phone number"],
   },
   profile_img: {
     type: String,
@@ -97,11 +98,11 @@ UserSchema.post<IUser>(
 
     const field = Object.keys((error as any).keyValue)[0];
     const messages: { [key: string]: string } = {
-      email: "Ya hay una cuenta con ese email",
-      phone: "El número de teléfono ya fue utilizado",
-      username: "El usuario ya existe",
+      email: "Email already in use",
+      phone: "Phone number already in use",
+      username: "Username already in use",
     };
-    const message = messages[field] || "Ocurrió un error";
+    const message = messages[field] || "An error occurred";
     return next(new Error(message));
   }
 );

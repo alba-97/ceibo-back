@@ -10,7 +10,7 @@ export default interface IEvent {
   img?: string;
   start_date: Date;
   end_date: Date;
-  event_location: string;
+  location: string;
   min_age?: number;
   max_age?: number;
   min_to_pay?: number;

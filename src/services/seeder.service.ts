@@ -58,7 +58,7 @@ export default class SeederService {
       const event = await this.eventRepository.createOne({
         title: data.events[i].title,
         description: data.events[i].description,
-        event_location: data.events[i].event_location,
+        location: data.events[i].location,
         start_date: new Date(data.events[i].start_date),
         end_date: new Date(data.events[i].end_date),
         img: data.events[i].img,

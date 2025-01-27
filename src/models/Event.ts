@@ -3,25 +3,25 @@ import { isDate, isURL } from "validator";
 import { IUser, IEvent } from "../interfaces/entities";
 
 const EventSchema = new Schema<IEvent>({
-  title: { type: String, required: [true, "Ingrese el título del evento"] },
+  title: { type: String, required: [true, "Title required"] },
   description: {
     type: String,
-    required: [true, "Ingrese la descripción del evento"],
+    required: [true, "Description required"],
   },
   img: { type: String, validate: isURL },
   start_date: {
     type: Date,
     validate: isDate,
-    required: [true, "Ingrese una fecha para el evento"],
+    required: [true, "Start date required"],
   },
   end_date: {
     type: Date,
     validate: isDate,
-    required: [true, "Ingrese una fecha de finalización del evento"],
+    required: [true, "End date required"],
   },
-  event_location: {
+  location: {
     type: String,
-    required: [true, "Ingrese la ubicación del evento"],
+    required: [true, "Location required"],
   },
   created_at: {
     type: String,
@@ -49,10 +49,7 @@ const EventSchema = new Schema<IEvent>({
   users: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
-EventSchema.index(
-  { title: 1, start_date: 1, event_location: 1 },
-  { unique: true }
-);
+EventSchema.index({ title: 1, start_date: 1, location: 1 }, { unique: true });
 
 EventSchema.set("toJSON", { getters: true, virtuals: true });
 
@@ -64,7 +61,7 @@ EventSchema.post(
   "save",
   function (error: Error, _: IUser, next: (err?: Error) => void) {
     if (error.name !== "MongoServerError") return next(error);
-    return next(new Error("Este evento ya fue creado"));
+    return next(new Error("Event already exists"));
   }
 );
 

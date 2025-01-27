@@ -9,7 +9,7 @@ export default class EventMapper {
       title,
       description,
       img,
-      event_location,
+      location,
       min_age,
       max_age,
       min_to_pay,
@@ -22,7 +22,7 @@ export default class EventMapper {
     const eventEntity: Partial<IEvent> = {
       title,
       description,
-      event_location,
+      location,
       start_date: new Date(start_date),
       end_date: new Date(end_date),
       comments: [],

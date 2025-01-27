@@ -4,7 +4,7 @@ export default interface EventDto {
   start_date: string;
   end_date: string;
   img?: string;
-  event_location: string;
+  location: string;
   min_age?: number;
   max_age?: number;
   min_to_pay?: number;

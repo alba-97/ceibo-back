@@ -133,7 +133,7 @@
       "description": "Presentation of the company's new product with a grand party",
       "start_date": "2024-09-15T17:00:00.000Z",
       "end_date": "2024-09-15T18:00:00.000Z",
-      "event_location": "Convention Center",
+      "location": "Convention Center",
       "img": "https://cdn.pixabay.com/photo/2016/08/16/09/53/international-conference-1597531_1280.jpg",
       "category": "Conference",
       "createdBy": "ironman"
@@ -141,7 +141,7 @@
     {
       "title": "Maria & Juan's Wedding",
       "description": "Maria and Juan's wedding at the town church, followed by a garden reception",
-      "event_location": "San José Church, Main Street 123, Pueblo Nuevo",
+      "location": "San José Church, Main Street 123, Pueblo Nuevo",
       "img": "https://cdn.pixabay.com/photo/2014/09/13/04/59/couple-443600_1280.jpg",
       "category": "Party",
       "start_date": "2024-07-18T21:00:00.000Z",
@@ -151,7 +151,7 @@
     {
       "title": "Birthday Party",
       "description": "Celebration of Ana's 30th birthday with music and food",
-      "event_location": "Ana's House, Flores Street 456",
+      "location": "Ana's House, Flores Street 456",
       "img": "https://cdn.pixabay.com/photo/2014/06/10/20/01/cake-366346_1280.jpg",
       "category": "Party",
       "start_date": "2024-12-05T14:00:00.000Z",
@@ -161,7 +161,7 @@
     {
       "title": "Rock Concert",
       "description": "Rock concert at the stadium featuring the most popular bands",
-      "event_location": "National Stadium",
+      "location": "National Stadium",
       "img": "https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_1280.jpg",
       "category": "Music",
       "start_date": "2024-07-22T21:00:00.000Z",
@@ -171,7 +171,7 @@
     {
       "title": "Graduation Party",
       "description": "Party to celebrate the graduation of the 2022 class",
-      "event_location": "Grand Plaza Reception Hall",
+      "location": "Grand Plaza Reception Hall",
       "img": "https://cdn.pixabay.com/photo/2017/02/05/00/08/graduation-2038864_1280.jpg",
       "category": "Party",
       "start_date": "2025-03-25T17:00:00.000Z",
@@ -181,7 +181,7 @@
     {
       "title": "Film Festival",
       "description": "Film festival showcasing independent films from various countries",
-      "event_location": "Palace Cinema",
+      "location": "Palace Cinema",
       "img": "https://cdn.pixabay.com/photo/2019/11/07/20/48/cinema-4609877_1280.jpg",
       "category": "Art & Culture",
       "start_date": "2024-05-08T15:00:00.000Z",
@@ -191,7 +191,7 @@
     {
       "title": "Gastronomic Fair",
       "description": "Gastronomic fair featuring dishes from different cultures and countries",
-      "event_location": "Plaza de Armas",
+      "location": "Plaza de Armas",
       "img": "https://cdn.pixabay.com/photo/2018/05/04/10/08/cheese-3373604_1280.jpg",
       "category": "Food & Drinks",
       "private": true,
