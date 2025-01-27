@@ -34,12 +34,14 @@ export default class EventService {
     this.categoryMapper = dependencies.categoryMapper;
   }
 
-  async enroll(eventId: string, user: IUser) {
-    const event = await this.eventRepository.findOneById(eventId);
+  async enroll(eventId: string, userId: string) {
+    const event = await this.eventRepository.addUser(eventId, userId);
     if (!event) throw new HttpError(404, "Event not found");
 
-    await this.eventRepository.addUser(eventId, user._id);
-    await this.userRepository.addEvent(user._id, eventId);
+    const user = await this.userRepository.addEvent(userId, eventId);
+    if (!user) throw new HttpError(404, "User not found");
+
+    return event;
   }
 
   async rateEvent(ratedBy: IUser, eventId: string, rating: number) {

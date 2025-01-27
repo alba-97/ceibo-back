@@ -27,17 +27,19 @@ export default class EventRepository {
     return event;
   }
 
-  async removeUser(userId: string, eventId: string) {
-    await Event.updateOne(
+  async removeUser(eventId: string, userId: string): Promise<IEvent | null> {
+    return await Event.findOneAndUpdate(
       { _id: new Types.ObjectId(eventId) },
-      { $pull: { users: new Types.ObjectId(userId) } }
+      { $pull: { users: new Types.ObjectId(userId) } },
+      { new: true }
     );
   }
 
-  async addUser(userId: string, eventId: string) {
-    await Event.updateOne(
+  async addUser(eventId: string, userId: string): Promise<IEvent | null> {
+    return await Event.findOneAndUpdate(
       { _id: new Types.ObjectId(eventId) },
-      { $push: { users: new Types.ObjectId(userId) } }
+      { $addToSet: { users: new Types.ObjectId(userId) } },
+      { new: true }
     );
   }
 

@@ -68,8 +68,10 @@ export default class EventController {
   @POST()
   async enroll(req: Request, res: Response) {
     try {
-      await this.eventService.enroll(req.body.eventId, req.user);
-      const event = await this.eventService.findEventById(req.body.eventId);
+      const event = await this.eventService.enroll(
+        req.body.eventId,
+        req.user._id
+      );
       res.status(200).send(event);
     } catch (err) {
       return handleError(res, err);

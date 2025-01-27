@@ -17,17 +17,19 @@ export default class UserRepository {
     return user;
   }
 
-  async removeEvent(eventId: string, userId: string) {
-    await User.updateOne(
+  async removeEvent(eventId: string, userId: string): Promise<IUser | null> {
+    return await User.findOneAndUpdate(
       { _id: new Types.ObjectId(userId) },
-      { $pull: { events: new Types.ObjectId(eventId) } }
+      { $pull: { events: new Types.ObjectId(eventId) } },
+      { new: true }
     );
   }
 
-  async addEvent(eventId: string, userId: string) {
-    await User.updateOne(
+  async addEvent(userId: string, eventId: string): Promise<IUser | null> {
+    return await User.findOneAndUpdate(
       { _id: new Types.ObjectId(userId) },
-      { $push: { events: new Types.ObjectId(eventId) } }
+      { $addToSet: { events: new Types.ObjectId(eventId) } },
+      { new: true }
     );
   }
 
