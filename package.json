@@ -6,8 +6,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc && tsnd --respawn src/index.ts",
-    "start": "tsc && node dist/index.js",
-    "migrate": "tsc && node dist/seeder/index.js"
+    "start": "node dist/index.js",
+    "migrate": "node dist/seeder/index.js"
   },
   "keywords": [],
   "author": "",
